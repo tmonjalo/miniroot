@@ -1,0 +1,17 @@
+#!/bin/sh
+
+# Mounting proc and sys file systems.
+/bin/mount -t proc proc /proc
+/bin/mount -t sysfs sysfs /sys
+
+/bin/mount -t tmpfs tmpfs /tmp
+/bin/mount -t tmpfs tmpfs /var
+
+/sbin/ifconfig eth0 192.168.8.133
+/usr/sbin/telnetd &
+
+# Set up the hostname.
+hostname miniroot
+
+exit 0
+
