@@ -26,8 +26,14 @@ linux: linux_subdir
 	$(LINUX_MAKE)
 
 linux_subdir: $(LINUX_TARBALL)
-	[ -d "$(LINUX_SUBDIR)" ] || tar x -C $(LINUX_DIR) -f $(LINUX_DIR)/$(LINUX_TARBALL)
-	[ -f $(LINUX_SUBDIR)/.config ] || [ -f $(LINUX_DIR)/$(LINUX_CONFIG) ] && cp $(LINUX_DIR)/$(LINUX_CONFIG) $(LINUX_SUBDIR)/.config
+	[ -d "$(LINUX_SUBDIR)" ] || \
+		tar x -C $(LINUX_DIR) -f $(LINUX_DIR)/$(LINUX_TARBALL)
+	[ -f $(LINUX_SUBDIR)/.config ] || \
+		if [ -f $(LINUX_DIR)/$(LINUX_CONFIG) ] ; then \
+			cp $(LINUX_DIR)/$(LINUX_CONFIG) $(LINUX_SUBDIR)/.config ; \
+		else \
+			cp $(LINUX_SUBDIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_SUBDIR)/.config ; \
+		fi
 
 $(LINUX_TARBALL):
 	wget -P $(LINUX_DIR) $(LINUX_URL)
