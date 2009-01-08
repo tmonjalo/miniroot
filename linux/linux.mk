@@ -6,7 +6,7 @@ LINUX_BUILD_OUT = O=$(abspath $(LINUX_BUILD_DIR))
 LINUX_VERBOSE = V=0
 
 # if LINUX_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
+ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)')),false)
 override LINUX_SRC := linux-$(strip $(LINUX_SRC)).tar.bz2
 LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(LINUX_SRC)
 endif
