@@ -5,7 +5,7 @@ all:
 CROSS_ARCH =
 CROSS_PATH =
 CROSS_PREFIX =
-CROSS_CC = $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc
+#CROSS_CC = $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc # (optional)
 CROSS_CFLAGS = -Os
 
 # Host compilation
@@ -40,6 +40,7 @@ build_dir:
 include config.mk
 
 # All rules
+include common.mk
 include $(LINUX_DIR)/linux.mk
 #include $(BUSYBOX_DIR)/busybox.mk
 #include makedevs/makedevs.mk

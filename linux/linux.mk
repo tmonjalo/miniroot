@@ -2,8 +2,9 @@
 all: linux
 clean: linux_clean
 
-LINUX_BUILD_OUT = O=$(abspath $(LINUX_BUILD_DIR))
-LINUX_VERBOSE = V=0
+# commented/empty options are disabled
+LINUX_BUILD_OUT = y
+#LINUX_VERBOSE = y
 
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)')),false)
@@ -12,11 +13,12 @@ LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(LINUX_SRC)
 endif
 
 LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
-LINUX_BUILD_DIR = $(BUILD_DIR)/$(LINUX_DIR)
+LINUX_BUILD_DIR = $(if $(LINUX_BUILD_OUT), $(BUILD_DIR)/$(LINUX_DIR), $(LINUX_SRC_DIR))
 
-LINUX_MAKE = PATH="$(CROSS_PATH)/bin:$$PATH" make -C $(LINUX_SRC_DIR) \
-	ARCH=$(CROSS_ARCH) CROSS_COMPILE=$(CROSS_PREFIX) CC=$(CROSS_CC) \
-	$(LINUX_BUILD_OUT) $(LINUX_VERBOSE)
+LINUX_MAKE = $(SET_CROSS_PATH) make -C $(LINUX_SRC_DIR) \
+	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
+	$(if $(LINUX_BUILD_OUT), O=$(abspath $(LINUX_BUILD_DIR))) \
+	$(if $(LINUX_VERBOSE), V=1)
 
 linux_%: linux_init
 	$(LINUX_MAKE) $*
