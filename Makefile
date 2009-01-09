@@ -10,7 +10,6 @@ CROSS_CFLAGS = -Os
 
 # Host compilation
 HOST_CC = gcc
-TOOLS_DIR = tools
 
 # Linux
 LINUX_DIR = linux
@@ -31,16 +30,14 @@ PKG_DROPBEAR = no
 
 # Build outside of the sources
 BUILD_DIR = build
-.PHONY: build_dir
-all: build_dir
-build_dir:
-	@ mkdir -p $(BUILD_DIR)
 
 # Overwrite default configuration with user parameters
 include config.mk
 
 # All rules
-include common.mk
+TOOLS_DIR = tools
+include $(TOOLS_DIR)/init.mk
+include $(TOOLS_DIR)/common.mk
 include $(LINUX_DIR)/linux.mk
 #include $(BUSYBOX_DIR)/busybox.mk
 #include makedevs/makedevs.mk
