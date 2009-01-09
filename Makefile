@@ -26,7 +26,9 @@ BUSYBOX_CONFIG =
 # Packages
 PKG_DIR = packages
 PKG_DROPBEAR = no
-#include $(PKG_DIR)/packages.mk
+
+# Root filesystem
+ROOT_DIR = root
 
 # Build outside of the sources
 BUILD_DIR = build
@@ -38,7 +40,8 @@ include config.mk
 TOOLS_DIR = tools
 include $(TOOLS_DIR)/init.mk
 include $(TOOLS_DIR)/common.mk
+#include $(TOOLS_DIR)/makedevs.mk
 include $(LINUX_DIR)/linux.mk
 include $(BUSYBOX_DIR)/busybox.mk
-#include makedevs/makedevs.mk
-#include image/image.mk
+#include $(PKG_DIR)/packages.mk
+#include $(ROOT_DIR)/root.mk
