@@ -36,5 +36,5 @@ linux_init:
 		else \
 			cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_DIR)/.config ; \
 		fi ; \
+		yes '' | $(LINUX_MAKE) oldconfig ; \
 	fi
-	yes '' | $(LINUX_MAKE) oldconfig
