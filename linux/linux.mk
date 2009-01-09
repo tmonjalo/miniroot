@@ -13,7 +13,7 @@ LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(LINUX_SRC)
 endif
 
 LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
-LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(LINUX_DIR))
+LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
 
 LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
