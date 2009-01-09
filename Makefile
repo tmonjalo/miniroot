@@ -38,7 +38,6 @@ include config.mk
 
 # All rules
 TOOLS_DIR = tools
-include $(TOOLS_DIR)/init.mk
 include $(TOOLS_DIR)/common.mk
 #include $(TOOLS_DIR)/makedevs.mk
 include $(LINUX_DIR)/linux.mk
