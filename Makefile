@@ -5,7 +5,7 @@ all:
 CROSS_ARCH =
 CROSS_PATH =
 CROSS_PREFIX =
-#CROSS_CC = $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc # (optional)
+#CROSS_CC = 'ccache $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc' # (optional)
 CROSS_CFLAGS = -Os
 
 # Host compilation
@@ -39,6 +39,6 @@ TOOLS_DIR = tools
 include $(TOOLS_DIR)/init.mk
 include $(TOOLS_DIR)/common.mk
 include $(LINUX_DIR)/linux.mk
-#include $(BUSYBOX_DIR)/busybox.mk
+include $(BUSYBOX_DIR)/busybox.mk
 #include makedevs/makedevs.mk
 #include image/image.mk

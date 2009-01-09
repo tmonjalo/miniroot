@@ -37,3 +37,4 @@ linux_init:
 			cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_DIR)/.config ; \
 		fi ; \
 	fi
+	yes '' | $(LINUX_MAKE) oldconfig
