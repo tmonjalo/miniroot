@@ -7,11 +7,15 @@ PATCH_DIR=$4
 
 check_src_dir () {
 	SRC_DIR=$($(dirname $0)/get_src_dir.sh "$DIR" "$SRC")
-	[ -d "$SRC_DIR" ] && exit 0
+	if [ -d "$SRC_DIR" ] ; then
+		exit 0
+	fi
 }
 
 patch_src_dir () {
-	$(dirname $0)/patch-kernel.sh $SRC_DIR $PATCH_DIR
+	if [ -n "$PATCH_DIR" ] ; then
+		$(dirname $0)/patch-kernel.sh $SRC_DIR $PATCH_DIR
+	fi
 }
 
 if echo $SRC | fgrep -q '://' ; then
