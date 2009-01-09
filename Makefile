@@ -21,7 +21,7 @@ LINUX_CONFIG =
 BUSYBOX_DIR = busybox
 BUSYBOX_SRC = 1.13.2 # directory or tarball or VCS URL or version
 BUSYBOX_PATCH_DIR =  # (optional)
-BUSYBOX_CONFIG =
+BUSYBOX_CONFIG =  # (optional)
 
 # Packages
 PKG_DIR = packages

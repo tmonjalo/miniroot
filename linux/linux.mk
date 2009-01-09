@@ -17,7 +17,7 @@ LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(n
 
 LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
-	$(if $(LINUX_BUILD_INSIDE), , O=$(abspath $(LINUX_BUILD_DIR))) \
+	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
 
 linux_%: linux_init
