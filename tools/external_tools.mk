@@ -13,11 +13,15 @@ BUILDROOT_URL_SUFFIX = ?view=co
 define EXTERNAL_TOOLS_DOWNLOAD
 $(1):
 	wget -O $(1) $(2)
+	 if [ '$(strip $(3))' = '.sh' -o '$(strip $(3))' = '.py' ] ; then \
+		chmod +x $(1) ; \
+	fi
 endef
 $(foreach PATH, $(BUILDROOT_PATHS), $(eval $(call EXTERNAL_TOOLS_DOWNLOAD, \
 	$(TOOLS_DIR)/$(notdir $(PATH)), \
-	$(BUILDROOT_URL_PREFIX)$(PATH)$(BUILDROOT_URL_SUFFIX)) \
-))
+	$(BUILDROOT_URL_PREFIX)$(PATH)$(BUILDROOT_URL_SUFFIX), \
+	$(suffix $(PATH)) \
+)))
 
 TOOLS_SRCS = $(foreach PATH, $(BUILDROOT_PATHS), $(TOOLS_DIR)/$(notdir $(PATH)))
 
