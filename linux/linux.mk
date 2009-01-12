@@ -1,7 +1,3 @@
-.PHONY: linux linux_init
-all: linux
-clean: linux_clean
-
 # options can be enabled in config.mk
 #LINUX_BUILD_INSIDE = y
 #LINUX_VERBOSE = y
@@ -19,6 +15,10 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
+
+.PHONY: linux linux_init
+all: linux
+clean: linux_clean
 
 linux_%: linux_init
 	$(LINUX_MAKE) $*

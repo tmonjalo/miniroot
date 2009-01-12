@@ -1,7 +1,3 @@
-.PHONY: busybox busybox_init
-all: busybox
-clean: busybox_clean
-
 # options can be enabled in config.mk
 #BUSYBOX_BUILD_INSIDE = y
 #BUSYBOX_VERBOSE = y
@@ -21,6 +17,10 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	$(if $(BUSYBOX_BUILD_INSIDE), , O='$(abspath $(BUSYBOX_BUILD_DIR))') \
 	CONFIG_PREFIX='$(abspath $(BUSYBOX_INSTALL_DIR))' \
 	$(if $(BUSYBOX_VERBOSE), V=1)
+
+.PHONY: busybox busybox_init
+all: busybox
+clean: busybox_clean
 
 busybox_%: busybox_init
 	$(BUSYBOX_MAKE) $*

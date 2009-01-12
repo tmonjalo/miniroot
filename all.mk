@@ -6,8 +6,7 @@ BUILD_DIR = build
 
 # Build tools
 TOOLS_DIR = tools
-include $(TOOLS_DIR)/toolchain.mk
-#include $(TOOLS_DIR)/makedevs.mk
+include $(TOOLS_DIR)/tools.mk
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
