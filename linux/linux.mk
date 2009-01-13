@@ -23,6 +23,7 @@ linux_%: linux_init
 	$(LINUX_MAKE) $*
 
 linux: linux_init
+	@ echo '=== LINUX ==='
 	$(LINUX_MAKE)
 
 linux_init:

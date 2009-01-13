@@ -25,7 +25,9 @@ busybox_%: busybox_init
 	$(BUSYBOX_MAKE) $*
 
 busybox: busybox_init
+	@ echo '=== BUSYBOX ==='
 	$(BUSYBOX_MAKE) install
+	$(call STRIP, $(BUSYBOX_INSTALL_DIR)/bin/busybox)
 
 busybox_clean:
 	$(BUSYBOX_MAKE) clean uninstall
