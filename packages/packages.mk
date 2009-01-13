@@ -1,0 +1,1 @@
+PKG_BUILD_DIR = $(BUILD_DIR)

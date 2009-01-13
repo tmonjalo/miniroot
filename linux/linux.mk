@@ -17,7 +17,6 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(if $(LINUX_VERBOSE), V=1)
 
 .PHONY: linux linux_init
-all: linux
 clean: linux_clean
 
 linux_%: linux_init

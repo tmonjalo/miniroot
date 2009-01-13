@@ -27,8 +27,14 @@ include $(BUSYBOX_DIR)/busybox.mk
 
 # Packages
 PKG_DIR = packages
-#include $(PKG_DIR)/packages.mk
+include $(PKG_DIR)/packages.mk
 
 # Root filesystem
 ROOT_DIR = root
-#include $(ROOT_DIR)/root.mk
+include $(ROOT_DIR)/root.mk
+
+# Image
+IMAGE_DIR = image
+include $(IMAGE_DIR)/image.mk
+
+all: image

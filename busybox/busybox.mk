@@ -19,7 +19,6 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	$(if $(BUSYBOX_VERBOSE), V=1)
 
 .PHONY: busybox busybox_init
-all: busybox
 clean: busybox_clean
 
 busybox_%: busybox_init
