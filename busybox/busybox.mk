@@ -51,7 +51,7 @@ busybox_build: busybox_busybox
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
-	$(call STRIP, $(BUSYBOX_INSTALL_BIN))
+	$(CROSS_STRIP) $(BUSYBOX_INSTALL_BIN)
 
 busybox_clean:
 	$(BUSYBOX_MAKE) clean uninstall

@@ -9,5 +9,6 @@ endif
 endif
 
 $(TOOLCHAIN_CC):
+	@ echo '=== TOOLCHAIN ==='
 	@ echo NOT YET IMPLEMENTED
 	@ should use crosstool-ng
