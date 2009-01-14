@@ -1,5 +1,5 @@
-# Target for "make" or "make all"
-TARGET = image
+# Main target
+TARGET = image # built by "make" or "make all"
 
 # Host compilation
 HOST_CC = gcc
