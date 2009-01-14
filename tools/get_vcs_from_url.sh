@@ -1,5 +1,7 @@
 #! /bin/sh -e
 
+# try to guess the VCS to use for the URL
+
 URL=$*
 
 PROTOCOL=$(echo $URL | cut -d':' -f1 | cut -d'+' -f1)

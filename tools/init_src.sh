@@ -1,5 +1,8 @@
 #! /bin/sh -e
 
+# get sources by download, checkout or tarball
+# and patch them
+
 DIR=$1
 SRC=$2 # SRC can be a VCS URL to checkout, a directory or a tarball
 URL=$3 # URL can be a tarball URL or nothing

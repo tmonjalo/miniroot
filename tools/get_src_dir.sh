@@ -1,5 +1,7 @@
 #! /bin/sh -e
 
+# get or compute the directory name of the sources
+
 DIR=$1
 SRC=$2 # SRC can be a VCS URL, a directory or a tarball
 

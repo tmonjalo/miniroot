@@ -24,6 +24,11 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 .PHONY: busybox busybox_init busybox_build
 clean: busybox_clean
 
+# wildcard rule
+busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
+	$(BUSYBOX_MAKE) $*
+
+# scheduling rule
 busybox: busybox_init $(BUSYBOX_BUILD_CONFIG) busybox_build $(BUSYBOX_INSTALL_BIN)
 
 busybox_init:
@@ -43,9 +48,6 @@ $(BUSYBOX_BUILD_CONFIG):
 $(BUSYBOX_BUILD_BIN): busybox_build
 
 busybox_build: busybox_busybox
-
-busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
-	$(BUSYBOX_MAKE) $*
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install

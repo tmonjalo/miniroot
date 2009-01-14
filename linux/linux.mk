@@ -20,13 +20,12 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 .PHONY: linux linux_init linux_build
 clean: linux_clean
 
-linux: linux_init $(LINUX_BUILD_CONFIG) linux_build
-
+# wildcard rule
 linux_%: linux_init $(LINUX_BUILD_CONFIG)
 	$(LINUX_MAKE) $*
 
-linux_build:
-	$(LINUX_MAKE)
+# scheduling rule
+linux: linux_init $(LINUX_BUILD_CONFIG) linux_build
 
 linux_init:
 	@ echo '=== LINUX ==='
@@ -41,3 +40,6 @@ $(LINUX_BUILD_CONFIG):
 		cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
 	fi
 	yes '' | $(LINUX_MAKE) oldconfig
+
+linux_build:
+	$(LINUX_MAKE)
