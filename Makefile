@@ -1,3 +1,6 @@
+# Target for "make" or "make all"
+TARGET = image
+
 # Host compilation
 HOST_CC = gcc
 

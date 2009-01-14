@@ -1,5 +1,5 @@
 .PHONY: all clean
-all:
+all: init $(TARGET)
 
 # Build outside of the sources
 BUILD_DIR = build
@@ -43,5 +43,3 @@ include $(ROOT_DIR)/root.mk
 # Image
 IMAGE_DIR = image
 include $(IMAGE_DIR)/image.mk
-
-all: image
