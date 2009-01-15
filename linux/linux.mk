@@ -33,11 +33,11 @@ linux_init:
 
 $(LINUX_BUILD_CONFIG):
 	mkdir -p $(LINUX_BUILD_DIR)
-	@ echo copy config to $(LINUX_BUILD_CONFIG)
+	@ echo copy config to $@
 	@ if [ -f '$(LINUX_DIR)/$(LINUX_CONFIG)' ] ; then \
-		cp $(LINUX_DIR)/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
+		cp $(LINUX_DIR)/$(LINUX_CONFIG) $@ ; \
 	else \
-		cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
+		cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $@ ; \
 	fi
 	yes '' | $(LINUX_MAKE) oldconfig
 

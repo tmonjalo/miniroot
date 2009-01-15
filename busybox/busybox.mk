@@ -37,9 +37,9 @@ busybox_init:
 
 $(BUSYBOX_BUILD_CONFIG):
 	mkdir -p $(BUSYBOX_BUILD_DIR)
-	@ echo copy config to $(BUSYBOX_BUILD_CONFIG)
+	@ echo copy config to $@
 	@ if [ -f '$(BUSYBOX_DIR)/$(BUSYBOX_CONFIG)' ] ; then \
-		cp $(BUSYBOX_DIR)/$(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
+		cp $(BUSYBOX_DIR)/$(BUSYBOX_CONFIG) $@ ; \
 		yes '' | $(BUSYBOX_MAKE) oldconfig ; \
 	else \
 		$(BUSYBOX_MAKE) defconfig ; \
@@ -51,7 +51,7 @@ busybox_build: busybox_busybox
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
-	$(CROSS_STRIP) $(BUSYBOX_INSTALL_BIN)
+	$(CROSS_STRIP) $@
 
 busybox_clean:
 	$(BUSYBOX_MAKE) clean uninstall
