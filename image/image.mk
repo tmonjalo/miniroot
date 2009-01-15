@@ -12,7 +12,7 @@ image_init:
 	mkdir -p $(IMAGE_BUILD_DIR)
 
 $(ROOT_IMAGE):
-	echo 'cd $(ROOT_BUILD_DIR) && find | cpio --quiet --create --format=newc | gzip --best > $(ROOT_IMAGE)' >> $(FAKEROOT_SCRIPT)
+	echo 'cd $(ROOT_BUILD_DIR) && find | cpio --quiet --create --format=newc | gzip --best > $(abspath $(ROOT_IMAGE))' >> $(FAKEROOT_SCRIPT)
 	fakeroot sh $(FAKEROOT_SCRIPT)
 
 image_clean:
