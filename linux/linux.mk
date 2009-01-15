@@ -17,7 +17,7 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
 
-.PHONY: linux linux_init linux_build linux_clean
+.PHONY: linux linux_init linux_build
 clean: linux_clean
 
 # wildcard rule

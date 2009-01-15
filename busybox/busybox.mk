@@ -21,7 +21,7 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	CONFIG_PREFIX='$(abspath $(BUSYBOX_INSTALL_DIR))' \
 	$(if $(BUSYBOX_VERBOSE), V=1)
 
-.PHONY: busybox busybox_init busybox_build busybox_clean
+.PHONY: busybox busybox_init busybox_build
 clean: busybox_clean
 
 # wildcard rule
