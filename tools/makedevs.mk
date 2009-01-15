@@ -6,8 +6,10 @@ MAKEDEVS = $(MAKEDEVS_BUILD_DIR)/makedevs
 tools: $(MAKEDEVS)
 tools_clean: makedevs_clean
 
-$(MAKEDEVS): $(MAKEDEVS_SRC)
+$(MAKEDEVS_BUILD_DIR):
 	mkdir -p $(MAKEDEVS_BUILD_DIR)
+
+$(MAKEDEVS): $(MAKEDEVS_SRC) $(MAKEDEVS_BUILD_DIR)
 	$(HOST_CC) -Wall -Werror -O2 $< -o $@
 
 makedevs_clean:

@@ -31,8 +31,10 @@ linux_init:
 	@ echo '=== LINUX ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
 
-$(LINUX_BUILD_CONFIG):
+$(LINUX_BUILD_DIR):
 	mkdir -p $(LINUX_BUILD_DIR)
+
+$(LINUX_BUILD_CONFIG): $(LINUX_BUILD_DIR)
 	@ echo copy config to $(LINUX_BUILD_CONFIG)
 	@ if [ -f '$(LINUX_DIR)/$(LINUX_CONFIG)' ] ; then \
 		cp $(LINUX_DIR)/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
