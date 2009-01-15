@@ -1,4 +1,4 @@
-.PHONY: all clean
+.PHONY: all init clean
 all: init $(TARGET)
 
 # Host compilation
