@@ -17,13 +17,13 @@ root_lib: root_lib_init $(MKLIBS) $(SSTRIP)
 		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
 		-D $(foreach DIR, $(CROSS_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
-		$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), $(DIR)/*)
-	$(SSTRIP) $(ROOT_BUILD_LIB_DIR)/*
+		$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), $(shell find $(DIR) -type f))
+	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP)
 
 root_bin_init:
 	@ echo '=== BINARIES ==='
 root_bin: root_bin_init $(SSTRIP)
-	$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), $(SSTRIP) $(DIR)/* ;)
+	$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), find $(DIR) -type f | xargs -r $(SSTRIP) &&) true
 
 root_skel:
 	@ echo '=== SKELETON ==='
@@ -31,10 +31,8 @@ root_skel:
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
-root_dev: root_dev_init $(MAKEDEVS)
-	fakeroot sh -c "chown -R 0:0 $(ROOT_BUILD_DIR) ; ls -l $(ROOT_BUILD_DIR)/dev ; \
-		$(MAKEDEVS) -d $(ROOT_DIR)/device_table.txt $(ROOT_BUILD_DIR) ; \
-		ls -l $(ROOT_BUILD_DIR)/dev"
+root_dev: root_dev_init $(MAKEDEVS) $(IMAGE_BUILD_DIR)
+	echo '$(MAKEDEVS) -d $(ROOT_DIR)/device_table.txt $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
 
 root_clean:
 	- rm -rf $(ROOT_BUILD_DIR)
