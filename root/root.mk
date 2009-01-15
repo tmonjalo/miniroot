@@ -7,7 +7,7 @@ ROOT_BUILD_BIN_DIRS += $(ROOT_BUILD_DIR)/bin $(ROOT_BUILD_DIR)/sbin
 clean: root_clean
 
 # scheduling rule
-root: busybox packages root_lib root_bin root_skel root_dev
+root: busybox packages root_lib root_bin root_skel
 
 root_lib_init:
 	@ echo '=== LIBRARIES ==='
