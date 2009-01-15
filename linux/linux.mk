@@ -17,7 +17,7 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
 
-.PHONY: linux linux_init linux_build
+.PHONY: linux linux_init linux_build linux_clean
 clean: linux_clean
 
 # wildcard rule
@@ -31,10 +31,8 @@ linux_init:
 	@ echo '=== LINUX ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
 
-$(LINUX_BUILD_DIR):
+$(LINUX_BUILD_CONFIG):
 	mkdir -p $(LINUX_BUILD_DIR)
-
-$(LINUX_BUILD_CONFIG): $(LINUX_BUILD_DIR)
 	@ echo copy config to $(LINUX_BUILD_CONFIG)
 	@ if [ -f '$(LINUX_DIR)/$(LINUX_CONFIG)' ] ; then \
 		cp $(LINUX_DIR)/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \

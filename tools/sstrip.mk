@@ -6,10 +6,8 @@ SSTRIP = $(SSTRIP_BUILD_DIR)/sstrip
 tools: $(SSTRIP)
 tools_clean: sstrip_clean
 
-$(SSTRIP_BUILD_DIR):
-	mkdir -p $(SSTRIP_BUILD_DIR)
-
 $(SSTRIP): $(SSTRIP_SRC) $(SSTRIP_BUILD_DIR)
+	mkdir -p $(SSTRIP_BUILD_DIR)
 	$(HOST_CC) $< -o $@
 
 sstrip_clean:

@@ -21,7 +21,7 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	CONFIG_PREFIX='$(abspath $(BUSYBOX_INSTALL_DIR))' \
 	$(if $(BUSYBOX_VERBOSE), V=1)
 
-.PHONY: busybox busybox_init busybox_build
+.PHONY: busybox busybox_init busybox_build busybox_clean
 clean: busybox_clean
 
 # wildcard rule
@@ -35,10 +35,8 @@ busybox_init:
 	@ echo '=== BUSYBOX ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
 
-$(BUSYBOX_BUILD_DIR):
+$(BUSYBOX_BUILD_CONFIG):
 	mkdir -p $(BUSYBOX_BUILD_DIR)
-
-$(BUSYBOX_BUILD_CONFIG): $(BUSYBOX_BUILD_DIR)
 	@ echo copy config to $(BUSYBOX_BUILD_CONFIG)
 	@ if [ -f '$(BUSYBOX_DIR)/$(BUSYBOX_CONFIG)' ] ; then \
 		cp $(BUSYBOX_DIR)/$(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \

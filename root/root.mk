@@ -31,7 +31,8 @@ root_skel:
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
-root_dev: root_dev_init $(MAKEDEVS) $(IMAGE_BUILD_DIR)
+root_dev: root_dev_init $(MAKEDEVS)
+	mkdir -p $(dir $(FAKEROOT_SCRIPT))
 	echo '$(MAKEDEVS) -d $(ROOT_DIR)/device_table.txt $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
 
 root_clean:
