@@ -11,7 +11,10 @@ PATCH_DIR=$4
 
 check_src_dir () {
 	SRC_DIR=$($SCRIPTS_DIR/get_src_dir.sh "$DIR" "$SRC")
-	if [ -d "$SRC_DIR" ] ; then
+	if [ "$SRC_DIR" = "$DIR/" ] ; then
+		echo "bad source: $DIR/$SRC"
+		exit 1
+	elif [ -d "$SRC_DIR" ] ; then
 		exit 0
 	fi
 }
@@ -42,7 +45,7 @@ elif [ -d "$DIR/$SRC" ] ; then
 	exit 0
 else
 	# SRC is a file, assume it is a tarball
-	if [ ! -f "$DIR/$SRC" ] || ! tar tf "$DIR/$SRC" | head -n1 >/dev/null 2>&1 ; then
+	if [ ! -s "$DIR/$SRC" ] ; then
 		wget -O "$DIR/$SRC" "$URL"
 	fi
 	check_src_dir
