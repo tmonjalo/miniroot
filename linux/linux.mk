@@ -1,4 +1,5 @@
 # options can be enabled in config.mk
+#LINUX_INITRAMFS = y
 #LINUX_BUILD_INSIDE = y
 #LINUX_VERBOSE = y
 
@@ -16,16 +17,15 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
+LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig
+
+LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
+LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
 
 .PHONY: linux linux_init linux_build
 clean: linux_clean
 
-# wildcard rule
-linux_%: linux_init $(LINUX_BUILD_CONFIG)
-	$(LINUX_MAKE) $*
-
-# scheduling rule
-linux: linux_init $(LINUX_BUILD_CONFIG) linux_build
+linux: linux_all
 
 linux_init:
 	@ echo '=== LINUX ==='
@@ -33,13 +33,38 @@ linux_init:
 
 $(LINUX_BUILD_CONFIG):
 	mkdir -p $(LINUX_BUILD_DIR)
-	@ echo copy config to $@
+	@ echo 'copy config to $@'
 	@ if [ -f '$(LINUX_DIR)/$(LINUX_CONFIG)' ] ; then \
 		cp $(LINUX_DIR)/$(LINUX_CONFIG) $@ ; \
 	else \
 		cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $@ ; \
 	fi
-	yes '' | $(LINUX_MAKE) oldconfig
+	$(LINUX_MAKE_OLDCONFIG)
 
-linux_build:
-	$(LINUX_MAKE)
+linux_initramfs: image
+	@ echo '=== LINUX === (part 2)'
+	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
+		echo 'set CONFIG_INITRAMFS_SOURCE=$(ROOT_CPIO)' ; \
+		$(LINUX_SET_INITRAMFS) ; \
+		$(LINUX_MAKE_OLDCONFIG) ; \
+	fi
+
+linux_no_initramfs:
+	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '' ] ; then \
+		echo 'unset CONFIG_INITRAMFS_SOURCE' ; \
+		$(LINUX_SET_INITRAMFS) ; \
+		$(LINUX_MAKE_OLDCONFIG) ; \
+	fi
+
+# wildcard rule
+linux_%: linux_init $(LINUX_BUILD_CONFIG)
+	$(if $(LINUX_INITRAMFS), $(if $(or \
+			$(findstring all, $*), \
+			$(findstring vmlinux, $*), \
+			$(findstring Image, $*), \
+			$(findstring -pkg, $*), \
+			$(findstring rpm, $*), \
+			$(findstring install, $*) \
+		), $(MAKE) linux_initramfs), \
+		$(MAKE) linux_no_initramfs)
+	$(LINUX_MAKE) $*
