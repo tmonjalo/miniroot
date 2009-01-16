@@ -1,7 +1,7 @@
-# options can be enabled in config.mk
-#LINUX_INITRAMFS = y
-#LINUX_BUILD_INSIDE = y
-#LINUX_VERBOSE = y
+# options can be set in config.mk
+#LINUX_INITRAMFS = no
+#LINUX_BUILD_INSIDE = no
+#LINUX_VERBOSE = no
 
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)')),false)
@@ -22,7 +22,7 @@ LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY: linux linux_init linux_build
+.PHONY: linux linux_init linux_build linux_clean
 clean: linux_clean
 
 linux: linux_all
@@ -68,3 +68,6 @@ linux_%: linux_init $(LINUX_BUILD_CONFIG)
 		), $(MAKE) linux_initramfs), \
 		$(MAKE) linux_no_initramfs)
 	$(LINUX_MAKE) $*
+
+linux_clean:
+	- $(LINUX_MAKE) $*

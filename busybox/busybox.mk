@@ -1,6 +1,6 @@
-# options can be enabled in config.mk
-#BUSYBOX_BUILD_INSIDE = y
-#BUSYBOX_VERBOSE = y
+# options can be set in config.mk
+#BUSYBOX_BUILD_INSIDE = no
+#BUSYBOX_VERBOSE = no
 
 # if BUSYBOX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')),false)
@@ -21,7 +21,7 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	CONFIG_PREFIX='$(abspath $(BUSYBOX_INSTALL_DIR))' \
 	$(if $(BUSYBOX_VERBOSE), V=1)
 
-.PHONY: busybox busybox_init
+.PHONY: busybox busybox_init busybox_clean
 clean: busybox_clean
 
 busybox: $(BUSYBOX_INSTALL_BIN)
@@ -51,4 +51,4 @@ $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(CROSS_STRIP) $@
 
 busybox_clean:
-	$(BUSYBOX_MAKE) clean uninstall
+	- $(BUSYBOX_MAKE) clean uninstall
