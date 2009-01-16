@@ -1,5 +1,5 @@
 .PHONY: all clean
-all: $(TARGET)
+all: $(TARGETS)
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
@@ -20,13 +20,13 @@ BUILD_DIR = build
 TOOLS_DIR = tools
 include $(TOOLS_DIR)/tools.mk
 
-# Image
-IMAGE_DIR = image
-include $(IMAGE_DIR)/image.mk
-
 # Linux
 LINUX_DIR = linux
 include $(LINUX_DIR)/linux.mk
+
+# Image
+IMAGE_DIR = image
+include $(IMAGE_DIR)/image.mk
 
 # Root filesystem
 ROOT_DIR = root

@@ -1,5 +1,5 @@
-# Main target
-TARGET = image_linux_initramfs # built by "make" or "make all"
+# Main targets
+TARGETS = linux image # built by "make" or "make all"
 
 # Host compilation
 HOST_CC = gcc
