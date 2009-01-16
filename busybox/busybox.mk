@@ -21,15 +21,10 @@ BUSYBOX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	CONFIG_PREFIX='$(abspath $(BUSYBOX_INSTALL_DIR))' \
 	$(if $(BUSYBOX_VERBOSE), V=1)
 
-.PHONY: busybox busybox_init busybox_build
+.PHONY: busybox busybox_init
 clean: busybox_clean
 
-# wildcard rule
-busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
-	$(BUSYBOX_MAKE) $*
-
-# scheduling rule
-busybox: busybox_init $(BUSYBOX_BUILD_CONFIG) busybox_build $(BUSYBOX_INSTALL_BIN)
+busybox: $(BUSYBOX_INSTALL_BIN)
 
 busybox_init:
 	@ echo '=== BUSYBOX ==='
@@ -37,7 +32,7 @@ busybox_init:
 
 $(BUSYBOX_BUILD_CONFIG):
 	mkdir -p $(BUSYBOX_BUILD_DIR)
-	@ echo copy config to $@
+	@ echo 'copy config to $@'
 	@ if [ -f '$(BUSYBOX_DIR)/$(BUSYBOX_CONFIG)' ] ; then \
 		cp $(BUSYBOX_DIR)/$(BUSYBOX_CONFIG) $@ ; \
 		yes '' | $(BUSYBOX_MAKE) oldconfig ; \
@@ -45,9 +40,11 @@ $(BUSYBOX_BUILD_CONFIG):
 		$(BUSYBOX_MAKE) defconfig ; \
 	fi
 
-$(BUSYBOX_BUILD_BIN): busybox_build
+# wildcard rule
+busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
+	$(BUSYBOX_MAKE) $*
 
-busybox_build: busybox_busybox
+$(BUSYBOX_BUILD_BIN): busybox_busybox
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install

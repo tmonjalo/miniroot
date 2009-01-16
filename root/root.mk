@@ -6,7 +6,6 @@ ROOT_BUILD_BIN_DIRS += $(ROOT_BUILD_DIR)/bin $(ROOT_BUILD_DIR)/sbin
 .PHONY: root root_lib_init root_lib root_bin_init root_bin root_skel root_dev_init root_dev root_clean
 clean: root_clean
 
-# scheduling rule
 root: busybox packages root_lib root_bin root_skel
 
 root_lib_init:
