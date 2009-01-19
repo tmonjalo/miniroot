@@ -22,7 +22,7 @@ LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY: linux linux_init linux_build linux_clean
+.PHONY: linux linux_init linux_build linux_initramfs linux_no_initramfs linux_clean
 clean: linux_clean
 
 linux: linux_all
@@ -41,6 +41,11 @@ $(LINUX_BUILD_CONFIG):
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 
+linux_build: linux_modules_install
+	$(if $(LINUX_INITRAMFS), \
+		$(MAKE) linux_initramfs, \
+		$(MAKE) linux_no_initramfs)
+
 linux_initramfs: image
 	@ echo '=== LINUX === (part 2)'
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
@@ -58,16 +63,19 @@ linux_no_initramfs:
 
 # wildcard rule
 linux_%: linux_init $(LINUX_BUILD_CONFIG)
-	$(if $(LINUX_INITRAMFS), $(if $(or \
+	$(if $(or \
 			$(findstring all, $*), \
 			$(findstring vmlinux, $*), \
 			$(findstring Image, $*), \
 			$(findstring -pkg, $*), \
 			$(findstring rpm, $*), \
 			$(findstring install, $*) \
-		), $(MAKE) linux_initramfs), \
-		$(MAKE) linux_no_initramfs)
+		), $(MAKE) linux_build)
 	$(LINUX_MAKE) $*
+
+linux_modules_install:
+	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) modules_install
+	find $(ROOT_BUILD_DIR)/lib/modules -name "*.ko" | xargs -r $(CROSS_STRIP)
 
 linux_clean:
 	- $(LINUX_MAKE) $*
