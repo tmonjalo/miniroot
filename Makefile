@@ -22,7 +22,8 @@ BUSYBOX_PATCH_DIR =  # (optional)
 BUSYBOX_CONFIG =  # (optional)
 
 # Packages
-PKG_DROPBEAR = no
+PKG_DROPBEAR_SERVER = no
+PKG_DROPBEAR_CLIENT = no
 
 # Overwrite default configuration with user parameters
 include config.mk
