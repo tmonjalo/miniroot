@@ -17,5 +17,8 @@ packages_clean: $(2)_clean
 endif
 endef
 
+ZLIB_DIR = $(PKG_DIR)/zlib
+include $(ZLIB_DIR)/zlib.mk
+
 DROPBEAR_DIR = $(PKG_DIR)/dropbear
 include $(DROPBEAR_DIR)/dropbear.mk
