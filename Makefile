@@ -1,5 +1,7 @@
 # Main targets
 TARGETS = linux image # built by "make" or "make all"
+# User-defined targets (init and finish can be defined in config.mk)
+all: init $(TARGETS) finish
 
 # Host compilation
 HOST_CC = gcc

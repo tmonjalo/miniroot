@@ -1,5 +1,6 @@
-.PHONY: all clean
-all: $(TARGETS)
+.PHONY: all init finish clean
+init:
+finish:
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
