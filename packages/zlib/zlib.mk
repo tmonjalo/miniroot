@@ -32,11 +32,11 @@ zlib_configure:
 	$(SET_CROSS_PATH) $(SET_CROSS_CC) CFLAGS='$(CROSS_CFLAGS) -fPIC' ./configure --shared )
 
 $(ZLIB_BUILD_BIN): zlib_init
-	$(SET_CROSS_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
+	$(SET_CROSS_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $@)
 
 $(ZLIB_INSTALL_BIN): $(ZLIB_BUILD_BIN)
-	install -D $(ZLIB_BUILD_BIN) $(ZLIB_INSTALL_BIN)
-	$(CROSS_STRIP) $(ZLIB_INSTALL_BIN)
+	install -D $(ZLIB_BUILD_BIN) $@
+	$(CROSS_STRIP) $@
 
 zlib_clean:
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
