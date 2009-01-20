@@ -1,11 +1,7 @@
 ROOT_SKEL_DIR = $(ROOT_DIR)/skel
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
-ROOT_BUILD_BIN_DIRS += \
-	$(ROOT_BUILD_DIR)/sbin \
-	$(ROOT_BUILD_DIR)/bin \
-	$(ROOT_BUILD_DIR)/usr/sbin \
-	$(ROOT_BUILD_DIR)/usr/bin
+ROOT_BUILD_BIN_DIRS += $(ROOT_BUILD_DIR)/sbin $(ROOT_BUILD_DIR)/bin
 
 .PHONY: root root_lib_init root_lib root_bin_init root_bin root_skel root_dev_init root_dev root_clean
 clean: root_clean
