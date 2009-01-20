@@ -17,18 +17,23 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
-LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig
+LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) silentoldconfig
 
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY: linux linux_init linux_build linux_initramfs linux_no_initramfs linux_clean
+.PHONY: linux linux_init linux_init2 linux_init_src linux_clean
+.PHONY: linux_build_root linux_initramfs linux_no_initramfs linux_modules linux_modules_install
 clean: linux_clean
 
 linux: linux_all
 
 linux_init:
 	@ echo '=== LINUX ==='
+linux_init2:
+	@ echo '=== LINUX === (part 2)'
+
+linux_init_src:
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
 
 $(LINUX_BUILD_CONFIG):
@@ -41,13 +46,12 @@ $(LINUX_BUILD_CONFIG):
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 
-linux_build: linux_modules_install
+linux_build_root: linux_modules linux_modules_install
 	$(if $(LINUX_INITRAMFS), \
 		$(MAKE) linux_initramfs, \
 		$(MAKE) linux_no_initramfs)
 
-linux_initramfs: image
-	@ echo '=== LINUX === (part 2)'
+linux_initramfs: image linux_init2
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
 		echo 'set CONFIG_INITRAMFS_SOURCE=$(ROOT_CPIO)' ; \
 		$(LINUX_SET_INITRAMFS) ; \
@@ -62,7 +66,7 @@ linux_no_initramfs:
 	fi
 
 # wildcard rule
-linux_%: linux_init $(LINUX_BUILD_CONFIG)
+linux_%: linux_init linux_init_src $(LINUX_BUILD_CONFIG)
 	$(if $(or \
 			$(findstring all, $*), \
 			$(findstring vmlinux, $*), \
@@ -70,12 +74,15 @@ linux_%: linux_init $(LINUX_BUILD_CONFIG)
 			$(findstring -pkg, $*), \
 			$(findstring rpm, $*), \
 			$(findstring install, $*) \
-		), $(MAKE) linux_build)
+		), $(MAKE) linux_build_root)
 	$(LINUX_MAKE) $*
 
-linux_modules_install:
+linux_modules: linux_init_src $(LINUX_BUILD_CONFIG)
+	$(LINUX_MAKE) modules
+
+linux_modules_install: linux_modules
 	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) modules_install
 	find $(ROOT_BUILD_DIR)/lib/modules -name "*.ko" | xargs -r $(CROSS_STRIP)
 
 linux_clean:
-	- $(LINUX_MAKE) $*
+	- $(LINUX_MAKE) clean
