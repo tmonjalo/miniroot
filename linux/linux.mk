@@ -17,7 +17,7 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_CROSS_ARCH) $(SET_CROSS_COMPILE) $(SET_CROSS_CC) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
-LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) silentoldconfig
+LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig >/dev/null
 
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
@@ -49,7 +49,8 @@ $(LINUX_BUILD_CONFIG):
 linux_build_root: linux_modules linux_modules_install
 	$(if $(LINUX_INITRAMFS), \
 		$(MAKE) linux_initramfs, \
-		$(MAKE) linux_no_initramfs)
+		$(MAKE) linux_no_initramfs \
+	)
 
 linux_initramfs: image linux_init2
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
@@ -74,7 +75,9 @@ linux_%: linux_init linux_init_src $(LINUX_BUILD_CONFIG)
 			$(findstring -pkg, $*), \
 			$(findstring rpm, $*), \
 			$(findstring install, $*) \
-		), $(MAKE) linux_build_root)
+		), \
+		$(MAKE) linux_build_root \
+	)
 	$(LINUX_MAKE) $*
 
 linux_modules: linux_init_src $(LINUX_BUILD_CONFIG)
