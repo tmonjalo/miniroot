@@ -1,4 +1,8 @@
 # options can be set in config.mk
+#LINUX_SRC = <directory | tarball | VCS URL | version>
+#LINUX_PATCH_DIR = [dir]
+#LINUX_CONFIG = <file>
+#LINUX_MODULES = no
 #LINUX_INITRAMFS = no
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
@@ -46,7 +50,7 @@ $(LINUX_BUILD_CONFIG):
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 
-linux_build_root: linux_modules linux_modules_install
+linux_build_root: $(if $(LINUX_MODULES), linux_modules_install)
 	$(if $(LINUX_INITRAMFS), \
 		$(MAKE) linux_initramfs, \
 		$(MAKE) linux_no_initramfs \

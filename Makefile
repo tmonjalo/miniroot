@@ -15,6 +15,8 @@ CROSS_CFLAGS = -Os
 LINUX_SRC = 2.6.28 # directory or tarball or VCS URL or version
 LINUX_PATCH_DIR =  # (optional)
 LINUX_CONFIG =
+#LINUX_MODULES = yes # build and install modules on root if defined
+#LINUX_INITRAMFS = yes # embed root in linux if defined (no need to set image in TARGETS)
 
 # Busybox
 BUSYBOX_SRC = 1.13.2 # directory or tarball or VCS URL or version
