@@ -61,7 +61,8 @@ $(DROPBEAR_BUILD_BIN): dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
 	$(SET_CROSS_PATH) $(MAKE) -C $(DROPBEAR_BUILD_DIR) dropbearmulti \
 	MULTI=1 PROGRAMS='$(strip \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), dropbear dropbearkey) \
-		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) )'
+		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) \
+	)'
 
 $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
 	install -D $(DROPBEAR_BUILD_BIN) $@
@@ -69,14 +70,16 @@ $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		ln -snf $(notdir $@) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
-		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) )
+		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) \
+	)
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), \
 		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_CLIENT1_ALIAS) && \
-		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_CLIENT2_ALIAS) )
+		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_CLIENT2_ALIAS) \
+	)
 
 dropbear_clean:
 	- $(if $(DROPBEAR_BUILD_INSIDE), \
-		$(MAKE) -C $(DROPBEAR_BUILD_DIR) clean , \
+		$(MAKE) -C $(DROPBEAR_BUILD_DIR) clean, \
 		rm -rf $(DROPBEAR_BUILD_DIR) ) # make clean is broken in libtommath
 	- rm -f $(DROPBEAR_INSTALL_BIN)
 	- rm -f $(DROPBEAR_INSTALL_SERVER_ALIAS)

@@ -14,8 +14,9 @@ image_init:
 $(ROOT_CPIO): root_dev image_init
 	echo 'cd $(ROOT_BUILD_DIR) && find \
 		| cpio --quiet --create --format=newc \
-		$(if $(LINUX_INITRAMFS),,| gzip --best) > $(abspath $@)' \
-		>> $(FAKEROOT_SCRIPT)
+		$(if $(LINUX_INITRAMFS),,| gzip --best) \
+		> $(abspath $@)' \
+	>> $(FAKEROOT_SCRIPT)
 	fakeroot sh -x $(FAKEROOT_SCRIPT)
 	@ echo 'image = $@'
 
