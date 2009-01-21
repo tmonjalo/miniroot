@@ -1,5 +1,5 @@
 SSTRIP_SRC = $(TOOLS_DIR)/sstrip.c
-SSTRIP_BUILD_DIR = $(BUILD_DIR)/sstrip
+SSTRIP_BUILD_DIR = $(BUILD_DIR)/$(TOOLS_DIR)
 SSTRIP = $(SSTRIP_BUILD_DIR)/sstrip
 
 .PHONY: sstrip_clean

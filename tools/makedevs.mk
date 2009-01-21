@@ -1,5 +1,5 @@
 MAKEDEVS_SRC = $(TOOLS_DIR)/makedevs.c
-MAKEDEVS_BUILD_DIR = $(BUILD_DIR)/makedevs
+MAKEDEVS_BUILD_DIR = $(BUILD_DIR)/$(TOOLS_DIR)
 MAKEDEVS = $(MAKEDEVS_BUILD_DIR)/makedevs
 
 .PHONY: makedevs_clean
