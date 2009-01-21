@@ -14,7 +14,7 @@ root_lib: root_lib_init $(MKLIBS) $(SSTRIP)
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
 	$(SET_CROSS_PATH) $(MKLIBS) \
 		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
-		-D $(foreach DIR, $(CROSS_LIB_DIRS), -L $(DIR)) -L $(ROOT_BUILD_LIB_DIR) \
+		-D $(foreach DIR, $(CROSS_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
 		$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), $(shell find $(DIR) -type f))
 	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>/dev/null || true
