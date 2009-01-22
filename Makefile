@@ -8,7 +8,7 @@ HOST_CC = gcc
 CROSS_ARCH =
 CROSS_PATH =  # toolchain will be built if undefined (optional)
 CROSS_PREFIX =
-#CROSS_CC = 'ccache $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc' # (optional)
+CROSS_CC =  # (optional)
 CROSS_CFLAGS = -Os
 
 # Linux
