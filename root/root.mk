@@ -1,4 +1,3 @@
-ROOT_SKEL_DIR = $(ROOT_DIR)/skel
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
 ROOT_BUILD_BIN_DIRS += $(ROOT_BUILD_DIR)/sbin $(ROOT_BUILD_DIR)/bin
@@ -32,7 +31,7 @@ root_dev_init:
 	@ echo '=== DEVICES ==='
 root_dev: root_dev_init $(MAKEDEVS)
 	mkdir -p $(dir $(FAKEROOT_SCRIPT))
-	echo '$(MAKEDEVS) -d $(ROOT_DIR)/device_table.txt $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
+	echo '$(MAKEDEVS) -d $(ROOT_DEV_TABLE) $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
 
 root_clean:
 	- rm -rf $(ROOT_BUILD_DIR)

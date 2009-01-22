@@ -18,7 +18,7 @@ CROSS_STRIP = $(CROSS_PATH_PREFIX)strip -s
 CONFIGURE_CROSS_HOST = $(if $(CROSS_PREFIX), --host=$(strip $(CROSS_PREFIX:-=)))
 
 # Build outside of the sources
-BUILD_DIR = build
+BUILD_DIR ?= build
 
 # Build tools
 TOOLS_DIR = tools
