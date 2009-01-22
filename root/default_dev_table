@@ -49,8 +49,8 @@
 /dev/zero      c     666     0     0       1       5       -       -       -
 /dev/random    c     666     0     0       1       8       -       -       -
 /dev/urandom   c     666     0     0       1       9       -       -       -
-/dev/loop      b     640     0     0       7       0       0       1       8
 /dev/console   c     666     0     0       5       1       -       -       -
 /dev/tty       c     666     0     0       4       0       0       1       8
 /dev/ttyS      c     666     0     0       4      64       0       1       2
+/dev/loop      b     640     0     0       7       0       0       1       8
 /dev/sda       b     640     0     0       8       0       0       1      10
