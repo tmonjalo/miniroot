@@ -2,7 +2,6 @@
 #LINUX_SRC = <directory | tarball | VCS URL | version>
 #LINUX_PATCH_DIR = [dir]
 #LINUX_CONFIG = <file>
-#LINUX_INITRAMFS = no
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
 
@@ -23,8 +22,9 @@ LINUX_MAKE = $(SET_CROSS_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig >/dev/null
 
 LINUX_MODULES = $(shell grep '^CONFIG_MODULES=y' $(LINUX_BUILD_CONFIG) 2>/dev/null)
-LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="\(.*\)",\1,p' $(LINUX_BUILD_CONFIG)
-LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(if $(LINUX_INITRAMFS),$(abspath $(ROOT_CPIO)))",' $(LINUX_BUILD_CONFIG)
+LINUX_INITRAMFS = $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG))
+LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
+LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
 
 .PHONY: linux linux_init linux_init2 linux_init_src linux_clean
 .PHONY: linux_build_root linux_initramfs linux_no_initramfs linux_modules linux_modules_install
