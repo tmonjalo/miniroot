@@ -1,27 +1,32 @@
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
-ROOT_BUILD_BIN_DIRS += $(ROOT_BUILD_DIR)/sbin $(ROOT_BUILD_DIR)/bin
 
-.PHONY: root root_lib_init root_lib root_bin_init root_bin root_skel root_dev_init root_dev root_clean
+FIND_ROOT_BINS = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec \
+	file '{}' \; | sed -n 's,^\(.*\):.*executable.*dynamically.*,\1,p'
+
+.PHONY: root root_clean \
+	root_lib root_lib_init root_lib_so root_bin root_bin_init \
+	root_skel root_dev root_dev_init root_clean
 clean: root_clean
 
 root: busybox packages root_lib root_bin root_skel
 
+root_lib: $(if $(CROSS_STATIC), , root_lib_init root_lib_so)
 root_lib_init:
 	@ echo '=== LIBRARIES ==='
-root_lib: root_lib_init $(MKLIBS) $(SSTRIP)
+root_lib_so: $(MKLIBS) $(SSTRIP)
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
 	$(SET_CROSS_PATH) $(MKLIBS) \
 		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
 		-D $(foreach DIR, $(CROSS_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
-		$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), $(shell find $(DIR) -type f))
+		`$(FIND_ROOT_BINS)`
 	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>/dev/null || true
 
 root_bin_init:
 	@ echo '=== BINARIES ==='
 root_bin: root_bin_init $(SSTRIP)
-	$(foreach DIR, $(ROOT_BUILD_BIN_DIRS), find $(DIR) -type f | xargs -r $(SSTRIP) &&) true
+	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
 root_skel:
 	@ echo '=== SKELETON ==='
