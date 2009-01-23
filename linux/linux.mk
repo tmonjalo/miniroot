@@ -26,8 +26,9 @@ LINUX_INITRAMFS = $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG)
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY: linux linux_init linux_init2 linux_init_src linux_clean
-.PHONY: linux_build_root linux_initramfs linux_no_initramfs linux_modules linux_modules_install
+.PHONY: linux linux_clean linux_init linux_init2 linux_init_src \
+	linux_build_root linux_initramfs linux_no_initramfs \
+	linux_modules linux_modules_install
 clean: linux_clean
 
 linux: linux_all
