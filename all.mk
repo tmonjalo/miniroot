@@ -8,7 +8,7 @@ finish:
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
 
 # Cross compilation
-SET_CROSS_PATH = $(if $(CROSS_PATH), PATH="$(abspath $(CROSS_PATH))/bin:$$PATH")
+SET_CROSS_PATH = $(if $(CROSS_PATH), PATH="$$PATH:$(abspath $(CROSS_PATH))/bin")
 SET_CROSS_ARCH = $(if $(CROSS_ARCH), ARCH=$(CROSS_ARCH))
 SET_CROSS_COMPILE = $(if $(CROSS_PREFIX), CROSS_COMPILE=$(CROSS_PREFIX))
 SET_CROSS_CC = $(if $(CROSS_CC), CC=$(CROSS_CC))
