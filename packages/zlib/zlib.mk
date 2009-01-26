@@ -22,9 +22,6 @@ zlib: $(ZLIB_BUILD_BIN)
 zlib_init:
 	@ echo '=== ZLIB ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_URL)' '$(ZLIB_PATCH_DIR)'
-	@ if fgrep -q 'LIBS=libz.a' $(ZLIB_SRC_DIR)/Makefile ; then \
-		$(MAKE) zlib_configure ; \
-	fi
 
 zlib_configure:
 	( cd $(ZLIB_BUILD_DIR) && \
@@ -32,7 +29,10 @@ zlib_configure:
 	)
 
 $(ZLIB_BUILD_BIN): zlib_init
-	$(SET_CROSS_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $@)
+	@ if fgrep -q 'LIBS=libz.a' $(ZLIB_SRC_DIR)/Makefile ; then \
+		$(MAKE) zlib_configure ; \
+	fi
+	$(SET_CROSS_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
 
 zlib_clean:
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
