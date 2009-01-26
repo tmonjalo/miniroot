@@ -6,8 +6,8 @@ DROPBEAR_PATCH_DIR =
 DROPBEAR_DEPS = zlib
 
 # if DROPBEAR_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)')),false)
-override DROPBEAR_SRC := dropbear-$(strip $(DROPBEAR_SRC)).tar.bz2
+ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(DROPBEAR_SRC)')),false)
+override DROPBEAR_SRC := $(DROPBEAR_DIR)/dropbear-$(strip $(DROPBEAR_SRC)).tar.bz2
 DROPBEAR_URL = http://matt.ucc.asn.au/dropbear/releases/$(DROPBEAR_SRC)
 endif
 

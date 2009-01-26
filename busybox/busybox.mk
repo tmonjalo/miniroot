@@ -6,8 +6,8 @@
 #BUSYBOX_VERBOSE = no
 
 # if BUSYBOX_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')),false)
-override BUSYBOX_SRC := busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
+ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_SRC)')),false)
+override BUSYBOX_SRC := $(BUSYBOX_DIR)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
 BUSYBOX_URL = http://busybox.net/downloads/$(BUSYBOX_SRC)
 endif
 

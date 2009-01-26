@@ -6,8 +6,8 @@
 #LINUX_VERBOSE = no
 
 # if LINUX_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)')),false)
-override LINUX_SRC := linux-$(strip $(LINUX_SRC)).tar.bz2
+ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
+override LINUX_SRC := $(LINUX_DIR)/linux-$(strip $(LINUX_SRC)).tar.bz2
 LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(LINUX_SRC)
 endif
 

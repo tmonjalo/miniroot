@@ -4,9 +4,9 @@
 # and patch them
 
 SCRIPTS_DIR=$(dirname $0)
-DIR=$1
-SRC=$2 # SRC can be a VCS URL to checkout, a directory or a tarball
-URL=$3 # URL can be a tarball URL or nothing
+DIR=$1 # destination parent directory
+SRC=$2 # can be a VCS URL to checkout, a directory or a tarball
+URL=$3 # can be a tarball URL or nothing
 PATCH_DIR=$4
 
 check_src_dir () {
@@ -40,16 +40,20 @@ if echo $SRC | fgrep -q '://' ; then
 		exit 1
 	fi
 	patch_src_dir
-elif [ -d "$DIR/$SRC" ] ; then
+elif [ -d "$SRC" ] ; then
 	# SRC is an existing directory
 	exit 0
 else
 	# SRC is a file, assume it is a tarball
-	if [ ! -s "$DIR/$SRC" ] ; then
-		wget -O "$DIR/$SRC" "$URL"
+	if [ ! -s "$SRC" ] ; then
+		if [ -z "$URL" ] ; then
+			echo "no URL to download"
+			exit 1
+		fi
+		wget -O "$SRC" "$URL"
 	fi
 	check_src_dir
-	echo untar sources to $DIR
-	tar x -C "$DIR" -f "$DIR/$SRC"
+	echo untar sources to $SRC_DIR
+	tar x -C "$DIR" -f "$SRC"
 	patch_src_dir
 fi

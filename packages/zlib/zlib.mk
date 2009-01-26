@@ -4,8 +4,8 @@ ZLIB_PATCH_DIR =
 ZLIB_BUILD_INSIDE = yes # cannot build zlib outside
 
 # if ZLIB_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)')),false)
-override ZLIB_SRC := zlib-$(strip $(ZLIB_SRC)).tar.bz2
+ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(ZLIB_SRC)')),false)
+override ZLIB_SRC := $(ZLIB_DIR)/zlib-$(strip $(ZLIB_SRC)).tar.bz2
 ZLIB_URL = http://www.zlib.net/$(ZLIB_SRC)
 endif
 
