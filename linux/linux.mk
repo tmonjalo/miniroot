@@ -60,14 +60,14 @@ linux_build_root: $(if $(LINUX_MODULES), linux_modules_install)
 linux_initramfs: image linux_init2
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
 		echo 'set CONFIG_INITRAMFS_SOURCE=$(ROOT_CPIO)' ; \
-		$(LINUX_SET_INITRAMFS) ; \
+		$(LINUX_SET_INITRAMFS) && \
 		$(LINUX_MAKE_OLDCONFIG) ; \
 	fi
 
 linux_no_initramfs:
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '' ] ; then \
 		echo 'unset CONFIG_INITRAMFS_SOURCE' ; \
-		$(LINUX_SET_INITRAMFS) ; \
+		$(LINUX_SET_INITRAMFS) && \
 		$(LINUX_MAKE_OLDCONFIG) ; \
 	fi
 
