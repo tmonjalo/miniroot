@@ -34,9 +34,9 @@ busybox_init:
 
 $(BUSYBOX_BUILD_CONFIG):
 	mkdir -p $(BUSYBOX_BUILD_DIR)
-	@ echo 'copy config to $@'
+	@ echo 'copy config to $(BUSYBOX_BUILD_CONFIG)'
 	@ if [ -f '$(BUSYBOX_CONFIG)' ] ; then \
-		cp $(BUSYBOX_CONFIG) $@ && \
+		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) && \
 		yes '' | $(BUSYBOX_MAKE) oldconfig ; \
 	else \
 		$(BUSYBOX_MAKE) defconfig ; \
