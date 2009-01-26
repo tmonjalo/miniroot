@@ -30,7 +30,7 @@ root_bin: root_bin_init $(SSTRIP)
 
 root_skel:
 	@ echo '=== SKELETON ==='
-	cp -a $(ROOT_SKEL_DIR)/* $(ROOT_BUILD_DIR)
+	tar c --exclude-vcs -C $(ROOT_SKEL_DIR) . | tar x -C $(ROOT_BUILD_DIR)
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
