@@ -1,10 +1,15 @@
 #! /bin/sh
 
-# Mounting proc and sys file systems.
-/bin/mount -t proc proc /proc
-/bin/mount -t sysfs sysfs /sys
-/bin/mount -t tmpfs tmpfs /tmp
-/bin/mount -t tmpfs tmpfs /var
+# Mount pseudo file systems
+mount -t proc proc /proc
+mount -t sysfs sysfs /sys
+mount -t devpts devpts /dev/pts
+mount -t tmpfs tmpfs /var
+mount -t tmpfs tmpfs /tmp
 
-# Set up the hostname.
+# Set up the hostname
 hostname miniroot
+
+# Start services
+#/etc/rc.udhcpc start
+#/etc/rc.telnetd start

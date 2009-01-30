@@ -47,10 +47,12 @@ busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
 	$(BUSYBOX_MAKE) $*
 
 $(BUSYBOX_BUILD_BIN): busybox_busybox
+	@ : # nop rule to make install working
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
 	$(CROSS_STRIP) $@
+	chmod 4755 $(BUSYBOX_INSTALL_BIN)
 
 busybox_clean:
 	- $(BUSYBOX_MAKE) clean uninstall
