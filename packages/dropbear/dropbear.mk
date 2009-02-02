@@ -1,7 +1,8 @@
 # options can be set in config.mk
 DROPBEAR_SRC ?= 0.52
-DROPBEAR_PATCH_DIR =
+#DROPBEAR_PATCH_DIR =
 #DROPBEAR_BUILD_INSIDE = no
+DROPBEAR_RC_SCRIPT ?= /etc/rc.dropbear
 
 DROPBEAR_DEPS = zlib
 
@@ -69,6 +70,7 @@ $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
 	$(CROSS_STRIP) $@
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
+		install $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
 		ln -snf $(notdir $@) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
 		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) \
 	)
