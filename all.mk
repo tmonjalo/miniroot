@@ -1,7 +1,7 @@
 # Main targets
 .PHONY: all init finish clean
 all: init $(TARGETS) finish
-# User-defined targets (init and finish can be defined in config.mk)
+# User-defined rules can be defined in config.mk
 init:
 finish:
 
