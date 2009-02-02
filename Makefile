@@ -1,4 +1,5 @@
 # Main targets
+all:
 TARGETS = linux image # built by "make" or "make all"
 
 # Host compilation
@@ -16,7 +17,7 @@ LINUX_SRC = 2.6.28 # directory or tarball or VCS URL or version
 LINUX_PATCH_DIR =  # (optional)
 LINUX_CONFIG =
 
-# Root
+# Root filesystem
 ROOT_DEV_TABLE = $(ROOT_DIR)/default_dev_table
 ROOT_SKEL_DIR = $(ROOT_DIR)/default_skel
 
