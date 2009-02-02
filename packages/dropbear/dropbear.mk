@@ -70,7 +70,7 @@ $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
 	$(CROSS_STRIP) $@
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
-		install $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
+		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
 		ln -snf $(notdir $@) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
 		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) \
 	)
