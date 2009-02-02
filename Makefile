@@ -10,6 +10,7 @@ CROSS_ARCH =
 CROSS_PATH =  # toolchain will be built if undefined (optional)
 CROSS_PREFIX =
 CROSS_CC =  # (optional)
+CROSS_CXX =  # (optional)
 CROSS_CFLAGS = -Os
 
 # Linux
