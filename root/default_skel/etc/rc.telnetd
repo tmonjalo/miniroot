@@ -1,0 +1,17 @@
+#! /bin/sh -e
+
+case "$1" in
+	start )
+		telnetd
+		;;
+	stop )
+		killall telnetd
+		;;
+	restart )
+		$0 stop
+		$0 start
+		;;
+	* )
+		echo "usage: $0 (start|stop|restart)"
+		exit 1
+esac

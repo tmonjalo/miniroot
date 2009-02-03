@@ -1,0 +1,22 @@
+#! /bin/sh -e
+
+case "$1" in
+	start )
+		for SYSDEV in $(find /sys/class/net -type l) ; do
+			if readlink $SYSDEV | fgrep -qv /virtual/ ; then
+				DEV=$(basename $SYSDEV)
+				udhcpc -i $DEV
+			fi
+		done
+		;;
+	stop )
+		killall udhcpc
+		;;
+	restart )
+		$0 stop
+		$0 start
+		;;
+	* )
+		echo "usage: $0 (start|stop|restart)"
+		exit 1
+esac
