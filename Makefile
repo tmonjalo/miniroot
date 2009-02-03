@@ -10,6 +10,6 @@ include config.mk
 include all.mk
 
 # Add user-defined rules which can use variables from all.mk
-ifdef CUSTOM_RULES
-include $(CUSTOM_RULES)
+ifdef EXTRA_RULES
+include $(EXTRA_RULES)
 endif
