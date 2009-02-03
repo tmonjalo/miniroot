@@ -12,7 +12,7 @@ CROSS_CC = 'ccache $(CROSS_PATH)/bin/$(CROSS_PREFIX)gcc'
 # Linux
 LINUX_CONFIG = arm_defconfig
 
-# Root
+# Root filesystem
 
 # Busybox
 
