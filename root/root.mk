@@ -2,7 +2,7 @@ ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
 
 FIND_ROOT_BINS = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec \
-	file '{}' \; | sed -n 's,^\(.*\):.*executable.*dynamically.*,\1,p'
+	file '{}' \; | sed -n 's,^\(.*\):.*ELF.*executable.*,\1,p'
 
 .PHONY: root root_clean \
 	root_lib root_lib_init root_lib_so root_bin root_bin_init \
