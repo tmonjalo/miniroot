@@ -1,9 +1,6 @@
 # Main targets
-.PHONY: all init finish clean
-all: init $(TARGETS) finish
-# User-defined rules can be defined in config.mk
-init:
-finish:
+.PHONY: all clean
+all: $(TARGETS)
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
