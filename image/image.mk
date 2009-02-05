@@ -18,7 +18,7 @@ $(ROOT_CPIO): root_dev image_init
 		> $(abspath $@)' \
 	>> $(FAKEROOT_SCRIPT)
 	fakeroot sh -x $(FAKEROOT_SCRIPT)
-	@ echo 'image = $@'
+	@ echo "image: `du --human-readable $@`"
 
 image_clean:
 	- rm -rf $(IMAGE_BUILD_DIR)
