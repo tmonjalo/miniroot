@@ -1,6 +1,6 @@
 # options can be set in config.mk
 DROPBEAR_SRC ?= 0.52
-#DROPBEAR_PATCH_DIR =
+#DROPBEAR_PATCH_DIR = [directory]
 #DROPBEAR_BUILD_INSIDE = no
 DROPBEAR_RC_SCRIPT ?= /etc/rc.dropbear
 

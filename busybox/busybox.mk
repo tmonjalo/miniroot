@@ -1,6 +1,6 @@
 # options can be set in config.mk
 #BUSYBOX_SRC = <directory | tarball | VCS URL | version>
-#BUSYBOX_PATCH_DIR = [dir]
+#BUSYBOX_PATCH_DIR = [directory]
 #BUSYBOX_CONFIG = [file]
 #BUSYBOX_BUILD_INSIDE = no
 #BUSYBOX_VERBOSE = no

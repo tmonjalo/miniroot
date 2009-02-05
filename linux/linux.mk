@@ -1,6 +1,6 @@
 # options can be set in config.mk
 #LINUX_SRC = <directory | tarball | VCS URL | version>
-#LINUX_PATCH_DIR = [dir]
+#LINUX_PATCH_DIR = [directory]
 #LINUX_CONFIG = <file>
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no

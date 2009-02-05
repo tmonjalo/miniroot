@@ -1,6 +1,6 @@
 # options can be set in config.mk
 ZLIB_SRC ?= 1.2.3
-#ZLIB_PATCH_DIR =
+#ZLIB_PATCH_DIR = [directory]
 ZLIB_BUILD_INSIDE = yes # cannot build zlib outside
 
 # if ZLIB_SRC is a version number
