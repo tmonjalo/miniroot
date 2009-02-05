@@ -1,3 +1,9 @@
+# options can be set in config.mk
+#ROOT_DEV_TABLE = <file>
+#ROOT_SKEL_DIR = [directory]
+#ROOT_SKEL_SRC = [directory | tarball | VCS URL]
+
+ROOT_SKEL_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_DIR)')
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
 
@@ -6,7 +12,7 @@ FIND_ROOT_BINS = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec \
 
 .PHONY: root root_clean \
 	root_lib root_lib_init root_lib_so root_bin root_bin_init \
-	root_skel root_dev root_dev_init root_clean
+	root_skel root_skel_init root_dev root_dev_init root_clean
 clean: root_clean
 
 root: busybox packages root_lib root_bin root_skel
@@ -28,9 +34,11 @@ root_bin_init:
 root_bin: root_bin_init $(SSTRIP)
 	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
-root_skel:
+root_skel_init:
 	@ echo '=== SKELETON ==='
-	tar c --exclude-vcs -C $(ROOT_SKEL_DIR) . | tar x -C $(ROOT_BUILD_DIR)
+	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '' '' '$(ROOT_SKEL_DIR)'
+root_skel: root_skel_init
+	tar c --exclude-vcs -C $(ROOT_SKEL_SRC_DIR) . | tar x -C $(ROOT_BUILD_DIR)
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
