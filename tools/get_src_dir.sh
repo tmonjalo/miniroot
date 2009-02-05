@@ -2,21 +2,30 @@
 
 # get or compute the directory name of the sources
 
-DIR=$1 # destination parent directory
-SRC=$2 # can be a VCS URL, a directory or a tarball
+strip_str() {
+	echo $1 | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
+}
 
-if echo $SRC | fgrep -q '://' ; then
-	# SRC is an URL
-	printf $DIR/
-	echo $SRC | sed 's,://,_,g' | tr '/' '_'
-elif [ -d "$SRC" ] ; then
-	# SRC is a directory
-	echo $SRC
-elif [ -f "$SRC" ] ; then
-	# SRC is a file, assume it is a tarball
-	printf $DIR/
-	tar tf "$SRC" 2>/dev/null | head -n1 | sed 's:/*$::'
+TOP_DIR=$(strip_str $1) # destination parent directory
+SRC=$(strip_str $2) # can be a VCS URL, a directory or a tarball
+DEST_DIR=$(strip_str $3) # force directory where to checkout or to untar
+
+if [ -n "$(echo $DEST_DIR | tr -d '[:space:]')" ] ; then
+	echo $DEST_DIR
 else
-	# SRC is unknown
-	echo $DIR/$SRC
+	if echo $SRC | fgrep -q '://' ; then
+		# SRC is an URL
+		printf $TOP_DIR/
+		echo $SRC | sed 's,://,_,g' | tr '/' '_'
+	elif [ -d "$SRC" ] ; then
+		# SRC is a directory
+		echo $SRC
+	elif [ -f "$SRC" ] ; then
+		# SRC is a file, assume it is a tarball
+		printf $TOP_DIR/
+		tar tf "$SRC" 2>/dev/null | head -n1 | sed 's:/*$::'
+	else
+		# SRC is unknown
+		echo $TOP_DIR/$SRC
+	fi
 fi

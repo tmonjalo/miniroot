@@ -2,7 +2,11 @@
 
 # check if the parameters specify valid sources
 
-SRC=$1 # can be a VCS URL, a directory or a tarball
+strip_str() {
+	echo $1 | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
+}
+
+SRC=$(strip_str $1) # can be a VCS URL, a directory or a tarball
 
 if [ -e "$SRC" ] || echo "$SRC" | fgrep -q '://' ; then
 	echo true
