@@ -7,8 +7,9 @@ ROOT_SKEL_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SK
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
 
-FIND_ROOT_BINS = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec \
-	file '{}' \; | sed -n 's,^\(.*\):.*ELF.*executable.*,\1,p'
+FIND_ROOT_BINS_FILE = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec file '{}' \;
+FIND_ROOT_BINS = $(FIND_ROOT_BINS_FILE) | sed -n 's,^\(.*\):.*ELF.*executable.*,\1,p'
+FIND_ROOT_BINS_NOT_STRIPPED = $(FIND_ROOT_BINS_FILE) | sed -n 's,^\(.*\):.*ELF.*executable.*not stripped.*,\1,p'
 
 .PHONY: root root_clean \
 	root_lib root_lib_init root_lib_so root_bin root_bin_init \
@@ -32,7 +33,7 @@ root_lib_so: $(MKLIBS) $(SSTRIP)
 root_bin_init:
 	@ echo '=== BINARIES ==='
 root_bin: root_bin_init $(SSTRIP)
-	$(FIND_ROOT_BINS) | xargs -r $(CROSS_STRIP) 2>/dev/null || true
+	$(FIND_ROOT_BINS_NOT_STRIPPED) | xargs -r $(CROSS_STRIP)
 	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
 root_skel_init:
