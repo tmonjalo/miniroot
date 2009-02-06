@@ -51,7 +51,6 @@ $(BUSYBOX_BUILD_BIN): busybox_busybox
 
 $(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
-	$(CROSS_STRIP) $@
 	chmod 4755 $(BUSYBOX_INSTALL_BIN)
 
 busybox_clean:

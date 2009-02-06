@@ -32,6 +32,7 @@ root_lib_so: $(MKLIBS) $(SSTRIP)
 root_bin_init:
 	@ echo '=== BINARIES ==='
 root_bin: root_bin_init $(SSTRIP)
+	$(FIND_ROOT_BINS) | xargs -r $(CROSS_STRIP) 2>/dev/null || true
 	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
 root_skel_init:

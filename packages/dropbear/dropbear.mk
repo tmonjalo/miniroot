@@ -66,8 +66,7 @@ $(DROPBEAR_BUILD_BIN): dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
 	)'
 
 $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
-	install -D $(DROPBEAR_BUILD_BIN) $@
-	$(CROSS_STRIP) $@
+	install -D $< $@
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
