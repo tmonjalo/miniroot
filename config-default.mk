@@ -10,7 +10,7 @@ CROSS_PATH =  # toolchain will be built if undefined (optional)
 CROSS_PREFIX =
 CROSS_CC =  # (optional)
 CROSS_CXX =  # (optional)
-CROSS_CFLAGS = -Os
+CROSS_CFLAGS = -Os -static
 
 # Linux
 LINUX_SRC = 2.6.28 # directory or tarball or VCS URL or version
