@@ -4,13 +4,15 @@ TARGETS = linux image # built by "make" or "make all"
 # Host compilation
 HOST_CC = gcc
 
-# Cross compilation
+# Target compilation
 CROSS_ARCH =
 CROSS_PATH =  # toolchain will be built if undefined (optional)
 CROSS_PREFIX =
 CROSS_CC =  # (optional)
 CROSS_CXX =  # (optional)
-CROSS_CFLAGS = -Os -static
+TARGET_CFLAGS = -Os
+TARGET_CXXFLAGS = -Os
+TARGET_LDFLAGS = -static
 
 # Linux
 LINUX_SRC = 2.6.28 # directory or tarball or VCS URL or version

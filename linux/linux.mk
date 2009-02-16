@@ -90,7 +90,7 @@ linux_modules: linux_init_src $(LINUX_BUILD_CONFIG)
 
 linux_modules_install: linux_modules
 	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) modules_install
-	find $(ROOT_BUILD_LIB_DIR)/modules -name "*.ko" | xargs -r $(CROSS_STRIP)
+	find $(ROOT_BUILD_LIB_DIR)/modules -name "*.ko" | xargs -r $(TARGET_STRIP)
 
 linux_clean:
 	- $(LINUX_MAKE) clean

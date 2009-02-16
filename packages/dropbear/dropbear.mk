@@ -38,7 +38,7 @@ endef
 $(DROPBEAR_BUILD_DIR)/Makefile:
 	mkdir -p $(DROPBEAR_BUILD_DIR)
 	( cd $(DROPBEAR_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) CFLAGS='$(CROSS_CFLAGS)' \
+		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
 			$(CONFIGURE_CROSS_HOST) \
 			--srcdir='$(abspath $(DROPBEAR_SRC_DIR))' \

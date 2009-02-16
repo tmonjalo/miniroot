@@ -25,7 +25,8 @@ zlib_init:
 
 zlib_configure:
 	( cd $(ZLIB_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) CFLAGS='$(CROSS_CFLAGS) -fPIC' ./configure --shared \
+		$(SET_CROSS_PATH) $(SET_CROSS_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
+		./configure --shared \
 	)
 
 $(ZLIB_BUILD_BIN): zlib_init
@@ -37,4 +38,4 @@ $(ZLIB_BUILD_BIN): zlib_init
 zlib_clean:
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
-CROSS_LIB_DIRS += $(ZLIB_BUILD_DIR)
+TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)

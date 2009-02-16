@@ -18,14 +18,14 @@ clean: root_clean
 
 root: busybox packages root_lib root_bin root_skel
 
-root_lib: $(if $(CROSS_STATIC), , root_lib_init root_lib_so)
+root_lib: $(if $(TARGET_STATIC), , root_lib_init root_lib_so)
 root_lib_init:
 	@ echo '=== LIBRARIES ==='
 root_lib_so: $(MKLIBS) $(SSTRIP)
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
 	$(SET_CROSS_PATH) $(MKLIBS) \
 		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
-		-D $(foreach DIR, $(CROSS_LIB_DIRS), -L $(DIR)) \
+		-D $(foreach DIR, $(TARGET_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
 		`$(FIND_ROOT_BINS)`
 	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>/dev/null || true
@@ -33,7 +33,7 @@ root_lib_so: $(MKLIBS) $(SSTRIP)
 root_bin_init:
 	@ echo '=== BINARIES ==='
 root_bin: root_bin_init $(SSTRIP)
-	$(FIND_ROOT_BINS_NOT_STRIPPED) | xargs -r $(CROSS_STRIP)
+	$(FIND_ROOT_BINS_NOT_STRIPPED) | xargs -r $(TARGET_STRIP)
 	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
 root_skel_init:

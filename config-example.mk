@@ -3,7 +3,7 @@ TARGETS = linux_uImage
 
 # Host compilation
 
-# Cross compilation
+# Target compilation
 CROSS_ARCH = arm
 CROSS_PATH = /home/me/toolchain-arm-uclibc
 CROSS_PREFIX = arm-linux-uclibc-
