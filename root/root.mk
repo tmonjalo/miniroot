@@ -21,8 +21,9 @@ root: busybox packages root_lib root_bin root_skel
 root_lib: $(if $(TARGET_STATIC), , root_lib_init root_lib_so)
 root_lib_init:
 	@ echo '=== LIBRARIES ==='
-root_lib_so: $(MKLIBS) $(SSTRIP)
+$(ROOT_BUILD_LIB_DIR):
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
+root_lib_so: $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
 	$(SET_CROSS_PATH) $(MKLIBS) \
 		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
 		-D $(foreach DIR, $(TARGET_LIB_DIRS), -L $(DIR)) \
@@ -44,8 +45,7 @@ root_skel: root_skel_init
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
-root_dev: root_dev_init $(MAKEDEVS)
-	mkdir -p $(dir $(FAKEROOT_SCRIPT))
+root_dev: root_dev_init $(MAKEDEVS) | $(dir $(FAKEROOT_SCRIPT))
 	echo '$(MAKEDEVS) -d $(ROOT_DEV_TABLE) $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
 
 root_clean:

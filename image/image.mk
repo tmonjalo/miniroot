@@ -9,9 +9,11 @@ image: root $(ROOT_CPIO)
 
 image_init:
 	@ echo '=== IMAGE ==='
+
+$(IMAGE_BUILD_DIR):
 	mkdir -p $(IMAGE_BUILD_DIR)
 
-$(ROOT_CPIO): root_dev image_init
+$(ROOT_CPIO): root_dev image_init | $(IMAGE_BUILD_DIR)
 	echo 'cd $(ROOT_BUILD_DIR) && find \
 		| cpio --quiet --create --format=newc \
 		$(if $(LINUX_INITRAMFS),,| gzip --best) \

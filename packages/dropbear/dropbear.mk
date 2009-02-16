@@ -35,8 +35,10 @@ define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$(1).*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
 endef
 
-$(DROPBEAR_BUILD_DIR)/Makefile:
+$(DROPBEAR_BUILD_DIR):
 	mkdir -p $(DROPBEAR_BUILD_DIR)
+
+$(DROPBEAR_BUILD_DIR)/Makefile: | $(DROPBEAR_BUILD_DIR)
 	( cd $(DROPBEAR_BUILD_DIR) && \
 		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
@@ -65,9 +67,11 @@ $(DROPBEAR_BUILD_BIN): dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) \
 	)'
 
-$(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN)
-	install -D $< $@
+$(ROOT_BUILD_DIR)/bin:
 	mkdir -p $(ROOT_BUILD_DIR)/bin
+
+$(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
+	install -D $< $@
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
 		ln -snf $(notdir $@) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \

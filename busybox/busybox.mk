@@ -32,8 +32,10 @@ busybox_init:
 	@ echo '=== BUSYBOX ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
 
-$(BUSYBOX_BUILD_CONFIG):
+$(BUSYBOX_BUILD_DIR):
 	mkdir -p $(BUSYBOX_BUILD_DIR)
+
+$(BUSYBOX_BUILD_CONFIG): | $(BUSYBOX_BUILD_DIR)
 	@ echo 'copy config to $(BUSYBOX_BUILD_CONFIG)'
 	@ if [ -f '$(BUSYBOX_CONFIG)' ] ; then \
 		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) && \
