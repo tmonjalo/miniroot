@@ -65,6 +65,8 @@ else
 	check_src_dir
 	echo untar sources to $DEST_DIR
 	tar x -C "$TOP_DIR" -f "$SRC"
-	mv $SRC_DIR $DEST_DIR
+	if [ "$SRC_DIR" != "$DEST_DIR" ] ; then
+		mv $SRC_DIR $DEST_DIR
+	fi
 	patch_src_dir
 fi
