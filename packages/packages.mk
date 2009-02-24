@@ -22,3 +22,6 @@ include $(ZLIB_DIR)/zlib.mk
 
 DROPBEAR_DIR = $(PKG_DIR)/dropbear
 include $(DROPBEAR_DIR)/dropbear.mk
+
+LIBROXML_DIR = $(PKG_DIR)/libroxml
+include $(LIBROXML_DIR)/libroxml.mk

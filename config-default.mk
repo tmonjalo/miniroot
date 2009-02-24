@@ -31,3 +31,4 @@ BUSYBOX_CONFIG =  # (optional)
 # Packages
 PKG_DROPBEAR_SERVER = no
 PKG_DROPBEAR_CLIENT = no
+PKG_LIBROXML = no
