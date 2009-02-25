@@ -1,5 +1,5 @@
 # options can be set in config.mk
-LIBROXML_SRC ?= 1.3
+LIBROXML_SRC ?= 1.4
 #LIBROXML_PATCH_DIR = [directory]
 #LIBROXML_BUILD_INSIDE = no
 
@@ -17,7 +17,7 @@ LIBROXML_BUILD_BIN = $(LIBROXML_BUILD_DIR)/roxml
 LIBROXML_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/$(notdir $(LIBROXML_BUILD_BIN))
 
 .PHONY: libroxml libroxml_init libroxml_clean
-$(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML_SERVER) $(PKG_LIBROXML_CLIENT), libroxml))
+$(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML), libroxml))
 
 libroxml: $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
 
