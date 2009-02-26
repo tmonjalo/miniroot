@@ -31,13 +31,14 @@
 # -Erik Andersen <andersen@codepoet.org>
 
 # <name>    <type> <mode>  <uid> <gid>
+/proc          d     755     0     0       -       -       -       -       -
+/sys           d     755     0     0       -       -       -       -       -
 /dev           d     755     0     0       -       -       -       -       -
 /dev/pts       d     755     0     0       -       -       -       -       -
 /tmp           d    1777     0     0       -       -       -       -       -
 /var           d     755     0     0       -       -       -       -       -
+/var/log       d     755     0     0       -       -       -       -       -
 /root          d     755     0     0       -       -       -       -       -
-/proc          d     755     0     0       -       -       -       -       -
-/sys           d     755     0     0       -       -       -       -       -
 
 # <name>    <type> <mode>  <uid> <gid>  <major> <minor> <start>  <inc>  <count>
 /dev/mem       c     640     0     0       1       1       -       -       -
@@ -51,4 +52,5 @@
 /dev/tty       c     666     0     0       4       0       0       1       8
 /dev/ttyS      c     666     0     0       4      64       0       1       2
 /dev/loop      b     640     0     0       7       0       0       1       8
-/dev/sda       b     640     0     0       8       0       0       1      10
+/dev/sda       b     640     0     0       8       0       -       -       -
+/dev/sda       b     640     0     0       8       1       1       1       9
