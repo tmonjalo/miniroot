@@ -28,7 +28,7 @@ libroxml_init:
 $(LIBROXML_BUILD_BIN): libroxml_init
 	$(SET_CROSS_PATH) $(MAKE) -C $(LIBROXML_SRC_DIR) $(abspath $@) \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))') \
-		$(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS)
+		$(SET_CROSS_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(LIBROXML_INSTALL_BIN): $(LIBROXML_BUILD_BIN)
 	install -D $< $@
