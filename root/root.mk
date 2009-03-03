@@ -41,7 +41,7 @@ root_skel_init:
 	@ echo '=== SKELETON ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '' '' '$(ROOT_SKEL_DIR)'
 root_skel: root_skel_init
-	tar c --exclude-vcs -C $(ROOT_SKEL_SRC_DIR) . | tar x -C $(ROOT_BUILD_DIR)
+	tar --create --exclude-vcs --directory $(ROOT_SKEL_SRC_DIR) . | tar --extract --directory $(ROOT_BUILD_DIR)
 
 root_dev_init:
 	@ echo '=== DEVICES ==='
