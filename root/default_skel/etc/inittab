@@ -2,10 +2,12 @@
 ::sysinit:/bin/mount -t sysfs sysfs /sys
 ::sysinit:/bin/mount -t devpts devpts /dev/pts
 
+::sysinit:/sbin/hwclock -f /dev/rtc -s
+::sysinit:/bin/hostname -F /etc/hostname
+
 ::sysinit:/sbin/syslogd
 ::sysinit:/sbin/klogd
 
-::sysinit:/bin/hostname -F /etc/hostname
 ::sysinit:/etc/rc
 
 ::askfirst:-/bin/sh

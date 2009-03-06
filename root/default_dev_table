@@ -47,6 +47,7 @@
 /dev/zero      c     666     0     0       1       5       -       -       -
 /dev/random    c     666     0     0       1       8       -       -       -
 /dev/urandom   c     666     0     0       1       9       -       -       -
+/dev/rtc       c     640     0     0      10     135       -       -       -
 /dev/console   c     666     0     0       5       1       -       -       -
 /dev/ptmx      c     666     0     0       5       2       -       -       -
 /dev/tty       c     666     0     0       4       0       0       1       8
