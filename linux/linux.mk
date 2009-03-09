@@ -8,7 +8,7 @@
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
 override LINUX_SRC := $(LINUX_DIR)/linux-$(strip $(LINUX_SRC)).tar.bz2
-LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(LINUX_SRC)
+LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(notdir $(LINUX_SRC))
 endif
 
 LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
