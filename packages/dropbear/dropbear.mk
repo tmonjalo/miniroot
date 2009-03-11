@@ -35,10 +35,8 @@ define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$(1).*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
 endef
 
-$(DROPBEAR_BUILD_DIR):
+$(DROPBEAR_BUILD_DIR)/Makefile:
 	mkdir -p $(DROPBEAR_BUILD_DIR)
-
-$(DROPBEAR_BUILD_DIR)/Makefile: | $(DROPBEAR_BUILD_DIR)
 	( cd $(DROPBEAR_BUILD_DIR) && \
 		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \

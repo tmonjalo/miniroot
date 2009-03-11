@@ -41,10 +41,8 @@ linux_init2:
 linux_init_src:
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
 
-$(LINUX_BUILD_DIR):
+$(LINUX_BUILD_CONFIG):
 	mkdir -p $(LINUX_BUILD_DIR)
-
-$(LINUX_BUILD_CONFIG): | $(LINUX_BUILD_DIR)
 	@ echo 'copy config to $(LINUX_BUILD_CONFIG)'
 	@ if [ -f '$(LINUX_CONFIG)' ] ; then \
 		cp $(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
