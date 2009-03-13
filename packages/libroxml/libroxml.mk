@@ -1,5 +1,5 @@
 # options can be set in config.mk
-LIBROXML_SRC ?= 1.4
+LIBROXML_SRC ?= 1.5
 #LIBROXML_PATCH_DIR = [directory]
 #LIBROXML_BUILD_INSIDE = no
 
