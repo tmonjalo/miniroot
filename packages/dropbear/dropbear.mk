@@ -72,12 +72,12 @@ $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
 	install -D $< $@
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
-		ln -snf $(notdir $@) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
-		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) \
+		ln -snf $(@F) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
+		ln -snf ../sbin/$(@F) $(DROPBEAR_INSTALL_KEYGEN_ALIAS) \
 	)
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), \
-		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_CLIENT1_ALIAS) && \
-		ln -snf ../sbin/$(notdir $@) $(DROPBEAR_INSTALL_CLIENT2_ALIAS) \
+		ln -snf ../sbin/$(@F) $(DROPBEAR_INSTALL_CLIENT1_ALIAS) && \
+		ln -snf ../sbin/$(@F) $(DROPBEAR_INSTALL_CLIENT2_ALIAS) \
 	)
 
 dropbear_clean:
