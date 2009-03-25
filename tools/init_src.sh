@@ -50,6 +50,14 @@ if echo $SRC | fgrep -q '://' ; then
 		exit 1
 	fi
 	patch_src_dir
+elif [ -d "$SRC"/.git ]; then
+	# checkout a local git repository
+	check_src_dir
+	git clone "$SRC" "$DEST_DIR"
+elif [ -d "$SRC"/.hg ]; then
+	# checkout a local mercurial repository
+	check_src_dir
+	hg clone "$SRC" "$DEST_DIR"
 elif [ -d "$SRC" ] ; then
 	# SRC is an existing directory
 	exit 0
