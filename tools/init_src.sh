@@ -41,10 +41,12 @@ if echo $SRC | fgrep -q '://' ; then
 	check_src_dir
 	URL=$SRC
 	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $URL)
-	if [ "$VCS" = "git" ] ; then
-		git clone "$URL" "$DEST_DIR" # could be $TOP_DIR/$(basename $URL)
-	elif [ "$VCS" = "svn" ] ; then
-		svn co "$URL" "$DEST_DIR" # could be $TOP_DIR/$(basename $URL)
+	if [ "$VCS" = git ] ; then
+		git clone "$URL" "$DEST_DIR"
+	elif [ "$VCS" = hg ] ; then
+		hg clone "$URL" "$DEST_DIR"
+	elif [ "$VCS" = svn ] ; then
+		svn co "$URL" "$DEST_DIR"
 	else
 		echo $VCS: unknown protocol
 		exit 1
