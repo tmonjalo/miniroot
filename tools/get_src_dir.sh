@@ -17,12 +17,12 @@ else
 		# SRC is an URL
 		printf $TOP_DIR/
 		echo $SRC | sed 's,://,_,g' | tr '/' '_'
-	elif [ -d "$SRC"/.git ] ; then
+	elif [ -d $SRC/.git ] ; then
 		# SRC is a local git repository
-		echo $TOP_DIR/git_`basename $SRC`
-	elif [ -d "$SRC"/.hg ] ; then
+		echo $TOP_DIR/local_git_$(basename $SRC)
+	elif [ -d $SRC/.hg ] ; then
 		# SRC is a local mercurial repository
-		echo $TOP_DIR/hg_`basename $SRC`
+		echo $TOP_DIR/local_hg_$(basename $SRC)
 	elif [ -d "$SRC" ] ; then
 		# SRC is a directory
 		echo $SRC
