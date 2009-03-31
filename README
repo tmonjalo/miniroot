@@ -1,0 +1,34 @@
+.----------------.
+| HOW to start ? |
+'----------------'
+
+Read config-default.mk
+and
+Write your own config.mk (as config-example.mk).
+
+.-------.
+| WHY ? |
+'-------'
+
+miniroot is intended to be a simple solution to build and/or develop a
+minimal system based on Linux and BusyBox.
+
+The system is "makefile-oriented" with few shell scripts. Its goal is
+to be comprehensive by a human...
+
+.-------------------.
+| WHAT does it do ? |
+'-------------------'
+
+The kernel automatically embed the root filesystem into an initramfs.
+But it can also build an external compressed root.
+
+Linux and BusyBox build systems can be directly accessed with the
+wildcard rules linux_* and busybox_* (e.g. linux_menuconfig).
+
+The libraries can be built with the minimal set of needed functions.
+
+The configurations and other customizations can be archived in a
+separate directory by making config.mk a link (e.g. to config/config.mk).
+
+The build system can be extended with a makefile defined as EXTRA_RULES.
