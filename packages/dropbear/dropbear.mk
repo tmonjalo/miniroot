@@ -1,3 +1,5 @@
+# this package could be broken: TO TEST & FIX
+
 # options can be set in config.mk
 DROPBEAR_SRC ?= 0.52
 #DROPBEAR_PATCH_DIR = [directory]
@@ -28,7 +30,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_DROPBEAR_SERVER) $(PKG_DROPBEAR_CLIENT), d
 dropbear: $(DROPBEAR_DEPS) $(DROPBEAR_INSTALL_BIN)
 
 dropbear_init:
-	@ echo '=== DROPBEAR ==='
+	@ echo '=== DROPBEAR (package not tested) ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_URL)' '$(DROPBEAR_PATCH_DIR)'
 
 define DROPBEAR_DISABLE_FEATURE
