@@ -25,3 +25,6 @@ include $(DROPBEAR_DIR)/dropbear.mk
 
 LIBROXML_DIR = $(PKG_DIR)/libroxml
 include $(LIBROXML_DIR)/libroxml.mk
+
+E2FSPROGS_DIR = $(PKG_DIR)/e2fsprogs
+include $(E2FSPROGS_DIR)/e2fsprogs.mk
