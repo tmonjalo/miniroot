@@ -9,7 +9,6 @@ TARGETS ?= linux image
 all: $(TARGETS)
 
 # Host compilation
-HOST_CC ?= gcc
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))
 
 # Target compilation

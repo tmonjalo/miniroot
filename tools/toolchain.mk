@@ -1,3 +1,11 @@
+# options can be set in config.mk
+HOST_CC ?= gcc
+#CROSS_ARCH =
+#CROSS_PATH =
+#CROSS_PREFIX =
+#CROSS_CC =
+#CROSS_CXX =
+
 TOOLCHAIN_BUILD_DIR = $(BUILD_DIR)/$(CROSS_PREFIX:-=)
 TOOLCHAIN_CC = $(TOOLCHAIN_BUILD_DIR)/bin/$(CROSS_PREFIX)cc
 
