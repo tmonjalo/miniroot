@@ -73,7 +73,7 @@ $(ROOT_BUILD_DIR)/bin:
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 
 $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
-	install -D $< $@
+	install -D $(DROPBEAR_BUILD_BIN) $(DROPBEAR_INSTALL_BIN)
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
 		ln -snf $(@F) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \
