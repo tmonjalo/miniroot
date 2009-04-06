@@ -11,7 +11,7 @@ $(strip $(or \
 endef
 
 define PKG_INCLUDE_RULE
-ifneq ($(call PKG_IS_SET, $(1)),)
+ifneq '$(call PKG_IS_SET, $(1))' ''
 packages: $(2)
 packages_clean: $(2)_clean
 endif
@@ -23,8 +23,8 @@ include $(ZLIB_DIR)/zlib.mk
 DROPBEAR_DIR = $(PKG_DIR)/dropbear
 include $(DROPBEAR_DIR)/dropbear.mk
 
-LIBROXML_DIR = $(PKG_DIR)/libroxml
-include $(LIBROXML_DIR)/libroxml.mk
-
 E2FSPROGS_DIR = $(PKG_DIR)/e2fsprogs
 include $(E2FSPROGS_DIR)/e2fsprogs.mk
+
+LIBROXML_DIR = $(PKG_DIR)/libroxml
+include $(LIBROXML_DIR)/libroxml.mk
