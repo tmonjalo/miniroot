@@ -31,7 +31,7 @@ $(LIBROXML_BUILD_BIN): libroxml_init
 		$(SET_CROSS_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(LIBROXML_INSTALL_BIN): $(LIBROXML_BUILD_BIN)
-	install -D $< $@
+	install -D $< $(LIBROXML_INSTALL_BIN)
 
 libroxml_clean:
 	$(MAKE) -C $(LIBROXML_SRC_DIR) clean \
