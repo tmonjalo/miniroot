@@ -11,4 +11,5 @@ endif
 $(TOOLCHAIN_CC):
 	@ echo '=== TOOLCHAIN ==='
 	@ echo 'NOT YET IMPLEMENTED'
-	@ should use crosstool-ng
+	@ echo 'should use crosstool-ng'
+	@ false
