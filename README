@@ -2,9 +2,13 @@
 | HOW to start ? |
 '----------------'
 
-Read config-default.mk
+git clone git://github.com/tmonjalo/miniroot.git
 and
 Write your own config.mk (as config-example.mk).
+
+Customizations are done by setting variables in config.mk.
+The list of relevant variables can be found in headers of .mk files or
+in the main Makefile.
 
 .-------.
 | WHY ? |
