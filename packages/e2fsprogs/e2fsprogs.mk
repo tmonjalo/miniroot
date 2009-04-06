@@ -1,7 +1,7 @@
 # options can be set in config.mk
 E2FSPROGS_SRC ?= 1.41.4
 #E2FSPROGS_PATCH_DIR = [directory]
-#E2FSPROGS_BUILD_INSIDE = yes
+#E2FSPROGS_BUILD_INSIDE = no
 
 E2FSPROGS_DEPS =
 
@@ -16,16 +16,17 @@ E2FSPROGS_BUILD_DIR = $(if $(E2FSPROGS_BUILD_INSIDE), $(E2FSPROGS_SRC_DIR), $(BU
 E2FSPROGS_BUILD_MKFS_BIN = $(E2FSPROGS_BUILD_DIR)/misc/mke2fs
 E2FSPROGS_INSTALL_MKFS_BIN = $(ROOT_BUILD_DIR)/sbin/$(notdir $(E2FSPROGS_BUILD_MKFS_BIN))
 
-.PHONY: e2fsprogs_mkfs e2fsprogs_init ee2fsprogs_configure 2fsprogs_clean 
-$(eval $(call PKG_INCLUDE_RULE, $(PKG_E2FSPROGS_MKFS), e2fsprogs_mkfs))
+.PHONY: e2fsprogs_mkfs e2fsprogs_init e2fsprogs_configure 2fsprogs_clean
+$(eval $(call PKG_INCLUDE_RULE, $(PKG_E2FSPROGS_MKFS), e2fsprogs))
 
-e2fsprogs_mkfs: $(E2FSPROGS_DEPS) $(E2FSPROGS_INSTALL_MKFS_BIN)
+e2fsprogs: $(E2FSPROGS_DEPS) \
+	$(if $(call PKG_IS_SET, $(PKG_E2FSPROGS_MKFS)), $(E2FSPROGS_INSTALL_MKFS_BIN))
 
 e2fsprogs_init:
 	@ echo '=== E2FSPROGS ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
 
-e2fsprogs_configure:
+e2fsprogs_configure: e2fsprogs_init
 	mkdir -p $(E2FSPROGS_BUILD_DIR)
 	( cd $(E2FSPROGS_BUILD_DIR) && \
 		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
@@ -43,7 +44,7 @@ e2fsprogs_configure:
 			--disable-nls \
 	)
 
-$(E2FSPROGS_BUILD_MKFS_BIN): e2fsprogs_init e2fsprogs_configure
+$(E2FSPROGS_BUILD_MKFS_BIN): e2fsprogs_configure
 	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR) misc/$(notdir $(E2FSPROGS_BUILD_MKFS_BIN))
 
 $(E2FSPROGS_INSTALL_MKFS_BIN): $(E2FSPROGS_BUILD_MKFS_BIN)
