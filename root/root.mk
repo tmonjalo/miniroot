@@ -1,8 +1,7 @@
 # options can be set in config.mk
-#ROOT_DEV_TABLE = <file>
-#ROOT_SKEL_DIR = [directory]
-#ROOT_SKEL_SRC = [directory | tarball | VCS URL]
-ROOT_SKEL_SRC ?= $(ROOT_SKEL_DIR)
+ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table # <file>
+ROOT_SKEL_DIR ?= $(ROOT_DIR)/default_skel # [directory]
+ROOT_SKEL_SRC ?= $(ROOT_SKEL_DIR) # [directory | tarball | VCS URL]
 
 ROOT_SKEL_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_DIR)')
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)

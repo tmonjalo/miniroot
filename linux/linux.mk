@@ -1,7 +1,7 @@
 # options can be set in config.mk
-#LINUX_SRC = <directory | tarball | VCS URL | version>
-#LINUX_PATCH_DIR = [directory]
-#LINUX_CONFIG = <file>
+LINUX_SRC ?= 2.6.29.1 # <version | directory | tarball | VCS URL>
+LINUX_PATCH_DIR ?= # [directory]
+LINUX_CONFIG ?= # <file>
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
 

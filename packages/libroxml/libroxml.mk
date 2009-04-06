@@ -1,6 +1,7 @@
 # options can be set in config.mk
+PKG_LIBROXML ?= no
 LIBROXML_SRC ?= 1.5
-#LIBROXML_PATCH_DIR = [directory]
+LIBROXML_PATCH_DIR ?= # [directory]
 #LIBROXML_BUILD_INSIDE = no
 
 LIBROXML_DEPS =

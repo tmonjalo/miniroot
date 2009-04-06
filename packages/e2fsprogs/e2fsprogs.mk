@@ -1,6 +1,7 @@
 # options can be set in config.mk
+PKG_E2FSPROGS_MKFS ?= no
 E2FSPROGS_SRC ?= 1.41.4
-#E2FSPROGS_PATCH_DIR = [directory]
+E2FSPROGS_PATCH_DIR ?= # [directory]
 #E2FSPROGS_BUILD_INSIDE = no
 
 E2FSPROGS_DEPS =
@@ -44,7 +45,7 @@ $(E2FSPROGS_BUILD_DIR)/Makefile:
 			--disable-nls \
 	)
 
-e2fsprogs_libs: $(E2FSPROGS_BUILD_DIR)/Makefile
+e2fsprogs_libs: e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
 	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et
 	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/ext2fs
 	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/e2p

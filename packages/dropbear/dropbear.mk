@@ -1,8 +1,10 @@
 # this package could be broken: TO TEST & FIX
 
 # options can be set in config.mk
+PKG_DROPBEAR_SERVER ?= no
+PKG_DROPBEAR_CLIENT ?= no
 DROPBEAR_SRC ?= 0.52
-#DROPBEAR_PATCH_DIR = [directory]
+DROPBEAR_PATCH_DIR ?= # [directory]
 #DROPBEAR_BUILD_INSIDE = no
 DROPBEAR_RC_SCRIPT ?= /etc/rc.dropbear
 
