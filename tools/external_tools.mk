@@ -11,10 +11,10 @@ BUILDROOT_URL_PREFIX = http://sources.busybox.net/index.py/trunk/buildroot/
 BUILDROOT_URL_SUFFIX = ?view=co
 
 define EXTERNAL_TOOLS_DOWNLOAD
-$(1):
-	wget -O $(1) $(2)
-	 if [ '$(strip $(3))' = '.sh' -o '$(strip $(3))' = '.py' ] ; then \
-		chmod +x $(1) ; \
+$1:
+	wget -O $1 $2
+	 if [ '$(strip $3)' = '.sh' -o '$(strip $3)' = '.py' ] ; then \
+		chmod +x $1 ; \
 	fi
 endef
 $(foreach PATH, $(BUILDROOT_PATHS), $(eval $(call EXTERNAL_TOOLS_DOWNLOAD, \

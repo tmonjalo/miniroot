@@ -36,7 +36,7 @@ dropbear_init:
 	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_URL)' '$(DROPBEAR_PATCH_DIR)'
 
 define DROPBEAR_DISABLE_FEATURE
-sed -i 's,^\(#define.*$(1).*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
+sed -i 's,^\(#define.*$1.*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
 endef
 
 $(DROPBEAR_BUILD_DIR)/Makefile:
