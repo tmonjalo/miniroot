@@ -35,5 +35,5 @@ $(LIBROXML_INSTALL_BIN): $(LIBROXML_BUILD_BIN)
 	install -D $(LIBROXML_BUILD_BIN) $(LIBROXML_INSTALL_BIN)
 
 libroxml_clean:
-	$(MAKE) -C $(LIBROXML_SRC_DIR) clean \
+	- $(MAKE) -C $(LIBROXML_SRC_DIR) clean \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')
