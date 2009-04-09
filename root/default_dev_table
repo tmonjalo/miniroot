@@ -47,11 +47,16 @@
 /dev/zero      c     666     0     0       1       5       -       -       -
 /dev/random    c     666     0     0       1       8       -       -       -
 /dev/urandom   c     666     0     0       1       9       -       -       -
-/dev/rtc       c     640     0     0      10     135       -       -       -
-/dev/console   c     666     0     0       5       1       -       -       -
-/dev/ptmx      c     666     0     0       5       2       -       -       -
 /dev/tty       c     666     0     0       4       0       0       1       8
 /dev/ttyS      c     666     0     0       4      64       0       1       2
+/dev/console   c     666     0     0       5       1       -       -       -
+/dev/ptmx      c     666     0     0       5       2       -       -       -
 /dev/loop      b     640     0     0       7       0       0       1       8
+/dev/rtc       c     640     0     0      10     135       -       -       -
+
+# <name>    <type> <mode>  <uid> <gid>  <major> <minor> <start>  <inc>  <count>
+/dev/mtdblock  b     640     0     0      31       0       0       1       1
 /dev/sda       b     640     0     0       8       0       -       -       -
-/dev/sda       b     640     0     0       8       1       1       1       9
+/dev/sda       b     640     0     0       8       1       1       1      15
+/dev/sdb       b     640     0     0       8      16       -       -       -
+/dev/sdb       b     640     0     0       8      17       1       1      15
