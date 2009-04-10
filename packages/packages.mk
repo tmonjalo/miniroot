@@ -28,3 +28,7 @@ include $(E2FSPROGS_DIR)/e2fsprogs.mk
 
 LIBROXML_DIR = $(PKG_DIR)/libroxml
 include $(LIBROXML_DIR)/libroxml.mk
+
+NATIVEGCC_DIR = $(PKG_DIR)/native-gcc
+include $(NATIVEGCC_DIR)/native-gcc.mk
+
