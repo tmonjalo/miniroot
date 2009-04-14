@@ -8,8 +8,6 @@ NATIVEGCC_TARGET_PREFIX	?=
 NATIVEGCC_PREFIX		?= $(CROSS_PATH)/$(CROSS_PREFIX:-=)
 # The binaries, lib and includes folders to copy to rootfs
 NATIVEGCC_DIRECTORIES	?= bin lib sys-include
-# Verbosity of native-gcc installation
-SET_NATIVEGCC_VERBOSE	= $(if $(VERBOSE),NATIVEGCC_VERBOSE="yes")
 ##
 ## end of config.mk tunable variables ##
 ##
@@ -26,7 +24,7 @@ native-gcc: native-gcc_install
 native-gcc_install: 
 	@echo "== NATIVE GCC =="
 	@$(foreach DIR,$(NATIVEGCC_DIRECTORIES),\
-		$(if $(NATIVEGCC_VERBOSE),echo,:) "Installing $(DIR)..." ; \
+		$(if $(V),echo,:) "Installing $(DIR)..." ; \
 		mkdir -p $(NATIVEGCC_INSTALLDIR)/$(DIR) ;\
 		tar -cC $(NATIVEGCC_PREFIX)/$(DIR) . | tar -xC $(NATIVEGCC_INSTALLDIR)/$(DIR) ;\
 	)
