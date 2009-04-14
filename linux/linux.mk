@@ -74,12 +74,12 @@ linux_no_initramfs:
 # wildcard rule
 linux_%: linux_init linux_init_src $(LINUX_BUILD_CONFIG)
 	$(if $(or \
-			$(findstring all, $*), \
-			$(findstring vmlinux, $*), \
-			$(findstring Image, $*), \
-			$(findstring -pkg, $*), \
-			$(findstring rpm, $*), \
-			$(findstring install, $*) \
+			$(filter all, $*), \
+			$(filter vmlinux, $*), \
+			$(filter %Image, $*), \
+			$(filter %-pkg, $*), \
+			$(filter %rpm, $*), \
+			$(filter %install, $*) \
 		), \
 		$(MAKE) linux_build_root \
 	)
