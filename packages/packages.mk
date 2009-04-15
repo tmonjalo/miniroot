@@ -17,14 +17,17 @@ packages_clean: $2_clean
 endif
 endef
 
+MDADM_DIR = $(PKG_DIR)/mdadm
+include $(MDADM_DIR)/mdadm.mk
+
+E2FSPROGS_DIR = $(PKG_DIR)/e2fsprogs
+include $(E2FSPROGS_DIR)/e2fsprogs.mk
+
 ZLIB_DIR = $(PKG_DIR)/zlib
 include $(ZLIB_DIR)/zlib.mk
 
 DROPBEAR_DIR = $(PKG_DIR)/dropbear
 include $(DROPBEAR_DIR)/dropbear.mk
-
-E2FSPROGS_DIR = $(PKG_DIR)/e2fsprogs
-include $(E2FSPROGS_DIR)/e2fsprogs.mk
 
 LIBROXML_DIR = $(PKG_DIR)/libroxml
 include $(LIBROXML_DIR)/libroxml.mk
