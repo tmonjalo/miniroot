@@ -2,7 +2,7 @@
 PKG_MDADM ?= no
 MDADM_SRC ?= 2.6.9
 MDADM_PATCH_DIR ?= # [directory]
-#MDADM_BUILD_INSIDE = no
+MDADM_BUILD_INSIDE = yes # cannot build outside
 
 MDADM_DEPS =
 
@@ -26,20 +26,14 @@ mdadm_init:
 	@ echo '=== MDADM ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$(MDADM_URL)' '$(MDADM_PATCH_DIR)'
 
-$(MDADM_BUILD_DIR)/Makefile:
-	mkdir -p $(MDADM_BUILD_DIR)
-	( cd $(MDADM_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
-		$(abspath $(MDADM_SRC_DIR))/configure \
-		$(CONFIGURE_CROSS_HOST) \
-			--srcdir='$(abspath $(MDADM_SRC_DIR))'
-	)
-
-$(MDADM_BUILD_BIN): mdadm_init $(MDADM_BUILD_DIR)/Makefile
-	$(SET_CROSS_PATH) $(MAKE) -C $(MDADM_BUILD_DIR) $(notdir $(MDADM_BUILD_BIN))
+$(MDADM_BUILD_BIN): mdadm_init
+	$(SET_CROSS_PATH) $(MAKE) -C $(MDADM_SRC_DIR) mdadm \
+		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))') \
+		$(SET_CROSS_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(MDADM_INSTALL_BIN): $(MDADM_BUILD_BIN)
 	install -D $(MDADM_BUILD_BIN) $(MDADM_INSTALL_BIN)
 
 mdadm_clean:
-	- $(MAKE) -C $(MDADM_BUILD_DIR) clean
+	- $(MAKE) -C $(MDADM_SRC_DIR) clean \
+		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))')
