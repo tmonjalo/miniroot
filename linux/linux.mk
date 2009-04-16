@@ -44,7 +44,7 @@ linux_init_src:
 $(LINUX_BUILD_CONFIG):
 	mkdir -p $(LINUX_BUILD_DIR)
 	@ echo 'copy config to $(LINUX_BUILD_CONFIG)'
-	@ if [ -f '$(LINUX_CONFIG)' ] ; then \
+	@ if [ -f '$(strip $(LINUX_CONFIG))' ] ; then \
 		cp $(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
 	else \
 		cp $(LINUX_SRC_DIR)/arch/$(CROSS_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
