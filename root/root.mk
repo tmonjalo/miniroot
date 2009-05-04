@@ -24,8 +24,8 @@ root_lib_init:
 $(ROOT_BUILD_LIB_DIR):
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
 root_lib_so: $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
-	$(SET_CROSS_PATH) $(MKLIBS) \
-		$(if $(CROSS_PREFIX), --target $(CROSS_PREFIX)) \
+	$(SET_PATH) $(MKLIBS) \
+		$(if $(TOOLCHAIN_PREFIX), --target $(TOOLCHAIN_PREFIX)) \
 		-D $(foreach DIR, $(TARGET_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
 		`$(FIND_ROOT_BINS)`

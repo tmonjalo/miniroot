@@ -27,7 +27,7 @@ zlib_init:
 
 zlib_configure:
 	( cd $(ZLIB_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
+		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
 		$(if $(TARGET_STATIC), ./configure, ./configure --shared) \
 	)
 
@@ -35,7 +35,7 @@ $(ZLIB_BUILD_BIN): zlib_init
 	@ if ! fgrep -q 'LIBS=$(notdir $(ZLIB_BUILD_BIN))' $(ZLIB_SRC_DIR)/Makefile ; then \
 		$(MAKE) zlib_configure ; \
 	fi
-	$(SET_CROSS_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
+	$(SET_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
 
 zlib_clean:
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean

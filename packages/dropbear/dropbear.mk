@@ -42,9 +42,9 @@ endef
 $(DROPBEAR_BUILD_DIR)/Makefile:
 	mkdir -p $(DROPBEAR_BUILD_DIR)
 	( cd $(DROPBEAR_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
+		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
-			$(CONFIGURE_CROSS_HOST) \
+			$(CONFIGURE_HOST) \
 			--srcdir='$(abspath $(DROPBEAR_SRC_DIR))' \
 			--with-zlib='$(abspath $(ZLIB_BUILD_DIR))' \
 			--disable-lastlog \
@@ -63,7 +63,7 @@ $(DROPBEAR_BUILD_DIR)/Makefile:
 	$(call DROPBEAR_DISABLE_FEATURE, DO_MOTD)
 
 $(DROPBEAR_BUILD_BIN): dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
-	$(SET_CROSS_PATH) $(MAKE) -C $(DROPBEAR_BUILD_DIR) dropbearmulti \
+	$(SET_PATH) $(MAKE) -C $(DROPBEAR_BUILD_DIR) dropbearmulti \
 	MULTI=1 PROGRAMS='$(strip \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), dropbear dropbearkey) \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) \

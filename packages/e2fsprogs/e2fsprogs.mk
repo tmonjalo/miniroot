@@ -30,9 +30,9 @@ e2fsprogs_init:
 $(E2FSPROGS_BUILD_DIR)/Makefile:
 	mkdir -p $(E2FSPROGS_BUILD_DIR)
 	( cd $(E2FSPROGS_BUILD_DIR) && \
-		$(SET_CROSS_PATH) $(SET_CROSS_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
+		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(E2FSPROGS_SRC_DIR))/configure \
-		$(CONFIGURE_CROSS_HOST) \
+		$(CONFIGURE_HOST) \
 			--srcdir='$(abspath $(E2FSPROGS_SRC_DIR))' \
 			--disable-testio-debug \
 			--disable-debugfs \
@@ -46,14 +46,14 @@ $(E2FSPROGS_BUILD_DIR)/Makefile:
 	)
 
 e2fsprogs_libs: e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/ext2fs
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/e2p
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/blkid
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/uuid
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/ext2fs
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/e2p
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/blkid
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/uuid
 
 $(E2FSPROGS_BUILD_MKFS): e2fsprogs_libs
-	$(SET_CROSS_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/misc $(notdir $(E2FSPROGS_BUILD_MKFS))
+	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/misc $(notdir $(E2FSPROGS_BUILD_MKFS))
 
 $(E2FSPROGS_INSTALL_MKFS): $(E2FSPROGS_BUILD_MKFS)
 	install -D $(E2FSPROGS_BUILD_MKFS) $(E2FSPROGS_INSTALL_MKFS)

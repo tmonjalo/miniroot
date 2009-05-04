@@ -27,9 +27,9 @@ mdadm_init:
 	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$(MDADM_URL)' '$(MDADM_PATCH_DIR)'
 
 $(MDADM_BUILD_BIN): mdadm_init
-	$(SET_CROSS_PATH) $(MAKE) -C $(MDADM_SRC_DIR) mdadm \
+	$(SET_PATH) $(MAKE) -C $(MDADM_SRC_DIR) mdadm \
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))') \
-		$(SET_CROSS_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
+		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(MDADM_INSTALL_BIN): $(MDADM_BUILD_BIN)
 	install -D $(MDADM_BUILD_BIN) $(MDADM_INSTALL_BIN)
