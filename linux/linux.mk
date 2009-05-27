@@ -4,6 +4,8 @@ LINUX_PATCH_DIR ?= # [directory]
 LINUX_CONFIG ?= # <file>
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
+LINUX_TOOLCHAIN_PATH ?= $(TOOLCHAIN_PATH)
+LINUX_TOOLCHAIN_PREFIX ?= $(TOOLCHAIN_PREFIX)
 
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
@@ -15,8 +17,8 @@ LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)
 LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
 LINUX_BUILD_CONFIG = $(LINUX_BUILD_DIR)/.config
 
-LINUX_MAKE = $(SET_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
-	$(SET_ARCH) $(SET_CROSS_COMPILE) $(SET_CC) \
+LINUX_MAKE = $(SET_LINUX_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
+	$(SET_ARCH) $(SET_LINUX_CROSS_COMPILE) $(SET_LINUX_CC) \
 	$(if $(LINUX_BUILD_INSIDE), , O='$(abspath $(LINUX_BUILD_DIR))') \
 	$(if $(LINUX_VERBOSE), V=1)
 LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig >/dev/null
