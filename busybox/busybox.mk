@@ -1,5 +1,5 @@
 # options can be set in config.mk
-BUSYBOX_SRC ?= 1.13.3 # <version | directory | tarball | VCS URL>
+BUSYBOX_SRC ?= 1.13.4 # <version | directory | tarball | VCS URL>
 BUSYBOX_PATCH_DIR ?= # [directory]
 BUSYBOX_CONFIG ?= # [file]
 #BUSYBOX_BUILD_INSIDE = no
