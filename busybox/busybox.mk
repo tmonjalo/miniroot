@@ -5,6 +5,8 @@ BUSYBOX_CONFIG ?= # [file]
 #BUSYBOX_BUILD_INSIDE = no
 #BUSYBOX_VERBOSE = no
 
+BUSYBOX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if BUSYBOX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_SRC)')),false)
 override BUSYBOX_SRC := $(BUSYBOX_DIR)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2

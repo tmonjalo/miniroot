@@ -6,6 +6,8 @@ MDADM_BUILD_INSIDE = yes # cannot build outside
 
 MDADM_DEPS =
 
+MDADM_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if MDADM_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(MDADM_SRC)')),false)
 override MDADM_SRC := $(MDADM_DIR)/mdadm-$(strip $(MDADM_SRC)).tar.bz2

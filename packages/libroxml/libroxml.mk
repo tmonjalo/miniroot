@@ -7,6 +7,8 @@ LIBROXML_PATCH_DIR ?= # [directory]
 
 LIBROXML_DEPS =
 
+LIBROXML_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if LIBROXML_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LIBROXML_SRC)')),false)
 override LIBROXML_SRC := $(LIBROXML_DIR)/libroxml-$(strip $(LIBROXML_SRC)).tar.gz

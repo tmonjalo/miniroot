@@ -38,28 +38,22 @@ TARGET_STRIP = $(TOOLCHAIN_PATH_PREFIX)strip -s
 BUILD_DIR ?= build
 
 # Build tools
-TOOLS_DIR = tools
-include $(TOOLS_DIR)/tools.mk
+include tools/tools.mk
 
 # Linux
-LINUX_DIR = linux
-include $(LINUX_DIR)/linux.mk
+include linux/linux.mk
 
 # Image
-IMAGE_DIR = image
-include $(IMAGE_DIR)/image.mk
+include image/image.mk
 
 # Root filesystem
-ROOT_DIR = root
-include $(ROOT_DIR)/root.mk
+include root/root.mk
 
 # Busybox
-BUSYBOX_DIR = busybox
-include $(BUSYBOX_DIR)/busybox.mk
+include busybox/busybox.mk
 
 # Packages
-PKG_DIR = packages
-include $(PKG_DIR)/packages.mk
+include packages/packages.mk
 
 # Add user-defined rules which can use variables previously defined
 ifdef EXTRA_RULES

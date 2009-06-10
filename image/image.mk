@@ -1,3 +1,4 @@
+IMAGE_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 IMAGE_BUILD_DIR = $(BUILD_DIR)/$(IMAGE_DIR)
 FAKEROOT_SCRIPT = $(IMAGE_BUILD_DIR)/fakeroot.sh
 ROOT_CPIO = $(IMAGE_BUILD_DIR)/$(if $(LINUX_INITRAMFS),root.cpio,root.gz)

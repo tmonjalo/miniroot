@@ -7,6 +7,8 @@ LINUX_CONFIG ?= # <file>
 LINUX_TOOLCHAIN_PATH ?= $(TOOLCHAIN_PATH)
 LINUX_TOOLCHAIN_PREFIX ?= $(TOOLCHAIN_PREFIX)
 
+LINUX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
 override LINUX_SRC := $(LINUX_DIR)/linux-$(strip $(LINUX_SRC)).tar.bz2

@@ -1,3 +1,4 @@
+PKG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 PKG_BUILD_DIR = $(BUILD_DIR)
 
 .PHONY: packages packages_clean
@@ -17,17 +18,8 @@ packages_clean: $2_clean
 endif
 endef
 
-MDADM_DIR = $(PKG_DIR)/mdadm
-include $(MDADM_DIR)/mdadm.mk
-
-E2FSPROGS_DIR = $(PKG_DIR)/e2fsprogs
-include $(E2FSPROGS_DIR)/e2fsprogs.mk
-
-ZLIB_DIR = $(PKG_DIR)/zlib
-include $(ZLIB_DIR)/zlib.mk
-
-DROPBEAR_DIR = $(PKG_DIR)/dropbear
-include $(DROPBEAR_DIR)/dropbear.mk
-
-LIBROXML_DIR = $(PKG_DIR)/libroxml
-include $(LIBROXML_DIR)/libroxml.mk
+include $(PKG_DIR)/mdadm/mdadm.mk
+include $(PKG_DIR)/e2fsprogs/e2fsprogs.mk
+include $(PKG_DIR)/zlib/zlib.mk
+include $(PKG_DIR)/dropbear/dropbear.mk
+include $(PKG_DIR)/libroxml/libroxml.mk

@@ -5,6 +5,8 @@ ZLIB_BUILD_INSIDE = yes # cannot build zlib outside
 
 ZLIB_DEPS =
 
+ZLIB_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if ZLIB_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(ZLIB_SRC)')),false)
 override ZLIB_SRC := $(ZLIB_DIR)/zlib-$(strip $(ZLIB_SRC)).tar.bz2

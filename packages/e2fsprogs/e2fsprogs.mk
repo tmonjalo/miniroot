@@ -6,6 +6,8 @@ E2FSPROGS_PATCH_DIR ?= # [directory]
 
 E2FSPROGS_DEPS =
 
+E2FSPROGS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
+
 # if E2FSPROGS_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(E2FSPROGS_SRC)')),false)
 override E2FSPROGS_SRC := $(E2FSPROGS_DIR)/e2fsprogs-$(strip $(E2FSPROGS_SRC)).tar.gz
