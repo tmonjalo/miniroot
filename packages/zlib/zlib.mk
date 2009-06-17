@@ -18,28 +18,28 @@ ZLIB_VERSION = $(shell sed -n 's,.*VERSION.*"\(.*\)".*,\1,p' $(ZLIB_SRC_DIR)/zli
 ZLIB_BUILD_DIR = $(if $(ZLIB_BUILD_INSIDE), $(ZLIB_SRC_DIR), $(BUILD_DIR)/$(notdir $(ZLIB_DIR)))
 ZLIB_BUILD_BIN = $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSION))
 
-.PHONY: zlib zlib_init zlib_configure zlib_clean
+.PHONY : zlib zlib_init zlib_configure zlib_clean
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_ZLIB), zlib))
 
-zlib: $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
+zlib : $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
 
-zlib_init:
+zlib_init :
 	@ echo '=== ZLIB ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_URL)' '$(ZLIB_PATCH_DIR)'
 
-zlib_configure:
+zlib_configure :
 	( cd $(ZLIB_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
 		$(if $(TARGET_STATIC), ./configure, ./configure --shared) \
 	)
 
-$(ZLIB_BUILD_BIN): zlib_init
+$(ZLIB_BUILD_BIN) : zlib_init
 	@ if ! fgrep -q 'LIBS=$(notdir $(ZLIB_BUILD_BIN))' $(ZLIB_SRC_DIR)/Makefile ; then \
 		$(MAKE) zlib_configure ; \
 	fi
 	$(SET_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
 
-zlib_clean:
+zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
 TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)

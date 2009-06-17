@@ -11,12 +11,12 @@ TOOLCHAIN_CC = $(TOOLCHAIN_BUILD_DIR)/bin/$(TOOLCHAIN_PREFIX)cc
 
 ifeq '$(TARGET_ARCH)' ''
 ifneq '$(TOOLCHAIN_PATH)' ''
-tools: $(TOOLCHAIN_CC)
+tools : $(TOOLCHAIN_CC)
 TOOLCHAIN_PATH = $(TOOLCHAIN_BUILD_DIR)
 endif
 endif
 
-$(TOOLCHAIN_CC):
+$(TOOLCHAIN_CC) :
 	@ echo '=== TOOLCHAIN ==='
 	@ echo 'NOT YET IMPLEMENTED'
 	@ echo 'should use crosstool-ng'

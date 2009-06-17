@@ -28,12 +28,12 @@ DROPBEAR_INSTALL_CLIENT1_ALIAS = $(ROOT_BUILD_DIR)/bin/dbclient
 DROPBEAR_INSTALL_CLIENT2_ALIAS = $(ROOT_BUILD_DIR)/bin/ssh
 DROPBEAR_INSTALL_KEYGEN_ALIAS = $(ROOT_BUILD_DIR)/bin/dropbearkey
 
-.PHONY: dropbear dropbear_init dropbear_clean
+.PHONY : dropbear dropbear_init dropbear_clean
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_DROPBEAR_SERVER) $(PKG_DROPBEAR_CLIENT), dropbear))
 
-dropbear: $(DROPBEAR_DEPS) $(DROPBEAR_INSTALL_BIN)
+dropbear : $(DROPBEAR_DEPS) $(DROPBEAR_INSTALL_BIN)
 
-dropbear_init:
+dropbear_init :
 	@ echo '=== DROPBEAR (package not tested) ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_URL)' '$(DROPBEAR_PATCH_DIR)'
 
@@ -41,7 +41,7 @@ define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$1.*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
 endef
 
-$(DROPBEAR_BUILD_DIR)/Makefile:
+$(DROPBEAR_BUILD_DIR)/Makefile :
 	mkdir -p $(DROPBEAR_BUILD_DIR)
 	( cd $(DROPBEAR_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
@@ -64,17 +64,17 @@ $(DROPBEAR_BUILD_DIR)/Makefile:
 	$(call DROPBEAR_DISABLE_FEATURE, ENABLE_.*FWD)
 	$(call DROPBEAR_DISABLE_FEATURE, DO_MOTD)
 
-$(DROPBEAR_BUILD_BIN): dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
+$(DROPBEAR_BUILD_BIN) : dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
 	$(SET_PATH) $(MAKE) -C $(DROPBEAR_BUILD_DIR) dropbearmulti \
 	MULTI=1 PROGRAMS='$(strip \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), dropbear dropbearkey) \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) \
 	)'
 
-$(ROOT_BUILD_DIR)/bin:
+$(ROOT_BUILD_DIR)/bin :
 	mkdir -p $(ROOT_BUILD_DIR)/bin
 
-$(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
+$(DROPBEAR_INSTALL_BIN) : $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
 	install -D $(DROPBEAR_BUILD_BIN) $(DROPBEAR_INSTALL_BIN)
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
@@ -86,7 +86,7 @@ $(DROPBEAR_INSTALL_BIN): $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
 		ln -snf ../sbin/$(@F) $(DROPBEAR_INSTALL_CLIENT2_ALIAS) \
 	)
 
-dropbear_clean:
+dropbear_clean :
 	- $(if $(DROPBEAR_BUILD_INSIDE), \
 		$(MAKE) -C $(DROPBEAR_BUILD_DIR) clean, \
 		rm -rf $(DROPBEAR_BUILD_DIR) ) # make clean is broken in libtommath

@@ -19,17 +19,17 @@ E2FSPROGS_BUILD_DIR = $(if $(E2FSPROGS_BUILD_INSIDE), $(E2FSPROGS_SRC_DIR), $(BU
 E2FSPROGS_BUILD_MKFS = $(E2FSPROGS_BUILD_DIR)/misc/mke2fs
 E2FSPROGS_INSTALL_MKFS = $(ROOT_BUILD_DIR)/sbin/$(notdir $(E2FSPROGS_BUILD_MKFS))
 
-.PHONY: e2fsprogs_mkfs e2fsprogs_init e2fsprogs_libs e2fsprogs_clean
+.PHONY : e2fsprogs_mkfs e2fsprogs_init e2fsprogs_libs e2fsprogs_clean
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_E2FSPROGS_MKFS), e2fsprogs))
 
-e2fsprogs: $(E2FSPROGS_DEPS) \
+e2fsprogs : $(E2FSPROGS_DEPS) \
 	$(if $(call PKG_IS_SET, $(PKG_E2FSPROGS_MKFS)), $(E2FSPROGS_INSTALL_MKFS))
 
-e2fsprogs_init:
+e2fsprogs_init :
 	@ echo '=== E2FSPROGS ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
 
-$(E2FSPROGS_BUILD_DIR)/Makefile:
+$(E2FSPROGS_BUILD_DIR)/Makefile :
 	mkdir -p $(E2FSPROGS_BUILD_DIR)
 	( cd $(E2FSPROGS_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
@@ -47,18 +47,18 @@ $(E2FSPROGS_BUILD_DIR)/Makefile:
 			--disable-nls \
 	)
 
-e2fsprogs_libs: e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
+e2fsprogs_libs : e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/ext2fs
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/e2p
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/blkid
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/uuid
 
-$(E2FSPROGS_BUILD_MKFS): e2fsprogs_libs
+$(E2FSPROGS_BUILD_MKFS) : e2fsprogs_libs
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/misc $(notdir $(E2FSPROGS_BUILD_MKFS))
 
-$(E2FSPROGS_INSTALL_MKFS): $(E2FSPROGS_BUILD_MKFS)
+$(E2FSPROGS_INSTALL_MKFS) : $(E2FSPROGS_BUILD_MKFS)
 	install -D $(E2FSPROGS_BUILD_MKFS) $(E2FSPROGS_INSTALL_MKFS)
 
-e2fsprogs_clean:
+e2fsprogs_clean :
 	- $(MAKE) -C $(E2FSPROGS_BUILD_DIR) clean

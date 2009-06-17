@@ -1,8 +1,8 @@
 PKG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 PKG_BUILD_DIR = $(BUILD_DIR)
 
-.PHONY: packages packages_clean
-clean: packages_clean
+.PHONY : packages packages_clean
+clean : packages_clean
 
 define PKG_IS_SET
 $(strip $(or \
@@ -13,8 +13,8 @@ endef
 
 define PKG_INCLUDE_RULE
 ifneq '$(call PKG_IS_SET, $1)' ''
-packages: $2
-packages_clean: $2_clean
+packages : $2
+packages_clean : $2_clean
 endif
 endef
 

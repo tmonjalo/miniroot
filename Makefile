@@ -1,12 +1,12 @@
-all:
+all :
 
 # Overwrite default configuration with user parameters
 include config.mk
 
 # Main targets
-.PHONY: all clean
+.PHONY : all clean
 TARGETS ?= linux image
-all: $(TARGETS)
+all : $(TARGETS)
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))

@@ -20,24 +20,24 @@ LIBROXML_BUILD_DIR = $(if $(LIBROXML_BUILD_INSIDE), $(LIBROXML_SRC_DIR), $(BUILD
 LIBROXML_BUILD_BIN = $(LIBROXML_BUILD_DIR)/roxml
 LIBROXML_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/$(notdir $(LIBROXML_BUILD_BIN))
 
-.PHONY: libroxml libroxml_init libroxml_clean
+.PHONY : libroxml libroxml_init libroxml_clean
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML), libroxml))
 
-libroxml: $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
+libroxml : $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
 
-libroxml_init:
+libroxml_init :
 	@ echo '=== LIBROXML ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)' '$(LIBROXML_URL)' '$(LIBROXML_PATCH_DIR)'
 
-$(LIBROXML_BUILD_BIN): libroxml_init
+$(LIBROXML_BUILD_BIN) : libroxml_init
 	$(SET_PATH) $(MAKE) -C $(LIBROXML_SRC_DIR) $(abspath $(LIBROXML_BUILD_BIN)) \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))') \
 		$(if $(LIBROXML_VERBOSE), V=1) \
 		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
-$(LIBROXML_INSTALL_BIN): $(LIBROXML_BUILD_BIN)
+$(LIBROXML_INSTALL_BIN) : $(LIBROXML_BUILD_BIN)
 	install -D $(LIBROXML_BUILD_BIN) $(LIBROXML_INSTALL_BIN)
 
-libroxml_clean:
+libroxml_clean :
 	- $(MAKE) -C $(LIBROXML_SRC_DIR) clean \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')

@@ -25,16 +25,16 @@ BUSYBOX_MAKE = $(SET_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	$(SET_CROSS_COMPILE) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 	CONFIG_PREFIX='$(abspath $(ROOT_BUILD_DIR))'
 
-.PHONY: busybox busybox_init busybox_clean
-clean: busybox_clean
+.PHONY : busybox busybox_init busybox_clean
+clean : busybox_clean
 
-busybox: $(BUSYBOX_INSTALL_BIN)
+busybox : $(BUSYBOX_INSTALL_BIN)
 
-busybox_init:
+busybox_init :
 	@ echo '=== BUSYBOX ==='
 	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
 
-$(BUSYBOX_BUILD_CONFIG):
+$(BUSYBOX_BUILD_CONFIG) :
 	mkdir -p $(BUSYBOX_BUILD_DIR)
 	@ echo 'copy config to $(BUSYBOX_BUILD_CONFIG)'
 	@ if [ -f '$(strip $(BUSYBOX_CONFIG))' ] ; then \
@@ -46,15 +46,15 @@ $(BUSYBOX_BUILD_CONFIG):
 	fi
 
 # wildcard rule
-busybox_%: busybox_init $(BUSYBOX_BUILD_CONFIG)
+busybox_% : busybox_init $(BUSYBOX_BUILD_CONFIG)
 	$(BUSYBOX_MAKE) $*
 
-$(BUSYBOX_BUILD_BIN): busybox_busybox
+$(BUSYBOX_BUILD_BIN) : busybox_busybox
 	@ : # nop rule to make install working
 
-$(BUSYBOX_INSTALL_BIN): $(BUSYBOX_BUILD_BIN)
+$(BUSYBOX_INSTALL_BIN) : $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
 	chmod 4755 $(BUSYBOX_INSTALL_BIN)
 
-busybox_clean:
+busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall
