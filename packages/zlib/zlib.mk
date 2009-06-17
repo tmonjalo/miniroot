@@ -10,13 +10,15 @@ ZLIB_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 # if ZLIB_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(ZLIB_SRC)')),false)
 override ZLIB_SRC := $(ZLIB_DIR)/zlib-$(strip $(ZLIB_SRC)).tar.bz2
-ZLIB_URL = http://www.zlib.net/$(notdir $(ZLIB_SRC))
+ZLIB_URL = http://zlib.net/$(notdir $(ZLIB_SRC))
 endif
 
 ZLIB_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)')
 ZLIB_VERSION = $(shell sed -n 's,.*VERSION.*"\(.*\)".*,\1,p' $(ZLIB_SRC_DIR)/zlib.h 2>/dev/null)
 ZLIB_BUILD_DIR = $(if $(ZLIB_BUILD_INSIDE), $(ZLIB_SRC_DIR), $(BUILD_DIR)/$(notdir $(ZLIB_DIR)))
 ZLIB_BUILD_BIN = $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSION))
+
+TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)
 
 .PHONY : zlib zlib_init zlib_configure zlib_clean
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_ZLIB), zlib))
@@ -42,4 +44,8 @@ $(ZLIB_BUILD_BIN) : zlib_init
 zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
-TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)
+zlib_check_latest :
+	@ printf 'default zlib: '
+	@ sed -n 's,^ZLIB_SRC ?= \([^ ]*\).*,\1,p' $(ZLIB_DIR)/zlib.mk
+	@ printf ' latest zlib: '
+	@ elinks -dump http://zlib.net | sed -n 's,.*http://.*/zlib-\(.*\).tar.bz2.*,\1,p' | head -n1

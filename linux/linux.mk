@@ -1,5 +1,5 @@
 # options can be set in config.mk
-LINUX_SRC ?= 2.6.29.1 # <version | directory | tarball | VCS URL>
+LINUX_SRC ?= 2.6.30 # <version | directory | tarball | VCS URL>
 LINUX_PATCH_DIR ?= # [directory]
 LINUX_CONFIG ?= # <file>
 #LINUX_BUILD_INSIDE = no
@@ -12,7 +12,7 @@ LINUX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
 override LINUX_SRC := $(LINUX_DIR)/linux-$(strip $(LINUX_SRC)).tar.bz2
-LINUX_URL = http://www.kernel.org/pub/linux/kernel/v2.6/$(notdir $(LINUX_SRC))
+LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6/$(notdir $(LINUX_SRC))
 endif
 
 LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
@@ -32,7 +32,8 @@ LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(R
 
 .PHONY : linux linux_clean linux_init linux_init2 linux_init_src \
 	linux_build_root linux_initramfs linux_no_initramfs \
-	linux_modules linux_modules_install
+	linux_modules linux_modules_install \
+	linux_check_latest
 clean : linux_clean
 
 linux : linux_all
@@ -98,3 +99,9 @@ linux_modules_install : linux_modules
 
 linux_clean :
 	- $(LINUX_MAKE) clean
+
+linux_check_latest :
+	@ printf 'default linux: '
+	@ sed -n 's,^LINUX_SRC ?= \([^ ]*\).*,\1,p' $(LINUX_DIR)/linux.mk
+	@ printf ' latest linux: '
+	@ elinks -dump http://kernel.org | sed -n 's,.*http://.*/linux-\(.*\).tar.bz2.*,\1,p' | head -n1

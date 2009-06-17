@@ -28,7 +28,7 @@ DROPBEAR_INSTALL_CLIENT1_ALIAS = $(ROOT_BUILD_DIR)/bin/dbclient
 DROPBEAR_INSTALL_CLIENT2_ALIAS = $(ROOT_BUILD_DIR)/bin/ssh
 DROPBEAR_INSTALL_KEYGEN_ALIAS = $(ROOT_BUILD_DIR)/bin/dropbearkey
 
-.PHONY : dropbear dropbear_init dropbear_clean
+.PHONY : dropbear dropbear_init dropbear_clean dropbear_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_DROPBEAR_SERVER) $(PKG_DROPBEAR_CLIENT), dropbear))
 
 dropbear : $(DROPBEAR_DEPS) $(DROPBEAR_INSTALL_BIN)
@@ -95,3 +95,9 @@ dropbear_clean :
 	- rm -f $(DROPBEAR_INSTALL_KEYGEN_ALIAS)
 	- rm -f $(DROPBEAR_INSTALL_CLIENT1_ALIAS)
 	- rm -f $(DROPBEAR_INSTALL_CLIENT2_ALIAS)
+
+dropbear_check_latest :
+	@ printf 'default dropbear: '
+	@ sed -n 's,^DROPBEAR_SRC ?= \([^ ]*\).*,\1,p' $(DROPBEAR_DIR)/dropbear.mk
+	@ printf ' latest dropbear: '
+	@ elinks -dump http://matt.ucc.asn.au/dropbear/dropbear.html | sed -n 's,.*http://.*/dropbear-\(.*\).tar.bz2.*,\1,p' | head -n1

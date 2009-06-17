@@ -1,6 +1,6 @@
 # options can be set in config.mk
 PKG_E2FSPROGS_MKFS ?= no
-E2FSPROGS_SRC ?= 1.41.4
+E2FSPROGS_SRC ?= 1.41.6
 E2FSPROGS_PATCH_DIR ?= # [directory]
 #E2FSPROGS_BUILD_INSIDE = no
 
@@ -19,7 +19,7 @@ E2FSPROGS_BUILD_DIR = $(if $(E2FSPROGS_BUILD_INSIDE), $(E2FSPROGS_SRC_DIR), $(BU
 E2FSPROGS_BUILD_MKFS = $(E2FSPROGS_BUILD_DIR)/misc/mke2fs
 E2FSPROGS_INSTALL_MKFS = $(ROOT_BUILD_DIR)/sbin/$(notdir $(E2FSPROGS_BUILD_MKFS))
 
-.PHONY : e2fsprogs_mkfs e2fsprogs_init e2fsprogs_libs e2fsprogs_clean
+.PHONY : e2fsprogs_mkfs e2fsprogs_init e2fsprogs_libs e2fsprogs_clean e2fsprogs_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_E2FSPROGS_MKFS), e2fsprogs))
 
 e2fsprogs : $(E2FSPROGS_DEPS) \
@@ -62,3 +62,9 @@ $(E2FSPROGS_INSTALL_MKFS) : $(E2FSPROGS_BUILD_MKFS)
 
 e2fsprogs_clean :
 	- $(MAKE) -C $(E2FSPROGS_BUILD_DIR) clean
+
+e2fsprogs_check_latest :
+	@ printf 'default e2fsprogs: '
+	@ sed -n 's,^E2FSPROGS_SRC ?= \([^ ]*\).*,\1,p' $(E2FSPROGS_DIR)/e2fsprogs.mk
+	@ printf ' latest e2fsprogs: '
+	@ elinks -dump http://e2fsprogs.sourceforge.net | sed -n 's,.*http://.*/e2fsprogs-\(.*\).tar.gz.*,\1,p' | head -n1

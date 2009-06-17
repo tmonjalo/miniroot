@@ -1,5 +1,5 @@
 # options can be set in config.mk
-BUSYBOX_SRC ?= 1.13.4 # <version | directory | tarball | VCS URL>
+BUSYBOX_SRC ?= 1.14.1 # <version | directory | tarball | VCS URL>
 BUSYBOX_PATCH_DIR ?= # [directory]
 BUSYBOX_CONFIG ?= # [file]
 #BUSYBOX_BUILD_INSIDE = no
@@ -25,7 +25,7 @@ BUSYBOX_MAKE = $(SET_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	$(SET_CROSS_COMPILE) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 	CONFIG_PREFIX='$(abspath $(ROOT_BUILD_DIR))'
 
-.PHONY : busybox busybox_init busybox_clean
+.PHONY : busybox busybox_init busybox_clean busybox_check_latest
 clean : busybox_clean
 
 busybox : $(BUSYBOX_INSTALL_BIN)
@@ -58,3 +58,9 @@ $(BUSYBOX_INSTALL_BIN) : $(BUSYBOX_BUILD_BIN)
 
 busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall
+
+busybox_check_latest :
+	@ printf 'default busybox: '
+	@ sed -n 's,^BUSYBOX_SRC ?= \([^ ]*\).*,\1,p' $(BUSYBOX_DIR)/busybox.mk
+	@ printf ' latest busybox: '
+	@ elinks -dump http://busybox.net | sed -n 's,.*http://.*/busybox-\(.*\).tar.bz2.*,\1,p' | head -n1

@@ -1,6 +1,6 @@
 # options can be set in config.mk
 PKG_LIBROXML ?= no
-LIBROXML_SRC ?= 1.5
+LIBROXML_SRC ?= 1.6.1
 LIBROXML_PATCH_DIR ?= # [directory]
 #LIBROXML_BUILD_INSIDE = no
 #LIBROXML_VERBOSE = no
@@ -41,3 +41,9 @@ $(LIBROXML_INSTALL_BIN) : $(LIBROXML_BUILD_BIN)
 libroxml_clean :
 	- $(MAKE) -C $(LIBROXML_SRC_DIR) clean \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')
+
+libroxml_check_latest :
+	@ printf 'default libroxml: '
+	@ sed -n 's,^LIBROXML_SRC ?= \([^ ]*\).*,\1,p' $(LIBROXML_DIR)/libroxml.mk
+	@ printf ' latest libroxml: '
+	@ elinks -dump http://code.google.com/p/libroxml/downloads/list | sed -n 's,.*http://.*/libroxml-\(.*\).tar.gz.*,\1,p' | head -n1

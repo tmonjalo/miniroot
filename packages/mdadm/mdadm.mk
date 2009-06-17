@@ -11,7 +11,7 @@ MDADM_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 # if MDADM_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(MDADM_SRC)')),false)
 override MDADM_SRC := $(MDADM_DIR)/mdadm-$(strip $(MDADM_SRC)).tar.bz2
-MDADM_URL = http://www.kernel.org/pub/linux/utils/raid/mdadm/$(notdir $(MDADM_SRC))
+MDADM_URL = http://kernel.org/pub/linux/utils/raid/mdadm/$(notdir $(MDADM_SRC))
 endif
 
 MDADM_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MDADM_DIR)' '$(MDADM_SRC)')
@@ -39,3 +39,9 @@ $(MDADM_INSTALL_BIN) : $(MDADM_BUILD_BIN)
 mdadm_clean :
 	- $(MAKE) -C $(MDADM_SRC_DIR) clean \
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))')
+
+mdadm_check_latest :
+	@ printf 'default mdadm: '
+	@ sed -n 's,^MDADM_SRC ?= \([^ ]*\).*,\1,p' $(MDADM_DIR)/mdadm.mk
+	@ printf ' latest mdadm: '
+	@ elinks -dump http://kernel.org/pub/linux/utils/raid/mdadm | sed -n 's,.*http://.*/mdadm-\(.*\).tar.bz2.*,\1,p' | tail -n1
