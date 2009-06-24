@@ -95,6 +95,7 @@ linux_modules : linux_init_src $(LINUX_BUILD_CONFIG)
 	$(LINUX_MAKE) modules
 
 linux_modules_install : linux_modules
+	rm -rf $(ROOT_BUILD_DIR)/lib/modules
 	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) modules_install
 	#find $(ROOT_BUILD_LIB_DIR)/modules -name "*.ko" | xargs -r $(TARGET_STRIP)
 
