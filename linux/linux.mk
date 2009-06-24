@@ -99,6 +99,9 @@ linux_modules_install : linux_modules
 	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) modules_install
 	#find $(ROOT_BUILD_LIB_DIR)/modules -name "*.ko" | xargs -r $(TARGET_STRIP)
 
+linux_firmware_install :
+	$(LINUX_MAKE) INSTALL_MOD_PATH=$(abspath $(ROOT_BUILD_DIR)) firmware_install
+
 linux_clean :
 	- $(LINUX_MAKE) clean
 
