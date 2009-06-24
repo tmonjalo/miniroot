@@ -26,7 +26,7 @@ e2fsprogs : $(E2FSPROGS_DEPS) \
 	$(if $(call PKG_IS_SET, $(PKG_E2FSPROGS_MKFS)), $(E2FSPROGS_INSTALL_MKFS))
 
 e2fsprogs_init :
-	@ echo '=== E2FSPROGS ==='
+	@ printf '\n=== E2FSPROGS ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
 
 $(E2FSPROGS_BUILD_DIR)/Makefile :

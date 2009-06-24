@@ -25,7 +25,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_MDADM), mdadm))
 mdadm : $(MDADM_DEPS) $(MDADM_INSTALL_BIN)
 
 mdadm_init :
-	@ echo '=== MDADM ==='
+	@ printf '\n=== MDADM ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$(MDADM_URL)' '$(MDADM_PATCH_DIR)'
 
 $(MDADM_BUILD_BIN) : mdadm_init

@@ -21,7 +21,7 @@ root : busybox packages root_lib root_bin root_skel
 
 root_lib : $(if $(TARGET_STATIC), , root_lib_init root_lib_so)
 root_lib_init :
-	@ echo '=== LIBRARIES ==='
+	@ printf '\n=== LIBRARIES ===\n'
 $(ROOT_BUILD_LIB_DIR) :
 	mkdir -p $(ROOT_BUILD_LIB_DIR)
 root_lib_so : $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
@@ -33,19 +33,19 @@ root_lib_so : $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
 	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>/dev/null || true
 
 root_bin_init :
-	@ echo '=== BINARIES ==='
+	@ printf '\n=== BINARIES ===\n'
 root_bin : root_bin_init $(SSTRIP)
 	$(FIND_ROOT_BINS_NOT_STRIPPED) | xargs -r $(TARGET_STRIP)
 	$(FIND_ROOT_BINS) | xargs -r $(SSTRIP)
 
 root_skel_init :
-	@ echo '=== SKELETON ==='
+	@ printf '\n=== SKELETON ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '' '' '$(ROOT_SKEL_DIR)'
 root_skel : root_skel_init
 	tar --create --exclude-vcs --directory $(ROOT_SKEL_SRC_DIR) . | tar --extract --directory $(ROOT_BUILD_DIR)
 
 root_dev_init :
-	@ echo '=== DEVICES ==='
+	@ printf '\n=== DEVICES ===\n'
 root_dev : root_dev_init $(MAKEDEVS) | $(dir $(FAKEROOT_SCRIPT))
 	echo '$(MAKEDEVS) -d $(ROOT_DEV_TABLE) $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
 

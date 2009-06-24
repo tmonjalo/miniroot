@@ -1,3 +1,4 @@
+# Default rule
 all :
 
 # Overwrite default configuration with user parameters
@@ -7,6 +8,7 @@ include config.mk
 .PHONY : all clean
 TARGETS ?= linux image
 all : $(TARGETS)
+	@ printf '\n'
 
 # Host compilation
 SET_HOST_CC = $(if $(HOST_CC), CC=$(HOST_CC))

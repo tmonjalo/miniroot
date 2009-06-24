@@ -31,7 +31,7 @@ clean : busybox_clean
 busybox : $(BUSYBOX_INSTALL_BIN)
 
 busybox_init :
-	@ echo '=== BUSYBOX ==='
+	@ printf '\n=== BUSYBOX ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
 
 $(BUSYBOX_BUILD_CONFIG) :

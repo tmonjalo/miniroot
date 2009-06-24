@@ -12,7 +12,7 @@ clean : image_clean
 image : root $(ROOT_CPIO)
 
 image_init :
-	@ echo '=== IMAGE ==='
+	@ printf '\n=== IMAGE ===\n'
 
 $(IMAGE_BUILD_DIR) :
 	mkdir -p $(IMAGE_BUILD_DIR)

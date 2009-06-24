@@ -40,9 +40,9 @@ clean : linux_clean
 linux : linux_all
 
 linux_init :
-	@ echo '=== LINUX ==='
+	@ printf '\n=== LINUX ===\n'
 linux_init2 :
-	@ echo '=== LINUX === (part 2)'
+	@ printf '\n=== LINUX === (part 2)\n'
 
 linux_init_src :
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
