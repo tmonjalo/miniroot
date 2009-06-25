@@ -53,6 +53,7 @@
 /dev/ptmx      c     666     0     0       5       2       -       -       -
 /dev/loop      b     640     0     0       7       0       0       1       8
 /dev/rtc       c     640     0     0      10     135       -       -       -
+/dev/rtc       c     640     0     0     254       0       0       1       1
 
 # <name>    <type> <mode>  <uid> <gid>  <major> <minor> <first>  <inc>  <last+1>
 /dev/mtdblock  b     640     0     0      31       0       0       1       1
