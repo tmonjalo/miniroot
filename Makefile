@@ -1,7 +1,7 @@
 # Default rule
 all :
 
-# Overwrite default configuration with user parameters
+# User configuration
 include config.mk
 
 # Main targets
