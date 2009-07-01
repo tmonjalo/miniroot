@@ -37,10 +37,12 @@ vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <d
 	local vcs_DIR="$5"
 	local vcs_URL="$(echo $vcs_SRC | sed 's,\([^ ]*\).*,\1,')"
 	local vcs_BRANCH="$(echo $vcs_SRC | sed 's,[^ ]* *\(.*\),\1,')"
-	echo $vcs_TOOL $vcs_MAIN_COMMAND "$vcs_URL" "$vcs_DIR"
 	$vcs_TOOL $vcs_MAIN_COMMAND "$vcs_URL" "$vcs_DIR"
 	if [ -n "$vcs_BRANCH" ] ; then
-		echo "( cd $vcs_DIR ; $vcs_TOOL $vcs_BRANCH_COMMAND $vcs_BRANCH )"
+		if [ -z "$vcs_BRANCH_COMMAND" ] ; then
+			echo $vcs_TOOL: no branch support for $vcs_BRANCH
+			exit 1
+		fi
 		( cd "$vcs_DIR" ; $vcs_TOOL $vcs_BRANCH_COMMAND "$vcs_BRANCH" )
 	fi
 }
@@ -55,7 +57,7 @@ if echo $SRC | fgrep -q '://' ; then
 	elif [ "$VCS" = hg ] ; then
 		vcs_checkout hg clone '' "$SRC" "$DEST_DIR"
 	elif [ "$VCS" = svn ] ; then
-		vcs_checkout svn co '' "$SRC" "$DEST_DIR"
+		vcs_checkout svn checkout '' "$SRC" "$DEST_DIR"
 	else
 		echo $VCS: unknown protocol
 		exit 1
