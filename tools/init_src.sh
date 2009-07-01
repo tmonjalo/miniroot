@@ -4,7 +4,7 @@
 # and patch them
 
 strip_str() {
-	echo $1 | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
+	echo $* | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
 }
 
 SCRIPTS_DIR=$(dirname $0)
@@ -29,37 +29,45 @@ check_src_dir () {
 	fi
 }
 
-patch_src_dir () {
-	if [ -n "$PATCH_DIR" ] ; then
-		make -s $SCRIPTS_DIR/patch-kernel.sh
-		$SCRIPTS_DIR/patch-kernel.sh $DEST_DIR $PATCH_DIR
+vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <directory>
+	local vcs_TOOL=$1
+	local vcs_MAIN_COMMAND=$2
+	local vcs_BRANCH_COMMAND=$3
+	local vcs_SRC="$4"
+	local vcs_DIR="$5"
+	local vcs_URL="$(echo $vcs_SRC | sed 's,\([^ ]*\).*,\1,')"
+	local vcs_BRANCH="$(echo $vcs_SRC | sed 's,[^ ]* *\(.*\),\1,')"
+	echo $vcs_TOOL $vcs_MAIN_COMMAND "$vcs_URL" "$vcs_DIR"
+	$vcs_TOOL $vcs_MAIN_COMMAND "$vcs_URL" "$vcs_DIR"
+	if [ -n "$vcs_BRANCH" ] ; then
+		echo "( cd $vcs_DIR ; $vcs_TOOL $vcs_BRANCH_COMMAND $vcs_BRANCH )"
+		( cd "$vcs_DIR" ; $vcs_TOOL $vcs_BRANCH_COMMAND "$vcs_BRANCH" )
 	fi
 }
 
+# copy, extract or download
 if echo $SRC | fgrep -q '://' ; then
 	# SRC is an URL
 	check_src_dir
-	URL=$SRC
-	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $URL)
+	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $SRC)
 	if [ "$VCS" = git ] ; then
-		git clone "$URL" "$DEST_DIR"
+		vcs_checkout git clone checkout "$SRC" "$DEST_DIR"
 	elif [ "$VCS" = hg ] ; then
-		hg clone "$URL" "$DEST_DIR"
+		vcs_checkout hg clone '' "$SRC" "$DEST_DIR"
 	elif [ "$VCS" = svn ] ; then
-		svn co "$URL" "$DEST_DIR"
+		vcs_checkout svn co '' "$SRC" "$DEST_DIR"
 	else
 		echo $VCS: unknown protocol
 		exit 1
 	fi
-	patch_src_dir
 elif [ -d $SRC/.git ] ; then
 	# checkout a local git repository
 	check_src_dir
-	git clone "$SRC" "$DEST_DIR"
+	vcs_checkout git clone checkout "$SRC" "$DEST_DIR"
 elif [ -d $SRC/.hg ] ; then
 	# checkout a local mercurial repository
 	check_src_dir
-	hg clone "$SRC" "$DEST_DIR"
+	vcs_checkout hg clone '' "$SRC" "$DEST_DIR"
 elif [ -d "$SRC" ] ; then
 	# SRC is an existing directory
 	exit 0
@@ -78,5 +86,10 @@ else
 	if [ "$SRC_DIR" != "$DEST_DIR" ] ; then
 		mv $SRC_DIR $DEST_DIR
 	fi
-	patch_src_dir
+fi
+
+# patch
+if [ -n "$PATCH_DIR" ] ; then
+	make -s $SCRIPTS_DIR/patch-kernel.sh
+	$SCRIPTS_DIR/patch-kernel.sh $DEST_DIR $PATCH_DIR
 fi
