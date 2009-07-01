@@ -36,3 +36,7 @@ The configurations and other customizations can be archived in a
 separate directory by making config.mk a link (e.g. to config/config.mk).
 
 The build system can be extended with a makefile defined as EXTRA_RULES.
+
+Packages are downloaded at the first build. They can be a local directory,
+a tarball, or a VCS repository. Example:
+	LINUX_SRC = git://linux-arm.org/linux-2.6.git wonderful-branch
