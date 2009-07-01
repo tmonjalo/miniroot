@@ -31,7 +31,8 @@ e2fsprogs_init :
 
 $(E2FSPROGS_BUILD_DIR)/Makefile :
 	mkdir -p $(E2FSPROGS_BUILD_DIR)
-	( cd $(E2FSPROGS_BUILD_DIR) && \
+	( set -e ; \
+		cd $(E2FSPROGS_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(E2FSPROGS_SRC_DIR))/configure \
 		$(CONFIGURE_HOST) \

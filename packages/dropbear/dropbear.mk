@@ -43,7 +43,8 @@ endef
 
 $(DROPBEAR_BUILD_DIR)/Makefile :
 	mkdir -p $(DROPBEAR_BUILD_DIR)
-	( cd $(DROPBEAR_BUILD_DIR) && \
+	( set -e ; \
+		cd $(DROPBEAR_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
 			$(CONFIGURE_HOST) \

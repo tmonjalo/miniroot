@@ -30,7 +30,8 @@ zlib_init :
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_URL)' '$(ZLIB_PATCH_DIR)'
 
 zlib_configure :
-	( cd $(ZLIB_BUILD_DIR) && \
+	( set -e ; \
+		cd $(ZLIB_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
 		$(if $(TARGET_STATIC), ./configure, ./configure --shared) \
 	)
