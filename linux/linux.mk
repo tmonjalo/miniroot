@@ -31,16 +31,16 @@ LINUX_INITRAMFS = $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG)
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY : linux linux_clean linux_init linux_init2 linux_init_src \
-	linux_build_root linux_initramfs linux_no_initramfs \
-	linux_modules linux_modules_install \
-	linux_check_latest
+.PHONY : linux linux_clean linux_init linux_image_init linux_init2 linux_init_src \
+	linux_modules linux_modules_install linux_initramfs linux_check_latest
 clean : linux_clean
 
 linux : linux_all
 
 linux_init :
 	@ printf '\n=== LINUX ===\n'
+linux_image_init :
+	@ printf '(end of part 1)\n\nmake root image for initramfs\n'
 linux_init2 :
 	@ printf '\n=== LINUX === (part 2)\n'
 
@@ -57,22 +57,9 @@ $(LINUX_BUILD_CONFIG) :
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 
-linux_build_root : $(if $(LINUX_MODULES), linux_modules_install)
-	$(if $(LINUX_INITRAMFS), \
-		$(MAKE) linux_initramfs, \
-		$(MAKE) linux_no_initramfs \
-	)
-
-linux_initramfs : image linux_init2
+linux_initramfs : $(if $(LINUX_MODULES), linux_modules_install) linux_image_init image linux_init2
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
 		echo 'set CONFIG_INITRAMFS_SOURCE=$(ROOT_CPIO)' ; \
-		$(LINUX_SET_INITRAMFS) && \
-		$(LINUX_MAKE_OLDCONFIG) ; \
-	fi
-
-linux_no_initramfs :
-	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '' ] ; then \
-		echo 'unset CONFIG_INITRAMFS_SOURCE' ; \
 		$(LINUX_SET_INITRAMFS) && \
 		$(LINUX_MAKE_OLDCONFIG) ; \
 	fi
@@ -87,11 +74,17 @@ linux_% : linux_init linux_init_src $(LINUX_BUILD_CONFIG)
 			$(filter %rpm, $*), \
 			$(filter %install, $*) \
 		), \
-		$(MAKE) linux_build_root \
+		$(if $(LINUX_INITRAMFS), \
+			$(MAKE) linux_initramfs, \
+			$(if $(LINUX_MODULES), \
+				$(MAKE) linux_modules_install \
+			) \
+		) \
 	)
 	$(LINUX_MAKE) $*
 
 linux_modules : linux_init_src $(LINUX_BUILD_CONFIG)
+	$(LINUX_MAKE) vmlinux
 	$(LINUX_MAKE) modules
 
 linux_modules_install : linux_modules
