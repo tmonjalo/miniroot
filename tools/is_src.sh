@@ -8,6 +8,7 @@ strip_str() {
 
 SRC=$(strip_str $1) # can be a VCS URL, a directory or a tarball
 
+# if SRC exists locally (tarball or directory) or is an URL
 if [ -e "$SRC" ] || echo "$SRC" | fgrep -q '://' ; then
 	echo true
 else

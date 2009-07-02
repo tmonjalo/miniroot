@@ -4,8 +4,10 @@
 
 URL=$*
 
+# get the URL prefix
 PROTOCOL=$(echo $URL | cut -d':' -f1 | cut -d'+' -f1)
 if [ "$PROTOCOL" = "http" -o "$PROTOCOL" = "https" ] ; then
+	# search a magic string inside the URL
 	if echo $URL | fgrep -qi git ; then
 		echo git
 	elif echo $URL | fgrep -qi hg ; then
@@ -15,8 +17,10 @@ if [ "$PROTOCOL" = "http" -o "$PROTOCOL" = "https" ] ; then
 	elif echo $URL | fgrep -qi cvs ; then
 		echo cvs
 	else
+		# fail
 		echo $PROTOCOL
 	fi
 else
+	# protocol defined by prefix
 	echo $PROTOCOL
 fi

@@ -10,9 +10,12 @@ TOP_DIR=$(strip_str $1) # destination parent directory
 SRC=$(strip_str $2) # can be a VCS URL, a directory or a tarball
 DEST_DIR=$(strip_str $3) # force directory where to checkout or to untar
 
+# if forced directory is not empty
 if [ -n "$(echo $DEST_DIR | tr -d '[:space:]')" ] ; then
+	# use the forced one
 	echo $DEST_DIR
 else
+	# compute a directory name
 	if echo $SRC | fgrep -q '://' ; then
 		# SRC is an URL
 		printf $TOP_DIR/
