@@ -1,6 +1,6 @@
 # options can be set in config.mk
 PKG_E2FSPROGS_MKFS ?= no
-E2FSPROGS_SRC ?= 1.41.6
+E2FSPROGS_SRC ?= 1.41.7
 E2FSPROGS_PATCH_DIR ?= # [directory]
 #E2FSPROGS_BUILD_INSIDE = no
 
