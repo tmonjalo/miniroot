@@ -9,6 +9,7 @@ strip_str() {
 TOP_DIR=$(strip_str $1) # destination parent directory
 SRC=$(strip_str $2) # can be a VCS URL, a directory or a tarball
 DEST_DIR=$(strip_str $3) # force directory where to checkout or to untar
+VCS_URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
 
 # if forced directory is not empty
 if [ -n "$(echo $DEST_DIR | tr -d '[:space:]')" ] ; then
@@ -17,15 +18,21 @@ if [ -n "$(echo $DEST_DIR | tr -d '[:space:]')" ] ; then
 else
 	# compute a directory name
 	if echo $SRC | fgrep -q '://' ; then
-		# SRC is an URL
+		# SRC is an URL (can have a branch option)
 		printf $TOP_DIR/
-		echo $SRC | sed 's,://,_,g' | tr '/' '_'
-	elif [ -d $SRC/.git ] ; then
+		echo $SRC | cut -d' ' -f1 | sed 's,://,_,g' | tr '/' '_'
+	elif [ -d "$SRC/.git" ] ; then
 		# SRC is a local git repository
 		echo $TOP_DIR/local_git_$(basename $SRC)
-	elif [ -d $SRC/.hg ] ; then
+	elif [ -d "$VCS_URL" ] ; then
+		# SRC is a local git repository with a specified branch
+		echo $TOP_DIR/local_git_$(basename $VCS_URL)
+	elif [ -d "$SRC/.hg" ] ; then
 		# SRC is a local mercurial repository
 		echo $TOP_DIR/local_hg_$(basename $SRC)
+	elif [ -d "$VCS_URL/.hg" ] ; then
+		# SRC is a local mercurial repository with a specified branch
+		echo $TOP_DIR/local_hg_$(basename $VCS_URL)
 	elif [ -d "$SRC" ] ; then
 		# SRC is a directory
 		echo $SRC

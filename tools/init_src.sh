@@ -13,11 +13,10 @@ SRC=$(strip_str $2) # can be a VCS URL to checkout, a directory or a tarball
 URL=$(strip_str $3) # can be a tarball URL or nothing
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
 DEST_DIR=$(strip_str $5) # force directory where to checkout or to untar
+VCS_URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
+VCS_BRANCH="$(echo $SRC | cut -d' ' -f2)" # SRC can have a branch option in VCS case
 
 check_src_dir () {
-	if [ -d "$DEST_DIR" ] ; then
-		exit 0 # already checked out or extracted
-	fi
 	SRC_DIR=$($SCRIPTS_DIR/get_src_dir.sh "$TOP_DIR" "$SRC")
 	if [ "$SRC_DIR" = "$TOP_DIR/" ] ; then
 		echo "bad source: $SRC"
@@ -30,46 +29,59 @@ check_src_dir () {
 }
 
 vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <directory>
-	local vcs_TOOL=$1
-	local vcs_MAIN_COMMAND=$2
-	local vcs_BRANCH_COMMAND=$3
-	local vcs_SRC="$4"
-	local vcs_DIR="$5"
-	local vcs_URL="$(echo $vcs_SRC | sed 's,\([^ ]*\).*,\1,')"
-	local vcs_BRANCH="$(echo $vcs_SRC | sed 's,[^ ]* *\(.*\),\1,')"
-	$vcs_TOOL $vcs_MAIN_COMMAND "$vcs_URL" "$vcs_DIR"
-	if [ -n "$vcs_BRANCH" ] ; then
-		if [ -z "$vcs_BRANCH_COMMAND" ] ; then
-			echo $vcs_TOOL: no branch support for $vcs_BRANCH
+	local VCS_TOOL=$1
+	local VCS_MAIN_COMMAND=$2
+	local VCS_BRANCH_COMMAND=$3
+	$VCS_TOOL $VCS_MAIN_COMMAND "$VCS_URL" "$DEST_DIR"
+	if [ -n "$VCS_BRANCH" ] ; then
+		if [ -z "$VCS_BRANCH_COMMAND" ] ; then
+			echo $VCS_TOOL: no branch support for $VCS_BRANCH
 			exit 1
 		fi
-		( cd "$vcs_DIR" ; $vcs_TOOL $vcs_BRANCH_COMMAND "$vcs_BRANCH" )
+		( cd "$DEST_DIR" ; $VCS_TOOL $VCS_BRANCH_COMMAND "$VCS_BRANCH" )
 	fi
 }
+
+# if the forced directory exists
+if [ -d "$DEST_DIR" ] ; then
+	exit 0 # already checked out or extracted
+fi
 
 # copy, extract or download
 if echo $SRC | fgrep -q '://' ; then
 	# SRC is an URL
 	check_src_dir
-	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $SRC)
+	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $VCS_URL)
 	if [ "$VCS" = git ] ; then
-		vcs_checkout git clone checkout "$SRC" "$DEST_DIR"
+		vcs_checkout git clone checkout
 	elif [ "$VCS" = hg ] ; then
-		vcs_checkout hg clone '' "$SRC" "$DEST_DIR"
+		vcs_checkout hg clone
 	elif [ "$VCS" = svn ] ; then
-		vcs_checkout svn checkout '' "$SRC" "$DEST_DIR"
+		vcs_checkout svn checkout
 	else
-		echo $VCS: unknown protocol
+		echo $VCS: protocol not supported
 		exit 1
 	fi
-elif [ -d $SRC/.git ] ; then
-	# checkout a local git repository
+elif [ -d "$SRC/.git" ] ; then
+	# SRC is a local git repository (space enabled in the path)
 	check_src_dir
-	vcs_checkout git clone checkout "$SRC" "$DEST_DIR"
-elif [ -d $SRC/.hg ] ; then
-	# checkout a local mercurial repository
+	VCS_URL="$SRC"
+	unset VCS_BRANCH
+	vcs_checkout git clone checkout
+elif [ -d "$VCS_URL/.git" ] ; then
+	# SRC is a local git repository (without space in the path) with a specified branch
 	check_src_dir
-	vcs_checkout hg clone '' "$SRC" "$DEST_DIR"
+	vcs_checkout git clone checkout
+elif [ -d "$SRC/.hg" ] ; then
+	# SRC is a local mercurial repository (space enabled in the path)
+	check_src_dir
+	VCS_URL="$SRC"
+	unset VCS_BRANCH
+	vcs_checkout hg clone
+elif [ -d "$VCS_URL/.hg" ] ; then
+	# SRC is a local mercurial repository (without space in the path) with a specified branch
+	check_src_dir
+	vcs_checkout hg clone
 elif [ -d "$SRC" ] ; then
 	# SRC is an existing directory
 	exit 0
