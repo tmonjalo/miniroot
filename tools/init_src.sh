@@ -14,7 +14,7 @@ URL=$(strip_str $3) # can be a tarball URL or nothing
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
 DEST_DIR=$(strip_str $5) # force directory where to checkout or to untar
 VCS_URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
-VCS_BRANCH="$(echo $SRC | cut -d' ' -f2)" # SRC can have a branch option in VCS case
+VCS_BRANCH="$(echo $SRC | cut -d' ' -sf2)" # SRC can have a branch option in VCS case
 
 check_src_dir () {
 	SRC_DIR=$($SCRIPTS_DIR/get_src_dir.sh "$TOP_DIR" "$SRC")
