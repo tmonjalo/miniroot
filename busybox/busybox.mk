@@ -20,10 +20,11 @@ BUSYBOX_BUILD_BIN = $(BUSYBOX_BUILD_DIR)/busybox
 BUSYBOX_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/busybox
 
 BUSYBOX_MAKE = $(SET_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
+	$(SET_CROSS_COMPILE) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 	$(if $(BUSYBOX_BUILD_INSIDE), , O='$(abspath $(BUSYBOX_BUILD_DIR))') \
 	$(if $(BUSYBOX_VERBOSE), V=1) \
-	$(SET_CROSS_COMPILE) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 	CONFIG_PREFIX='$(abspath $(ROOT_BUILD_DIR))'
+BUSYBOX_MAKE_OLDCONFIG = yes '' | $(BUSYBOX_MAKE) oldconfig >/dev/null
 
 .PHONY : busybox busybox_init busybox_clean busybox_check_latest
 clean : busybox_clean
@@ -39,11 +40,11 @@ $(BUSYBOX_BUILD_CONFIG) :
 	@ echo 'copy config to $(BUSYBOX_BUILD_CONFIG)'
 	@ if [ -f '$(strip $(BUSYBOX_CONFIG))' ] ; then \
 		echo $(BUSYBOX_BUILD_CONFIG) ; \
-		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) && \
-		yes '' | $(BUSYBOX_MAKE) oldconfig ; \
+		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
 	else \
-		$(BUSYBOX_MAKE) defconfig ; \
+		cp $(BUSYBOX_DIR)/default_config $(BUSYBOX_BUILD_CONFIG) ; \
 	fi
+	$(BUSYBOX_MAKE_OLDCONFIG)
 
 # wildcard rule
 busybox_% : busybox_init $(BUSYBOX_BUILD_CONFIG)
