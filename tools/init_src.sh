@@ -28,7 +28,7 @@ check_src_dir () {
 	fi
 }
 
-vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <directory>
+vcs_checkout () { # <vcs tool> <main command> [branch command]
 	local VCS_TOOL=$1
 	local VCS_MAIN_COMMAND=$2
 	local VCS_BRANCH_COMMAND=$3
@@ -39,8 +39,10 @@ vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <d
 			echo $VCS_TOOL: no branch support for $VCS_BRANCH
 			exit 1
 		fi
+		# branch can be <remote_repository>/<branch>
 		local VCS_LOCAL_BRANCH=$(echo $VCS_BRANCH | sed -n 's,.\+/\(.*\),\1,p')
 		if [ -n "$VCS_LOCAL_BRANCH" -a $VCS_TOOL = git ] ; then
+			# create a local branch if it is a remote one
 			VCS_BRANCH_COMMAND="$VCS_BRANCH_COMMAND -b $VCS_LOCAL_BRANCH"
 		fi
 		echo "$VCS_TOOL $VCS_BRANCH_COMMAND $VCS_BRANCH"
