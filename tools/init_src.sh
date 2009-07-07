@@ -32,12 +32,18 @@ vcs_checkout () { # <vcs tool> <main command> [branch command] <URL [branch]> <d
 	local VCS_TOOL=$1
 	local VCS_MAIN_COMMAND=$2
 	local VCS_BRANCH_COMMAND=$3
+	echo "$VCS_TOOL $VCS_MAIN_COMMAND $VCS_URL $DEST_DIR"
 	$VCS_TOOL $VCS_MAIN_COMMAND "$VCS_URL" "$DEST_DIR"
 	if [ -n "$VCS_BRANCH" ] ; then
 		if [ -z "$VCS_BRANCH_COMMAND" ] ; then
 			echo $VCS_TOOL: no branch support for $VCS_BRANCH
 			exit 1
 		fi
+		local VCS_LOCAL_BRANCH=$(echo $VCS_BRANCH | sed -n 's,.\+/\(.*\),\1,p')
+		if [ -n "$VCS_LOCAL_BRANCH" -a $VCS_TOOL = git ] ; then
+			VCS_BRANCH_COMMAND="$VCS_BRANCH_COMMAND -b $VCS_LOCAL_BRANCH"
+		fi
+		echo "$VCS_TOOL $VCS_BRANCH_COMMAND $VCS_BRANCH"
 		( cd "$DEST_DIR" ; $VCS_TOOL $VCS_BRANCH_COMMAND "$VCS_BRANCH" )
 	fi
 }
@@ -92,6 +98,7 @@ else
 			echo "no URL to download"
 			exit 1
 		fi
+		echo "wget -O $SRC $URL"
 		wget -O "$SRC" "$URL"
 	fi
 	check_src_dir
@@ -104,6 +111,7 @@ fi
 
 # patch
 if [ -n "$PATCH_DIR" ] ; then
+	echo patch sources
 	make -s $SCRIPTS_DIR/patch-kernel.sh
 	$SCRIPTS_DIR/patch-kernel.sh $DEST_DIR $PATCH_DIR
 fi
