@@ -4,7 +4,7 @@
 
 git clone git://github.com/tmonjalo/miniroot.git
 and
-Write your own config.mk (as config-example.mk).
+Write your own config.mk (see doc/ directory).
 
 Customizations are done by setting variables in config.mk.
 The list of relevant variables can be found in headers of .mk files or
@@ -17,25 +17,28 @@ in the main Makefile.
 miniroot is intended to be a simple solution to build and/or develop a
 minimal system based on Linux and BusyBox.
 
-The system is "makefile-oriented" with few shell scripts. Its goal is
-to be comprehensive by a human...
+The system is "makefile-oriented" with few shell scripts. Its main goal is
+to be human readable.
 
 .-------------------.
 | WHAT does it do ? |
 '-------------------'
 
-The kernel automatically embed the root filesystem into an initramfs.
-But it can also build an external compressed root.
+The kernel automatically embed the root filesystem into an initramfs if
+selected in the Linux configuration.
+A rootfs image can also be built separately.
 
 Linux and BusyBox build systems can be directly accessed with the
 wildcard rules linux_* and busybox_* (e.g. linux_menuconfig).
 
 The libraries can be built with the minimal set of needed functions.
+WARNING: mklibs.py probably needs bug fixes.
+Use "TARGET_LDFLAGS = -static" to forbid dynamic libraries.
 
 The configurations and other customizations can be archived in a
 separate directory by making config.mk a link (e.g. to config/config.mk).
 
-The build system can be extended with a makefile defined as EXTRA_RULES.
+The build system can be extended via a makefile defined as EXTRA_RULES.
 
 Packages are downloaded at the first build. They can be a local directory,
 a tarball, or a VCS repository. Example:
