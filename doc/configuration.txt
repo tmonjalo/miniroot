@@ -1,0 +1,80 @@
+All paths are relative to the main directory containing the Makefile.
+
+The variables XXX_SRC can be a version number, a local tarball, a tarball URL
+or a VCS URL (remote or local). Git URLs can include a branch as an option.
+
+toolchain
+---------
+
+If not defined, miniroot uses the default toolchain of the host.
+
+To use a different toolchain, the path must be specified with
+	TOOLCHAIN_PATH
+If toolchain binaries have a prefix, it must be defined in
+	TOOLCHAIN_PREFIX
+In order to use a wrapper with the compiler (like ccache), you can define
+	TARGET_CC
+
+Linux can be built with a different toolchain than the one used for the rootfs.
+All the toolchain variables can be prefixed by LINUX_ to specify this second toolchain.
+
+build options
+-------------
+
+Options for the toolchain can be set via the following variables.
+preprocessor:
+	TARGET_CPPFLAGS
+C compiler:
+	TARGET_CFLAGS
+C++ compiler:
+	TARGET_CXXFLAGS
+linker:
+	TARGET_LDFLAGS
+Default values are set in Makefile.
+
+linux
+-----
+
+Linux will be built if requested by a target of type linux_image.
+
+The source can be chosen via
+	LINUX_SRC
+
+The configuration can be retrieved from
+	LINUX_CONFIG
+It can be the name of a default configuration in the sources or another file.
+It can be configured by
+	make linux_menuconfig
+A rootfs will be embedded if initramfs is selected in the Linux configuration.
+
+busybox
+-------
+
+The source can be chosen via
+	BUSYBOX_SRC
+
+There is a default configuration in
+	busybox/default_config
+A specific configuration can be retrieved from
+	BUSYBOX_CONFIG
+It can be configured by
+	make linux_menuconfig
+
+
+packages
+--------
+
+All packages are disabled by default. They can be enabled by setting
+	PKG_XXX = yes
+Source is retrieved in
+	XXX_SRC
+Other variables can be overridden.
+Default values are defined in the headers of each package in
+	packages/XXX/XXX.mk
+
+main target
+-----------
+
+When typing "make" without specifying a target, all the targets defined in
+	TARGETS
+will be built. It defines the goal of the project.

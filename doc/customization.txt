@@ -1,0 +1,27 @@
+The variable which allow customization is EXTRA_RULES.
+It defines a makefile which will be loaded after all the base.
+
+It can include other makefiles, set new rules, add dependencies to main rules
+and reuse the variables of the main makefiles.
+
+Example:
+
+8<---------------------------------------------------------
+update:
+    git fetch .
+    svn update $(CONFIG_DIR)
+    svn update $(ROOT_SKEL_SRC_DIR)
+    svn update $(LINUX_SRC_DIR)
+status:
+    @ git status . | sed '/^# Untracked/q' | sed '/^#\t/!d'
+    @ sed '/ version: /{n;d;}' $(LINUX_BUILD_CONFIG) | sed 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"",' > $(LINUX_CONFIG)
+    @ sed '/ version: /{n;d;}' $(BUSYBOX_BUILD_CONFIG) > $(BUSYBOX_CONFIG)
+    @ svn status --quiet $(CONFIG_DIR)
+    @ svn status --quiet $(ROOT_SKEL_SRC_DIR)
+    @ svn status --quiet $(LINUX_SRC_DIR)
+8<---------------------------------------------------------
+
+In this example, configurations are stored in CONFIG_DIR.
+config.mk can be a link to the real configuration file in CONFIG_DIR.
+The command "make status" will store Linux and Busybox configurations.
+The configuration, root skeleton and Linux sources are stored in a svn repository.
