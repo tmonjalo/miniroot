@@ -61,7 +61,4 @@ busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall
 
 busybox_check_latest :
-	@ printf 'default busybox: '
-	@ sed -n 's,^BUSYBOX_SRC ?= \([^ ]*\).*,\1,p' $(BUSYBOX_DIR)/busybox.mk
-	@ printf ' latest busybox: '
-	@ elinks -dump http://busybox.net | sed -n 's,.*http://.*/busybox-\(.*\).tar.bz2.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, busybox.net)

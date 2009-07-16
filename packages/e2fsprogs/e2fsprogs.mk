@@ -65,7 +65,4 @@ e2fsprogs_clean :
 	- $(MAKE) -C $(E2FSPROGS_BUILD_DIR) clean
 
 e2fsprogs_check_latest :
-	@ printf 'default e2fsprogs: '
-	@ sed -n 's,^E2FSPROGS_SRC ?= \([^ ]*\).*,\1,p' $(E2FSPROGS_DIR)/e2fsprogs.mk
-	@ printf ' latest e2fsprogs: '
-	@ elinks -dump http://e2fsprogs.sourceforge.net | sed -n 's,.*http://.*/e2fsprogs-\(.*\).tar.gz.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, gz, head, e2fsprogs.sourceforge.net)

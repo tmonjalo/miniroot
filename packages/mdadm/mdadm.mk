@@ -41,7 +41,4 @@ mdadm_clean :
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))')
 
 mdadm_check_latest :
-	@ printf 'default mdadm: '
-	@ sed -n 's,^MDADM_SRC ?= \([^ ]*\).*,\1,p' $(MDADM_DIR)/mdadm.mk
-	@ printf ' latest mdadm: '
-	@ elinks -dump http://kernel.org/pub/linux/utils/raid/mdadm | sed -n 's,.*http://.*/mdadm-\(.*\).tar.bz2.*,\1,p' | tail -n1
+	@ $(call CHECK_LATEST_TARBALL, bz2, tail, kernel.org/pub/linux/utils/raid/mdadm)

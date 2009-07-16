@@ -99,7 +99,4 @@ linux_clean :
 	- $(LINUX_MAKE) clean
 
 linux_check_latest :
-	@ printf 'default linux: '
-	@ sed -n 's,^LINUX_SRC ?= \([^ ]*\).*,\1,p' $(LINUX_DIR)/linux.mk
-	@ printf ' latest linux: '
-	@ elinks -dump http://kernel.org | sed -n 's,.*http://.*/linux-\(.*\).tar.bz2.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, kernel.org)

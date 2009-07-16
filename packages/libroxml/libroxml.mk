@@ -43,7 +43,4 @@ libroxml_clean :
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')
 
 libroxml_check_latest :
-	@ printf 'default libroxml: '
-	@ sed -n 's,^LIBROXML_SRC ?= \([^ ]*\).*,\1,p' $(LIBROXML_DIR)/libroxml.mk
-	@ printf ' latest libroxml: '
-	@ elinks -dump http://code.google.com/p/libroxml/downloads/list | sed -n 's,.*http://.*/libroxml-\(.*\).tar.gz.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, gz, head, code.google.com/p/libroxml/downloads/list)

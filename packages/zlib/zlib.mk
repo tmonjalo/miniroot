@@ -46,7 +46,4 @@ zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
 zlib_check_latest :
-	@ printf 'default zlib: '
-	@ sed -n 's,^ZLIB_SRC ?= \([^ ]*\).*,\1,p' $(ZLIB_DIR)/zlib.mk
-	@ printf ' latest zlib: '
-	@ elinks -dump http://zlib.net | sed -n 's,.*http://.*/zlib-\(.*\).tar.bz2.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, zlib.net)

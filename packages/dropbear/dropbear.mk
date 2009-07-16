@@ -98,7 +98,4 @@ dropbear_clean :
 	- rm -f $(DROPBEAR_INSTALL_CLIENT2_ALIAS)
 
 dropbear_check_latest :
-	@ printf 'default dropbear: '
-	@ sed -n 's,^DROPBEAR_SRC ?= \([^ ]*\).*,\1,p' $(DROPBEAR_DIR)/dropbear.mk
-	@ printf ' latest dropbear: '
-	@ elinks -dump http://matt.ucc.asn.au/dropbear/dropbear.html | sed -n 's,.*http://.*/dropbear-\(.*\).tar.bz2.*,\1,p' | head -n1
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, matt.ucc.asn.au/dropbear/dropbear.html)
