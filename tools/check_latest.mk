@@ -34,7 +34,8 @@ define WWW_DUMP
 	$(if $(shell which elinks 2>/dev/null), \
 		elinks -dump $1, \
 		$(if $(shell which lynx 2>/dev/null), \
-			lynx -dump $1 \
+			lynx -dump $1, \
+			$(error no www-browser able to dump, you should install elinks) \
 		) \
 	)
 endef
