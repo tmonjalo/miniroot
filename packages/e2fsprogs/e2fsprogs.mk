@@ -65,4 +65,4 @@ e2fsprogs_clean :
 	- $(MAKE) -C $(E2FSPROGS_BUILD_DIR) clean
 
 e2fsprogs_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, gz, head, e2fsprogs.sourceforge.net)
+	@ $(call CHECK_LATEST_TARBALL, gz, head, http://e2fsprogs.sourceforge.net)

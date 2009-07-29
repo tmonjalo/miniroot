@@ -21,12 +21,12 @@ define GET_DEFAULT_VERSION
 	)
 endef
 
-# GET_TARBALL_VERSION <package> <extension> <head|tail> <www>
+# GET_TARBALL_VERSION <package> <extension> <head|tail> <url>
 # print version of a tarball from the web page
 define GET_TARBALL_VERSION
 	$(shell \
-		$(call WWW_DUMP, http://$(strip $4)) | \
-		sed -n 's,.*http://.*/$(strip $1)-\(.*\).tar.$(strip $2).*,\1,p' | \
+		$(call WWW_DUMP, $(strip $4)) | \
+		sed -n 's,.*://.*/$(strip $1)-\(.*\).tar.$(strip $2).*,\1,p' | \
 		$3 -n1 \
 	)
 endef
@@ -40,7 +40,7 @@ define WWW_DUMP
 	)
 endef
 
-# CHECK_LATEST_TARBALL_FOR <package> <extension> <head|tail> <www>
+# CHECK_LATEST_TARBALL_FOR <package> <extension> <head|tail> <url>
 # print default and latest version from the web page for the package
 # extension should be gz or bz2
 # filter first or last tarball with head or tail
@@ -52,7 +52,7 @@ define CHECK_LATEST_TARBALL_FOR
 	)
 endef
 
-# CHECK_LATEST_TARBALL <extension> <head|tail> <www>
+# CHECK_LATEST_TARBALL <extension> <head|tail> <url>
 # print default and latest version from the web page for the implicit package
 # extension should be gz or bz2
 # filter first or last tarball with head or tail

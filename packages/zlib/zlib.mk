@@ -20,7 +20,7 @@ ZLIB_BUILD_BIN = $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSIO
 
 TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)
 
-.PHONY : zlib zlib_init zlib_configure zlib_clean
+.PHONY : zlib zlib_init zlib_configure zlib_clean zlib_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_ZLIB), zlib))
 
 zlib : $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
@@ -46,4 +46,4 @@ zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
 zlib_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, zlib.net)
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://zlib.net)

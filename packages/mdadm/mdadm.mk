@@ -19,7 +19,7 @@ MDADM_BUILD_DIR = $(if $(MDADM_BUILD_INSIDE), $(MDADM_SRC_DIR), $(BUILD_DIR)/$(n
 MDADM_BUILD_BIN = $(MDADM_BUILD_DIR)/mdadm
 MDADM_INSTALL_BIN = $(ROOT_BUILD_DIR)/sbin/$(notdir $(MDADM_BUILD_BIN))
 
-.PHONY : mdadm_mkfs mdadm_init mdadm_libs mdadm_clean
+.PHONY : mdadm_mkfs mdadm_init mdadm_clean mdadm_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_MDADM), mdadm))
 
 mdadm : $(MDADM_DEPS) $(MDADM_INSTALL_BIN)
@@ -41,4 +41,4 @@ mdadm_clean :
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))')
 
 mdadm_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, kernel.org/pub/linux/utils/raid/mdadm)
+	@ $(call CHECK_LATEST_TARBALL, bz2, tail, http://kernel.org/pub/linux/utils/raid/mdadm)

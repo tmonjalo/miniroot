@@ -99,4 +99,4 @@ linux_clean :
 	- $(LINUX_MAKE) clean
 
 linux_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, kernel.org)
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://kernel.org)

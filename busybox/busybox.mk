@@ -61,4 +61,4 @@ busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall
 
 busybox_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, busybox.net)
+	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://busybox.net)

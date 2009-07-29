@@ -20,7 +20,7 @@ LIBROXML_BUILD_DIR = $(if $(LIBROXML_BUILD_INSIDE), $(LIBROXML_SRC_DIR), $(BUILD
 LIBROXML_BUILD_BIN = $(LIBROXML_BUILD_DIR)/roxml
 LIBROXML_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/$(notdir $(LIBROXML_BUILD_BIN))
 
-.PHONY : libroxml libroxml_init libroxml_clean
+.PHONY : libroxml libroxml_init libroxml_clean libroxml_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML), libroxml))
 
 libroxml : $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
@@ -43,4 +43,4 @@ libroxml_clean :
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')
 
 libroxml_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, gz, head, code.google.com/p/libroxml/downloads/list)
+	@ $(call CHECK_LATEST_TARBALL, gz, head, http://code.google.com/p/libroxml/downloads/list)
