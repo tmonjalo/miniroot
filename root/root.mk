@@ -47,7 +47,8 @@ root_skel : root_skel_init
 root_dev_init :
 	@ printf '\n=== DEVICES ===\n'
 root_dev : root_dev_init $(MAKEDEVS) | $(dir $(FAKEROOT_SCRIPT))
-	echo '$(MAKEDEVS) -d $(ROOT_DEV_TABLE) $(abspath $(ROOT_BUILD_DIR))' > $(FAKEROOT_SCRIPT)
+	@ echo 'set -e' > $(FAKEROOT_SCRIPT)
+	echo '$(MAKEDEVS) -d $(ROOT_DEV_TABLE) $(abspath $(ROOT_BUILD_DIR))' >> $(FAKEROOT_SCRIPT)
 
 root_clean :
 	- rm -rf $(ROOT_BUILD_DIR)

@@ -31,7 +31,7 @@ zlib_init :
 
 zlib_configure :
 	( set -e ; \
-		cd $(ZLIB_BUILD_DIR) && \
+		cd $(ZLIB_BUILD_DIR) ; \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
 		$(if $(TARGET_STATIC), ./configure, ./configure --shared) \
 	)
