@@ -18,6 +18,7 @@ packages_clean : $2_clean
 endif
 endef
 
+include $(PKG_DIR)/mtd-utils/mtd-utils.mk
 include $(PKG_DIR)/mdadm/mdadm.mk
 include $(PKG_DIR)/e2fsprogs/e2fsprogs.mk
 include $(PKG_DIR)/zlib/zlib.mk
