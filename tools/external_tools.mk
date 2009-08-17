@@ -1,6 +1,12 @@
+include $(TOOLS_DIR)/sstrip.mk
+
+include $(TOOLS_DIR)/makedevs.mk
+
 PATCH_KERNEL = $(TOOLS_DIR)/patch-kernel.sh
+tools : $(PATCH_KERNEL)
+
 MKLIBS = $(TOOLS_DIR)/mklibs.py
-tools : $(PATCH_KERNEL) $(MKLIBS)
+tools : $(MKLIBS)
 
 BUILDROOT_URL = http://git.buildroot.net/buildroot/plain/
 BUILDROOT_PATHS = \
