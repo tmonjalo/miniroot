@@ -27,9 +27,11 @@ e2fsprogs : $(E2FSPROGS_DEPS) \
 
 e2fsprogs_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== E2FSPROGS ===\n'
+
+$(E2FSPROGS_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
 
-$(E2FSPROGS_BUILD_DIR)/Makefile :
+$(E2FSPROGS_BUILD_DIR)/Makefile : | $(E2FSPROGS_SRC_DIR)
 	mkdir -p $(E2FSPROGS_BUILD_DIR)
 	( set -e ; \
 		cd $(E2FSPROGS_BUILD_DIR) ; \

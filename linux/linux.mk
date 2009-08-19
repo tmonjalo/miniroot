@@ -32,7 +32,7 @@ LINUX_INITRAMFS = $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG)
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
 
-.PHONY : linux linux_clean linux_init linux_image_init linux_init2 linux_init_src \
+.PHONY : linux linux_clean linux_init linux_image_init linux_init2 \
 	linux_modules linux_modules_install linux_initramfs linux_check_latest
 clean : linux_clean
 
@@ -45,10 +45,10 @@ linux_image_init :
 linux_init2 :
 	@ printf '\n=== LINUX === (part 2)\n'
 
-linux_init_src :
+$(LINUX_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
 
-$(LINUX_BUILD_CONFIG) :
+$(LINUX_BUILD_CONFIG) : | $(LINUX_SRC_DIR)
 	mkdir -p $(LINUX_BUILD_DIR)
 	@ echo 'copy config to $(LINUX_BUILD_CONFIG)'
 	@ if [ -f '$(strip $(LINUX_CONFIG))' ] ; then \
@@ -66,7 +66,7 @@ linux_initramfs : $(if $(LINUX_MODULES), linux_modules_install) linux_image_init
 	fi
 
 # wildcard rule
-linux_% : linux_init linux_init_src $(LINUX_BUILD_CONFIG)
+linux_% : linux_init $(LINUX_BUILD_CONFIG)
 	$(if $(or \
 			$(filter all, $*), \
 			$(filter vmlinux, $*), \
@@ -84,7 +84,7 @@ linux_% : linux_init linux_init_src $(LINUX_BUILD_CONFIG)
 	)
 	$(LINUX_MAKE) $*
 
-linux_modules : linux_init_src $(LINUX_BUILD_CONFIG)
+linux_modules : $(LINUX_BUILD_CONFIG)
 	$(LINUX_MAKE) vmlinux
 	$(LINUX_MAKE) modules
 

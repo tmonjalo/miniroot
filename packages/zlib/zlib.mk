@@ -27,9 +27,11 @@ zlib : $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
 
 zlib_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== ZLIB ===\n'
+
+$(ZLIB_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_URL)' '$(ZLIB_PATCH_DIR)'
 
-zlib_configure :
+zlib_configure : | $(ZLIB_SRC_DIR)
 	( set -e ; \
 		cd $(ZLIB_BUILD_DIR) ; \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
