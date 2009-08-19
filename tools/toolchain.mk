@@ -60,5 +60,5 @@ $(TOOLCHAIN_CC) :
 	@ $(MAKE) --no-print-directory toolchain_build
 
 toolchain_clean :
-	chmod -R +w $(TOOLCHAIN_BUILD_DIR)
-	rm -rf $(TOOLCHAIN_BUILD_DIR)
+	- chmod -R +w $(TOOLCHAIN_BUILD_DIR)
+	- rm -rf $(TOOLCHAIN_BUILD_DIR)

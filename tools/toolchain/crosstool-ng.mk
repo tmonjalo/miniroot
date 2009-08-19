@@ -14,6 +14,8 @@ CROSSTOOL-NG_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(CROSSTOOL-NG_DIR)'
 CROSSTOOL-NG_BUILD_DIR = $(CROSSTOOL-NG_SRC_DIR)
 CROSSTOOL-NG = $(CROSSTOOL-NG_BUILD_DIR)/ct-ng
 
+CROSSTOOL-NG_MAKE = $(MAKE) -C $(CROSSTOOL-NG_BUILD_DIR)
+
 .PHONY : crosstool-ng crosstool-ng_init crosstool-ng_clean crosstool-ng_check_latest
 
 crosstool-ng : $(CROSSTOOL-NG)
@@ -31,10 +33,13 @@ $(CROSSTOOL-NG_BUILD_DIR)/Makefile : | $(CROSSTOOL-NG_SRC_DIR)
 	)
 
 $(CROSSTOOL-NG) : crosstool-ng_init $(CROSSTOOL-NG_BUILD_DIR)/Makefile
-	$(MAKE) -C $(CROSSTOOL-NG_BUILD_DIR)
+	$(CROSSTOOL-NG_MAKE)
+
+crosstool-ng_% :
+	$(CROSSTOOL-NG_MAKE) $*
 
 crosstool-ng_clean :
-	- $(MAKE) -C $(CROSSTOOL-NG_BUILD_DIR) distclean
+	- $(CROSSTOOL-NG_MAKE) distclean
 
 crosstool-ng_check_latest :
 	@ $(call CHECK_LATEST_TARBALL, bz2, tail, http://ymorin.is-a-geek.org/download/crosstool-ng)
