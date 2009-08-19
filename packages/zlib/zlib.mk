@@ -25,7 +25,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_ZLIB), zlib))
 
 zlib : $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
 
-zlib_init :
+zlib_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== ZLIB ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_URL)' '$(ZLIB_PATCH_DIR)'
 

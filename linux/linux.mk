@@ -19,6 +19,7 @@ endif
 LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
 LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
 LINUX_BUILD_CONFIG = $(LINUX_BUILD_DIR)/.config
+LINUX_DEFAULT_CONFIG = $(LINUX_SRC_DIR)/arch/$(TARGET_ARCH)/configs/$(LINUX_CONFIG)
 
 LINUX_MAKE = $(SET_LINUX_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(SET_ARCH) $(SET_LINUX_CROSS_COMPILE) $(SET_LINUX_CC) \
@@ -37,7 +38,7 @@ clean : linux_clean
 
 linux : linux_all
 
-linux_init :
+linux_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== LINUX ===\n'
 linux_image_init :
 	@ printf '(end of part 1)\n\nmake root image for initramfs\n'
@@ -53,7 +54,7 @@ $(LINUX_BUILD_CONFIG) :
 	@ if [ -f '$(strip $(LINUX_CONFIG))' ] ; then \
 		cp $(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
 	else \
-		cp $(LINUX_SRC_DIR)/arch/$(TARGET_ARCH)/configs/$(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
+		cp $(LINUX_DEFAULT_CONFIG) $(LINUX_BUILD_CONFIG) ; \
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 

@@ -25,7 +25,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML), libroxml))
 
 libroxml : $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
 
-libroxml_init :
+libroxml_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== LIBROXML ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)' '$(LIBROXML_URL)' '$(LIBROXML_PATCH_DIR)'
 

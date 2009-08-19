@@ -33,7 +33,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_DROPBEAR_SERVER) $(PKG_DROPBEAR_CLIENT), d
 
 dropbear : $(DROPBEAR_DEPS) $(DROPBEAR_INSTALL_BIN)
 
-dropbear_init :
+dropbear_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== DROPBEAR (package not tested) ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_URL)' '$(DROPBEAR_PATCH_DIR)'
 

@@ -16,6 +16,7 @@ endif
 BUSYBOX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
 BUSYBOX_BUILD_DIR = $(if $(BUSYBOX_BUILD_INSIDE), $(BUSYBOX_SRC_DIR), $(BUILD_DIR)/$(notdir $(BUSYBOX_SRC_DIR)))
 BUSYBOX_BUILD_CONFIG = $(BUSYBOX_BUILD_DIR)/.config
+BUSYBOX_DEFAULT_CONFIG = $(BUSYBOX_DIR)/default_config
 BUSYBOX_BUILD_BIN = $(BUSYBOX_BUILD_DIR)/busybox
 BUSYBOX_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/busybox
 
@@ -31,7 +32,7 @@ clean : busybox_clean
 
 busybox : $(BUSYBOX_INSTALL_BIN)
 
-busybox_init :
+busybox_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== BUSYBOX ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
 
@@ -42,7 +43,7 @@ $(BUSYBOX_BUILD_CONFIG) :
 		echo $(BUSYBOX_BUILD_CONFIG) ; \
 		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
 	else \
-		cp $(BUSYBOX_DIR)/default_config $(BUSYBOX_BUILD_CONFIG) ; \
+		cp $(BUSYBOX_DEFAULT_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
 	fi
 	$(BUSYBOX_MAKE_OLDCONFIG)
 

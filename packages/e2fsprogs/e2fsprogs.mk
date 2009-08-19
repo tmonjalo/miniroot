@@ -25,7 +25,7 @@ $(eval $(call PKG_INCLUDE_RULE, $(PKG_E2FSPROGS_MKFS), e2fsprogs))
 e2fsprogs : $(E2FSPROGS_DEPS) \
 	$(if $(call PKG_IS_SET, $(PKG_E2FSPROGS_MKFS)), $(E2FSPROGS_INSTALL_MKFS))
 
-e2fsprogs_init :
+e2fsprogs_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== E2FSPROGS ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
 

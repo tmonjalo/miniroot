@@ -49,7 +49,7 @@ mtd-utils : $(MTD-UTILS_DEPS) \
 	$(if $(call PKG_IS_SET, $(PKG_MTD-UTILS_UBI)),   $(MTD-UTILS_INSTALL_UBI)  ) \
 	$(if $(call PKG_IS_SET, $(PKG_MTD-UTILS_JFFS2)), $(MTD-UTILS_INSTALL_JFFS2))
 
-mtd-utils_init :
+mtd-utils_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== MTD-UTILS ===\n'
 	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$(MTD-UTILS_URL)' '$(MTD-UTILS_PATCH_DIR)'
 
