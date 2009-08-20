@@ -1,7 +1,7 @@
 # options can be set in config.mk
 CROSSTOOL-NG_SRC ?= 1.4.2
 CROSSTOOL-NG_PATCH_DIR ?= # [directory]
-CROSSTOOL-NG_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)')
+CROSSTOOL-NG_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUILD_DIR)' '$(CROSSTOOL-NG_SRC)')
 
 CROSSTOOL-NG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
