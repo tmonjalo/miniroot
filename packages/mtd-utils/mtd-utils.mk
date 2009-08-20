@@ -9,6 +9,7 @@ PKG_MTD-UTILS_UBI ?= no   # TODO
 PKG_MTD-UTILS_JFFS2 ?= no # TODO
 MTD-UTILS_SRC ?= 1.2.0
 MTD-UTILS_PATCH_DIR ?= # [directory]
+MTD-UTILS_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)')
 #MTD-UTILS_BUILD_INSIDE = no
 
 MTD-UTILS_DEPS = \
@@ -16,13 +17,12 @@ MTD-UTILS_DEPS = \
 
 MTD-UTILS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+MTD-UTILS_URL = ftp://ftp.infradead.org/pub/mtd-utils
 # if MTD-UTILS_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(MTD-UTILS_SRC)')),false)
-override MTD-UTILS_SRC := $(MTD-UTILS_DIR)/mtd-utils-$(strip $(MTD-UTILS_SRC)).tar.bz2
-MTD-UTILS_URL = ftp://ftp.infradead.org/pub/mtd-utils/$(notdir $(MTD-UTILS_SRC))
+override MTD-UTILS_SRC := $(MTD-UTILS_URL)/mtd-utils-$(strip $(MTD-UTILS_SRC)).tar.bz2
 endif
 
-MTD-UTILS_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)')
 MTD-UTILS_BUILD_DIR = $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
 MTD-UTILS_INSTALL_DIR = $(ROOT_BUILD_DIR)/sbin
 
@@ -51,7 +51,7 @@ mtd-utils : $(MTD-UTILS_DEPS) \
 
 mtd-utils_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== MTD-UTILS ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$(MTD-UTILS_URL)' '$(MTD-UTILS_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$(MTD-UTILS_SRC_DIR)' '$(MTD-UTILS_PATCH_DIR)'
 
 define MTD-UTILS_RULES
 
@@ -75,4 +75,4 @@ mtd-utils_clean :
 		$(if $(MTD-UTILS_BUILD_INSIDE), , BUILDDIR='$(abspath $(MTD-UTILS_BUILD_DIR))') \
 
 mtd-utils_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, ftp://ftp.infradead.org/pub/mtd-utils)
+	@ $(call CHECK_LATEST_TARBALL, bz2, tail, $(MTD-UTILS_URL))

@@ -2,19 +2,19 @@
 PKG_E2FSPROGS_MKFS ?= no
 E2FSPROGS_SRC ?= 1.41.8
 E2FSPROGS_PATCH_DIR ?= # [directory]
+E2FSPROGS_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)')
 #E2FSPROGS_BUILD_INSIDE = no
 
 E2FSPROGS_DEPS =
 
 E2FSPROGS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+E2FSPROGS_URL = http://downloads.sourceforge.net/e2fsprogs
 # if E2FSPROGS_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(E2FSPROGS_SRC)')),false)
-override E2FSPROGS_SRC := $(E2FSPROGS_DIR)/e2fsprogs-$(strip $(E2FSPROGS_SRC)).tar.gz
-E2FSPROGS_URL = http://downloads.sourceforge.net/e2fsprogs/$(notdir $(E2FSPROGS_SRC))
+override E2FSPROGS_SRC := $(E2FSPROGS_URL)/e2fsprogs-$(strip $(E2FSPROGS_SRC)).tar.gz
 endif
 
-E2FSPROGS_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)')
 E2FSPROGS_BUILD_DIR = $(if $(E2FSPROGS_BUILD_INSIDE), $(E2FSPROGS_SRC_DIR), $(BUILD_DIR)/$(notdir $(E2FSPROGS_SRC_DIR)))
 E2FSPROGS_BUILD_MKFS = $(E2FSPROGS_BUILD_DIR)/misc/mke2fs
 E2FSPROGS_INSTALL_MKFS = $(ROOT_BUILD_DIR)/sbin/$(notdir $(E2FSPROGS_BUILD_MKFS))
@@ -29,7 +29,7 @@ e2fsprogs_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== E2FSPROGS ===\n'
 
 $(E2FSPROGS_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_URL)' '$(E2FSPROGS_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_SRC_DIR)' '$(E2FSPROGS_PATCH_DIR)'
 
 $(E2FSPROGS_BUILD_DIR)/Makefile : | $(E2FSPROGS_SRC_DIR)
 	mkdir -p $(E2FSPROGS_BUILD_DIR)

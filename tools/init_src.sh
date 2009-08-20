@@ -7,113 +7,107 @@ strip_str() {
 	echo $* | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
 }
 
-SCRIPTS_DIR=$(dirname $0)
 TOP_DIR=$(strip_str $1) # destination parent directory
-SRC=$(strip_str $2) # can be a VCS URL to checkout, a directory or a tarball
-URL=$(strip_str $3) # can be a tarball URL or nothing
+SRC=$(strip_str $2) # can be a VCS URL to checkout, a tarball URL to download, a directory or a tarball
+SRC_DIR=$(strip_str $3) # directory where to checkout or to untar
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
-DEST_DIR=$(strip_str $5) # force directory where to checkout or to untar
-VCS_URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
-VCS_BRANCH="$(echo $SRC | cut -d' ' -sf2)" # SRC can have a branch option in VCS case
 
-check_src_dir () {
-	SRC_DIR=$($SCRIPTS_DIR/get_src_dir.sh "$TOP_DIR" "$SRC")
-	if [ "$SRC_DIR" = "$TOP_DIR/" ] ; then
-		echo "bad source: $SRC"
-		exit 1
-	fi
-	DEST_DIR=${DEST_DIR:-$SRC_DIR}
-	if [ -d "$DEST_DIR" ] ; then
-		exit 0 # already checked out or extracted
-	fi
-}
+SCRIPTS_DIR=$(dirname $0)
+URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
+BRANCH="$(echo $SRC | cut -d' ' -sf2)" # SRC can have a branch option in VCS case
+ERROR_DIR=/tmp/miniroot_error # fake directory in case of error
 
 vcs_checkout () { # <vcs tool> <main command> [branch command]
-	local VCS_TOOL=$1
-	local VCS_MAIN_COMMAND=$2
-	local VCS_BRANCH_COMMAND=$3
-	echo "$VCS_TOOL $VCS_MAIN_COMMAND $VCS_URL $DEST_DIR"
-	$VCS_TOOL $VCS_MAIN_COMMAND "$VCS_URL" "$DEST_DIR"
-	if [ -n "$VCS_BRANCH" ] ; then
-		if [ -z "$VCS_BRANCH_COMMAND" ] ; then
-			echo $VCS_TOOL: no branch support for $VCS_BRANCH
+	local TOOL=$1
+	local MAIN_COMMAND=$2
+	local BRANCH_COMMAND=$3
+	echo "$TOOL $MAIN_COMMAND $URL $SRC_DIR"
+	$TOOL $MAIN_COMMAND "$URL" "$SRC_DIR"
+	if [ -n "$BRANCH" ] ; then
+		if [ -z "$BRANCH_COMMAND" ] ; then
+			echo $TOOL: no branch support for $BRANCH
 			exit 1
 		fi
 		# branch can be <remote_repository>/<branch>
-		local VCS_LOCAL_BRANCH=$(echo $VCS_BRANCH | sed -n 's,.\+/\(.*\),\1,p')
-		if [ -n "$VCS_LOCAL_BRANCH" -a $VCS_TOOL = git ] ; then
+		local LOCAL_BRANCH=$(echo $BRANCH | sed -n 's,.\+/\(.*\),\1,p')
+		if [ -n "$LOCAL_BRANCH" -a $TOOL = git ] ; then
 			# create a local branch if it is a remote one
-			VCS_BRANCH_COMMAND="$VCS_BRANCH_COMMAND -b $VCS_LOCAL_BRANCH"
+			BRANCH_COMMAND="$BRANCH_COMMAND -b $LOCAL_BRANCH"
 		fi
-		echo "$VCS_TOOL $VCS_BRANCH_COMMAND $VCS_BRANCH"
-		( cd "$DEST_DIR" ; $VCS_TOOL $VCS_BRANCH_COMMAND "$VCS_BRANCH" )
+		echo "$TOOL $BRANCH_COMMAND $BRANCH"
+		( cd "$SRC_DIR" ; $TOOL $BRANCH_COMMAND "$BRANCH" )
 	fi
 }
 
-# if the forced directory exists
-if [ -d "$DEST_DIR" ] ; then
-	exit 0 # already checked out or extracted
+extract_tarball () { # <tarball>
+	local TARBALL=$*
+	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/*$,,')
+	echo untar sources to $SRC_DIR
+	tar x -C "$TOP_DIR" -f "$TARBALL"
+	if [ "$(readlink -nm $TOP_DIR/$TARBALL_DIR)" != "$(readlink -nm $SRC_DIR)" ] ; then
+		# move to specified directory
+		mv $TOP_DIR/$TARBALL_DIR $SRC_DIR
+	fi
+}
+
+# check the source directory
+if echo $SRC_DIR | grep -q "^$ERROR_DIR" ; then
+	echo "bad source: $SRC"
+	exit 1
+fi
+if [ -d "$SRC_DIR" ] ; then
+	# already checked out or extracted
+	exit 0
 fi
 
 # copy, extract or download
 if echo $SRC | fgrep -q '://' ; then
-	# SRC is an URL
-	check_src_dir
-	VCS=$($SCRIPTS_DIR/get_vcs_from_url.sh $VCS_URL)
-	if [ "$VCS" = git ] ; then
+	# SRC is an URL (can have a branch option)
+	PROTOCOL=$($SCRIPTS_DIR/get_protocol_from_url.sh $URL)
+	if echo $PROTOCOL | grep -q tp ; then # http, ftp
+		TARBALL=$TOP_DIR/$(basename $SRC)
+		if [ ! -s "$TARBALL" ] ; then
+			echo "wget -O $TARBALL $SRC"
+			wget -O "$TARBALL" "$SRC"
+		fi
+		extract_tarball $TARBALL
+	elif [ "$PROTOCOL" = git ] ; then
 		vcs_checkout git clone checkout
-	elif [ "$VCS" = hg ] ; then
+	elif [ "$PROTOCOL" = hg ] ; then
 		vcs_checkout hg clone
-	elif [ "$VCS" = svn ] ; then
+	elif [ "$PROTOCOL" = svn ] ; then
 		vcs_checkout svn checkout
 	else
-		echo $VCS: protocol not supported
+		echo $PROTOCOL: protocol not supported
 		exit 1
 	fi
 elif [ -d "$SRC/.git" ] ; then
 	# SRC is a local git repository (space enabled in the path)
-	check_src_dir
-	VCS_URL="$SRC"
-	unset VCS_BRANCH
+	URL="$SRC"
+	unset BRANCH
 	vcs_checkout git clone checkout
-elif [ -d "$VCS_URL/.git" ] ; then
+elif [ -d "$URL/.git" ] ; then
 	# SRC is a local git repository (without space in the path) with a specified branch
-	check_src_dir
 	vcs_checkout git clone checkout
 elif [ -d "$SRC/.hg" ] ; then
 	# SRC is a local mercurial repository (space enabled in the path)
-	check_src_dir
-	VCS_URL="$SRC"
-	unset VCS_BRANCH
+	URL="$SRC"
+	unset BRANCH
 	vcs_checkout hg clone
-elif [ -d "$VCS_URL/.hg" ] ; then
+elif [ -d "$URL/.hg" ] ; then
 	# SRC is a local mercurial repository (without space in the path) with a specified branch
-	check_src_dir
 	vcs_checkout hg clone
 elif [ -d "$SRC" ] ; then
 	# SRC is an existing directory
 	exit 0
 else
 	# SRC is a file, assume it is a tarball
-	if [ ! -s "$SRC" ] ; then
-		if [ -z "$URL" ] ; then
-			echo "no URL to download"
-			exit 1
-		fi
-		echo "wget -O $SRC $URL"
-		wget -O "$SRC" "$URL"
-	fi
-	check_src_dir
-	echo untar sources to $DEST_DIR
-	tar x -C "$TOP_DIR" -f "$SRC"
-	if [ "$SRC_DIR" != "$DEST_DIR" ] ; then
-		mv $SRC_DIR $DEST_DIR
-	fi
+	extract_tarball $SRC
 fi
 
 # patch
 if [ -n "$PATCH_DIR" ] ; then
 	echo patch sources
 	make -s $SCRIPTS_DIR/patch-kernel.sh
-	$SCRIPTS_DIR/patch-kernel.sh $DEST_DIR $PATCH_DIR
+	$SCRIPTS_DIR/patch-kernel.sh $SRC_DIR $PATCH_DIR
 fi

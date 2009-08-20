@@ -1,16 +1,16 @@
 # options can be set in config.mk
 CROSSTOOL-NG_SRC ?= 1.4.2
 CROSSTOOL-NG_PATCH_DIR ?= # [directory]
+CROSSTOOL-NG_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)')
 
 CROSSTOOL-NG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+CROSSTOOL-NG_URL = http://ymorin.is-a-geek.org/download/crosstool-ng
 # if CROSSTOOL-NG_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(CROSSTOOL-NG_SRC)')),false)
-override CROSSTOOL-NG_SRC := $(CROSSTOOL-NG_DIR)/crosstool-ng-$(strip $(CROSSTOOL-NG_SRC)).tar.bz2
-CROSSTOOL-NG_URL = http://ymorin.is-a-geek.org/download/crosstool-ng/$(notdir $(CROSSTOOL-NG_SRC))
+override CROSSTOOL-NG_SRC := $(CROSSTOOL-NG_URL)/crosstool-ng-$(strip $(CROSSTOOL-NG_SRC)).tar.bz2
 endif
 
-CROSSTOOL-NG_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)')
 CROSSTOOL-NG_BUILD_DIR = $(CROSSTOOL-NG_SRC_DIR)
 CROSSTOOL-NG = $(CROSSTOOL-NG_BUILD_DIR)/ct-ng
 
@@ -24,7 +24,7 @@ crosstool-ng_init :
 	@ printf '\n=== CROSSTOOL-NG ===\n'
 
 $(CROSSTOOL-NG_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)' '$(CROSSTOOL-NG_URL)' '$(CROSSTOOL-NG_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)' '$(CROSSTOOL-NG_SRC_DIR)' '$(CROSSTOOL-NG_PATCH_DIR)'
 
 $(CROSSTOOL-NG_BUILD_DIR)/Makefile : | $(CROSSTOOL-NG_SRC_DIR)
 	( set -e ; \
@@ -42,4 +42,4 @@ crosstool-ng_clean :
 	- $(CROSSTOOL-NG_MAKE) distclean
 
 crosstool-ng_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, http://ymorin.is-a-geek.org/download/crosstool-ng)
+	@ $(call CHECK_LATEST_TARBALL, bz2, tail, $(CROSSTOOL-NG_URL))

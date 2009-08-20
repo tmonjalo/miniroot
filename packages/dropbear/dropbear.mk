@@ -5,6 +5,7 @@ PKG_DROPBEAR_SERVER ?= no
 PKG_DROPBEAR_CLIENT ?= no
 DROPBEAR_SRC ?= 0.52
 DROPBEAR_PATCH_DIR ?= # [directory]
+DROPBEAR_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)')
 #DROPBEAR_BUILD_INSIDE = no
 DROPBEAR_RC_SCRIPT ?= /etc/rc.dropbear
 
@@ -12,13 +13,12 @@ DROPBEAR_DEPS = zlib
 
 DROPBEAR_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+DROPBEAR_URL = http://matt.ucc.asn.au/dropbear/releases
 # if DROPBEAR_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(DROPBEAR_SRC)')),false)
-override DROPBEAR_SRC := $(DROPBEAR_DIR)/dropbear-$(strip $(DROPBEAR_SRC)).tar.bz2
-DROPBEAR_URL = http://matt.ucc.asn.au/dropbear/releases/$(notdir $(DROPBEAR_SRC))
+override DROPBEAR_SRC := $(DROPBEAR_URL)/dropbear-$(strip $(DROPBEAR_SRC)).tar.bz2
 endif
 
-DROPBEAR_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)')
 DROPBEAR_BUILD_DIR = $(if $(DROPBEAR_BUILD_INSIDE), $(DROPBEAR_SRC_DIR), $(BUILD_DIR)/$(notdir $(DROPBEAR_SRC_DIR)))
 DROPBEAR_BUILD_CONFIG = $(DROPBEAR_SRC_DIR)/options.h
 DROPBEAR_BUILD_BIN = $(DROPBEAR_BUILD_DIR)/dropbearmulti
@@ -37,7 +37,7 @@ dropbear_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== DROPBEAR (package not tested) ===\n'
 
 $(DROPBEAR_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_URL)' '$(DROPBEAR_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_SRC_DIR)' '$(DROPBEAR_PATCH_DIR)'
 
 define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$1.*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)

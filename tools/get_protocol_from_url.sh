@@ -1,13 +1,13 @@
 #! /bin/sh -e
 
-# try to guess the VCS to use for the URL
+# try to guess the protocol to use for the URL
 
 URL=$*
 
 # get the URL prefix
 PROTOCOL=$(echo $URL | cut -d':' -f1 | cut -d'+' -f1)
-if [ "$PROTOCOL" = "http" -o "$PROTOCOL" = "https" ] ; then
-	# search a magic string inside the URL
+if echo $PROTOCOL | grep -q '^http' ; then
+	# search a magic string inside the HTTP URL
 	if echo $URL | fgrep -qi git ; then
 		echo git
 	elif echo $URL | fgrep -qi hg ; then
@@ -17,7 +17,7 @@ if [ "$PROTOCOL" = "http" -o "$PROTOCOL" = "https" ] ; then
 	elif echo $URL | fgrep -qi cvs ; then
 		echo cvs
 	else
-		# fail
+		# failed or real HTTP
 		echo $PROTOCOL
 	fi
 else

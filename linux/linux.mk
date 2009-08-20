@@ -2,6 +2,7 @@
 LINUX_SRC ?= 2.6.30 # <version | directory | tarball | VCS URL>
 LINUX_PATCH_DIR ?= # [directory]
 LINUX_CONFIG ?= # <file>
+LINUX_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
 LINUX_TOOLCHAIN_PATH ?= $(TOOLCHAIN_PATH)
@@ -10,13 +11,12 @@ LINUX_TARGET_CC ?= $(TARGET_CC)
 
 LINUX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6
 # if LINUX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
-override LINUX_SRC := $(LINUX_DIR)/linux-$(strip $(LINUX_SRC)).tar.bz2
-LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6/$(notdir $(LINUX_SRC))
+override LINUX_SRC := $(LINUX_URL)/linux-$(strip $(LINUX_SRC)).tar.bz2
 endif
 
-LINUX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
 LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
 LINUX_BUILD_CONFIG = $(LINUX_BUILD_DIR)/.config
 LINUX_DEFAULT_CONFIG = $(LINUX_SRC_DIR)/arch/$(TARGET_ARCH)/configs/$(LINUX_CONFIG)
@@ -46,7 +46,7 @@ linux_init2 :
 	@ printf '\n=== LINUX === (part 2)\n'
 
 $(LINUX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_URL)' '$(LINUX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_SRC_DIR)' '$(LINUX_PATCH_DIR)'
 
 $(LINUX_BUILD_CONFIG) : | $(LINUX_SRC_DIR)
 	mkdir -p $(LINUX_BUILD_DIR)

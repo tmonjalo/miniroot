@@ -1,10 +1,10 @@
 # options can be set in config.mk
 ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table # <file>
-ROOT_SKEL_DIR ?= $(ROOT_DIR)/default_skel # [directory]
-ROOT_SKEL_SRC ?= $(ROOT_SKEL_DIR) # [directory | tarball | VCS URL]
+ROOT_SKEL_SRC ?= $(ROOT_DIR)/default_skel # [directory | tarball | VCS URL]
+ROOT_SKEL_PATCH_DIR ?= # [directory]
+ROOT_SKEL_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)')
 
 ROOT_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-ROOT_SKEL_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_DIR)')
 ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
 
@@ -40,7 +40,7 @@ root_bin : root_bin_init $(SSTRIP)
 
 root_skel_init :
 	@ printf '\n=== SKELETON ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '' '' '$(ROOT_SKEL_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_SRC_DIR)' '$(ROOT_SKEL_PATCH_DIR)'
 root_skel : root_skel_init
 	tar --create --exclude-vcs --directory $(ROOT_SKEL_SRC_DIR) . | tar --extract --directory $(ROOT_BUILD_DIR)
 

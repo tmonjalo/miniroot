@@ -2,18 +2,18 @@
 BUSYBOX_SRC ?= 1.14.2 # <version | directory | tarball | VCS URL>
 BUSYBOX_PATCH_DIR ?= # [directory]
 BUSYBOX_CONFIG ?= # [file]
+BUSYBOX_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
 #BUSYBOX_BUILD_INSIDE = no
 #BUSYBOX_VERBOSE = no
 
 BUSYBOX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
+BUSYBOX_URL = http://busybox.net/downloads
 # if BUSYBOX_SRC is a version number
 ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_SRC)')),false)
-override BUSYBOX_SRC := $(BUSYBOX_DIR)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
-BUSYBOX_URL = http://busybox.net/downloads/$(notdir $(BUSYBOX_SRC))
+override BUSYBOX_SRC := $(BUSYBOX_URL)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
 endif
 
-BUSYBOX_SRC_DIR = $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
 BUSYBOX_BUILD_DIR = $(if $(BUSYBOX_BUILD_INSIDE), $(BUSYBOX_SRC_DIR), $(BUILD_DIR)/$(notdir $(BUSYBOX_SRC_DIR)))
 BUSYBOX_BUILD_CONFIG = $(BUSYBOX_BUILD_DIR)/.config
 BUSYBOX_DEFAULT_CONFIG = $(BUSYBOX_DIR)/default_config
@@ -36,7 +36,7 @@ busybox_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== BUSYBOX ===\n'
 
 $(BUSYBOX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_URL)' '$(BUSYBOX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_SRC_DIR)' '$(BUSYBOX_PATCH_DIR)'
 
 $(BUSYBOX_BUILD_CONFIG) : | $(BUSYBOX_SRC_DIR)
 	mkdir -p $(BUSYBOX_BUILD_DIR)
