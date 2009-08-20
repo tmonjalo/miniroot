@@ -46,6 +46,7 @@ extract_tarball () { # <tarball>
 	tar x -C "$TOP_DIR" -f "$TARBALL"
 	if [ "$(readlink -nm $TOP_DIR/$TARBALL_DIR)" != "$(readlink -nm $SRC_DIR)" ] ; then
 		# move to specified directory
+		mkdir -p $(dirname $SRC_DIR)
 		mv $TOP_DIR/$TARBALL_DIR $SRC_DIR
 	fi
 }
@@ -98,8 +99,9 @@ elif [ -d "$URL/.hg" ] ; then
 	# SRC is a local mercurial repository (without space in the path) with a specified branch
 	vcs_checkout hg clone
 elif [ -d "$SRC" ] ; then
-	# SRC is an existing directory
-	exit 0
+	# SRC is a directory
+	mkdir -p "$SRC_DIR"
+	tar --create --exclude-vcs --directory "$SRC" . | tar --extract --directory "$SRC_DIR"
 else
 	# SRC is a file, assume it is a tarball
 	extract_tarball $SRC
