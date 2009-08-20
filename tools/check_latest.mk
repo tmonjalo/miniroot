@@ -28,7 +28,7 @@ endef
 define GET_TARBALL_VERSION
 	$(shell \
 		$(call WWW_DUMP, $(strip $4)) | \
-		sed -n 's,.*://.*/$(strip $1)-\(.*\).tar.$(strip $2).*,\1,p' | \
+		sed -n 's,.*://.*/$(strip $1)-\(.*\)\.tar\.$(strip $2).*,\1,p' | \
 		$3 -n1 \
 	)
 endef
