@@ -1,27 +1,40 @@
+Configuration is made by adding a file config.mk which is included by the Makefile.
+
 All paths are relative to the main directory containing the Makefile.
 
 The variables XXX_SRC can be a version number, a local tarball, a tarball URL
 or a VCS URL (remote or local). Git URLs can include a branch as an option.
+It is possible to specify the directory where the sources are checkouted, extracted or copied
+via the variables XXX_SRC_DIR.
+
 
 toolchain
 ---------
 
 If not defined, miniroot uses the default toolchain of the host.
 
-To use a different toolchain, the path must be specified with
+To use a different toolchain, the architecture must be specified with
+	TOOLCHAIN_ARCH
+To use an existing toolchain, the path must be specified with
 	TOOLCHAIN_PATH
-If toolchain binaries have a prefix, it must be defined in
+otherwise, the toolchain is generated.
+If toolchain binaries have a prefix, it should be defined in
 	TOOLCHAIN_PREFIX
-In order to use a wrapper with the compiler (like ccache), you can define
+In order to use a wrapper with the compiler, you can define
 	TARGET_CC
+The default is to use ccache.
 
 Linux can be built with a different toolchain than the one used for the rootfs.
 All the toolchain variables can be prefixed by LINUX_ to specify this second toolchain.
+
+Defaults are values are set in tools/toolchain.mk.
+
 
 build options
 -------------
 
 Options for the toolchain can be set via the following variables.
+
 preprocessor:
 	TARGET_CPPFLAGS
 C compiler:
@@ -30,12 +43,14 @@ C++ compiler:
 	TARGET_CXXFLAGS
 linker:
 	TARGET_LDFLAGS
+
 Default values are set in Makefile.
+
 
 linux
 -----
 
-Linux will be built if requested by a target of type linux_image.
+Linux will be built if requested by a target of type linux_image or just linux.
 
 The source can be chosen via
 	LINUX_SRC
@@ -43,9 +58,11 @@ The source can be chosen via
 The configuration can be retrieved from
 	LINUX_CONFIG
 It can be the name of a default configuration in the sources or another file.
-It can be configured by
+It can be interactively configured by
 	make linux_menuconfig
+
 A rootfs will be embedded if initramfs is selected in the Linux configuration.
+
 
 busybox
 -------
@@ -57,7 +74,7 @@ There is a default configuration in
 	busybox/default_config
 A specific configuration can be retrieved from
 	BUSYBOX_CONFIG
-It can be configured by
+It can be interactively configured by
 	make linux_menuconfig
 
 
@@ -71,6 +88,7 @@ Source is retrieved in
 Other variables can be overridden.
 Default values are defined in the headers of each package in
 	packages/XXX/XXX.mk
+
 
 main target
 -----------
