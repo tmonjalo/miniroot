@@ -70,7 +70,7 @@ linux_% : linux_init $(LINUX_BUILD_CONFIG)
 	$(if $(or \
 			$(filter all, $*), \
 			$(filter vmlinux, $*), \
-			$(filter %Image, $*), \
+			$(findstring Image, $*), \
 			$(filter %-pkg, $*), \
 			$(filter %rpm, $*), \
 			$(filter %install, $*) \
