@@ -51,19 +51,21 @@ mtd-utils : $(MTD-UTILS_DEPS) \
 
 mtd-utils_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== MTD-UTILS ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$(MTD-UTILS_SRC_DIR)' '$(MTD-UTILS_PATCH_DIR)'
+
+$(MTD-UTILS_SRC_DIR) :
+	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$@' '$(MTD-UTILS_PATCH_DIR)'
 
 define MTD-UTILS_RULES
 
-$(MTD-UTILS_BUILD_DIR)/$(strip $1) : mtd-utils_init
+$(MTD-UTILS_BUILD_DIR)/$(strip $1) : mtd-utils_init | $(MTD-UTILS_SRC_DIR)
 	$(value SET_PATH) $(MAKE) -C $(abspath $(MTD-UTILS_SRC_DIR)) \
 		$(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		CPPFLAGS='$(TARGET_CPPFLAGS) -I$(abspath $(MTD-UTILS_SRC_DIR)/include)' \
-		BUILDDIR=$(abspath $(MTD-UTILS_BUILD_DIR)) \
-		$(abspath $(MTD-UTILS_BUILD_DIR)/$(strip $1))
+		BUILDDIR=$(abspath $(@D)) \
+		$(abspath $@)
 
 $(MTD-UTILS_INSTALL_DIR)/$(strip $1) : $(MTD-UTILS_BUILD_DIR)/$(strip $1)
-	install -D $(MTD-UTILS_BUILD_DIR)/$(strip $1) $(MTD-UTILS_INSTALL_DIR)/$(strip $1)
+	install -D $< $@
 
 endef
 

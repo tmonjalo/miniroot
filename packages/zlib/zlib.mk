@@ -29,7 +29,7 @@ zlib_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== ZLIB ===\n'
 
 $(ZLIB_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$(ZLIB_SRC_DIR)' '$(ZLIB_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$@' '$(ZLIB_PATCH_DIR)'
 
 zlib_configure : | $(ZLIB_SRC_DIR)
 	( set -e ; \
@@ -39,10 +39,10 @@ zlib_configure : | $(ZLIB_SRC_DIR)
 	)
 
 $(ZLIB_BUILD_BIN) : zlib_init
-	@ if ! fgrep -q 'LIBS=$(notdir $(ZLIB_BUILD_BIN))' $(ZLIB_SRC_DIR)/Makefile ; then \
+	@ if ! fgrep -q 'LIBS=$(@F)' $(ZLIB_SRC_DIR)/Makefile ; then \
 		$(MAKE) zlib_configure ; \
 	fi
-	$(SET_PATH) $(MAKE) -C $(ZLIB_BUILD_DIR) $(notdir $(ZLIB_BUILD_BIN))
+	$(SET_PATH) $(MAKE) -C $(@D) $(@F)
 
 zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean

@@ -46,15 +46,15 @@ linux_init2 :
 	@ printf '\n=== LINUX === (part 2)\n'
 
 $(LINUX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$(LINUX_SRC_DIR)' '$(LINUX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$@' '$(LINUX_PATCH_DIR)'
 
 $(LINUX_BUILD_CONFIG) : | $(LINUX_SRC_DIR)
-	mkdir -p $(LINUX_BUILD_DIR)
-	@ echo 'copy config to $(LINUX_BUILD_CONFIG)'
+	mkdir -p $(@D)
+	@ echo 'copy config to $@'
 	@ if [ -f '$(strip $(LINUX_CONFIG))' ] ; then \
-		cp $(LINUX_CONFIG) $(LINUX_BUILD_CONFIG) ; \
+		cp $(LINUX_CONFIG) $@ ; \
 	else \
-		cp $(LINUX_DEFAULT_CONFIG) $(LINUX_BUILD_CONFIG) ; \
+		cp $(LINUX_DEFAULT_CONFIG) $@ ; \
 	fi
 	$(LINUX_MAKE_OLDCONFIG)
 

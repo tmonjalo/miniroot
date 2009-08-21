@@ -23,7 +23,7 @@ root_lib : $(if $(TARGET_STATIC), , root_lib_init root_lib_so)
 root_lib_init :
 	@ printf '\n=== LIBRARIES ===\n'
 $(ROOT_BUILD_LIB_DIR) :
-	mkdir -p $(ROOT_BUILD_LIB_DIR)
+	mkdir -p $@
 root_lib_so : $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
 	$(SET_PATH) $(MKLIBS) \
 		$(if $(TOOLCHAIN_PREFIX), --target $(TOOLCHAIN_PREFIX)) \
@@ -40,8 +40,9 @@ root_bin : root_bin_init $(SSTRIP)
 
 root_skel_init :
 	@ printf '\n=== SKELETON ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_SRC_DIR)' '$(ROOT_SKEL_PATCH_DIR)'
-root_skel : root_skel_init
+$(ROOT_SKEL_SRC_DIR) :
+	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$@' '$(ROOT_SKEL_PATCH_DIR)'
+root_skel : root_skel_init | $(ROOT_SKEL_SRC_DIR)
 	tar --create --exclude-vcs --directory $(ROOT_SKEL_SRC_DIR) . | tar --extract --directory $(ROOT_BUILD_DIR)
 
 root_dev_init :

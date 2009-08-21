@@ -20,6 +20,7 @@ override DROPBEAR_SRC := $(DROPBEAR_URL)/dropbear-$(strip $(DROPBEAR_SRC)).tar.b
 endif
 
 DROPBEAR_BUILD_DIR = $(if $(DROPBEAR_BUILD_INSIDE), $(DROPBEAR_SRC_DIR), $(BUILD_DIR)/$(notdir $(DROPBEAR_SRC_DIR)))
+DROPBEAR_BUILD_MAKEFILE = $(DROPBEAR_BUILD_DIR)/Makefile
 DROPBEAR_BUILD_CONFIG = $(DROPBEAR_SRC_DIR)/options.h
 DROPBEAR_BUILD_BIN = $(DROPBEAR_BUILD_DIR)/dropbearmulti
 DROPBEAR_INSTALL_BIN = $(ROOT_BUILD_DIR)/sbin/$(notdir $(DROPBEAR_BUILD_BIN))
@@ -37,16 +38,16 @@ dropbear_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== DROPBEAR (package not tested) ===\n'
 
 $(DROPBEAR_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$(DROPBEAR_SRC_DIR)' '$(DROPBEAR_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$@' '$(DROPBEAR_PATCH_DIR)'
 
 define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$1.*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)
 endef
 
-$(DROPBEAR_BUILD_DIR)/Makefile : | $(DROPBEAR_SRC_DIR)
-	mkdir -p $(DROPBEAR_BUILD_DIR)
+$(DROPBEAR_BUILD_MAKEFILE) : | $(DROPBEAR_SRC_DIR)
+	mkdir -p $(@D)
 	( set -e ; \
-		cd $(DROPBEAR_BUILD_DIR) ; \
+		cd $(@D) ; \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
 			$(CONFIGURE_HOST) \
@@ -67,18 +68,15 @@ $(DROPBEAR_BUILD_DIR)/Makefile : | $(DROPBEAR_SRC_DIR)
 	$(call DROPBEAR_DISABLE_FEATURE, ENABLE_.*FWD)
 	$(call DROPBEAR_DISABLE_FEATURE, DO_MOTD)
 
-$(DROPBEAR_BUILD_BIN) : dropbear_init $(DROPBEAR_BUILD_DIR)/Makefile
-	$(SET_PATH) $(MAKE) -C $(DROPBEAR_BUILD_DIR) dropbearmulti \
+$(DROPBEAR_BUILD_BIN) : dropbear_init $(DROPBEAR_BUILD_MAKEFILE)
+	$(SET_PATH) $(MAKE) -C $(@D) $(@F) \
 	MULTI=1 PROGRAMS='$(strip \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), dropbear dropbearkey) \
 		$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_CLIENT)), dbclient) \
 	)'
 
-$(ROOT_BUILD_DIR)/bin :
-	mkdir -p $(ROOT_BUILD_DIR)/bin
-
-$(DROPBEAR_INSTALL_BIN) : $(DROPBEAR_BUILD_BIN) | $(ROOT_BUILD_DIR)/bin
-	install -D $(DROPBEAR_BUILD_BIN) $(DROPBEAR_INSTALL_BIN)
+$(DROPBEAR_INSTALL_BIN) : $(DROPBEAR_BUILD_BIN)
+	install -D $< $@
 	$(if $(call PKG_IS_SET, $(PKG_DROPBEAR_SERVER)), \
 		install -D $(DROPBEAR_DIR)/dropbear.sh $(ROOT_BUILD_DIR)$(DROPBEAR_RC_SCRIPT) && \
 		ln -snf $(@F) $(DROPBEAR_INSTALL_SERVER_ALIAS) && \

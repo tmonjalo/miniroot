@@ -16,6 +16,7 @@ override E2FSPROGS_SRC := $(E2FSPROGS_URL)/e2fsprogs-$(strip $(E2FSPROGS_SRC)).t
 endif
 
 E2FSPROGS_BUILD_DIR = $(if $(E2FSPROGS_BUILD_INSIDE), $(E2FSPROGS_SRC_DIR), $(BUILD_DIR)/$(notdir $(E2FSPROGS_SRC_DIR)))
+E2FSPROGS_BUILD_MAKEFILE = $(E2FSPROGS_BUILD_DIR)/Makefile
 E2FSPROGS_BUILD_MKFS = $(E2FSPROGS_BUILD_DIR)/misc/mke2fs
 E2FSPROGS_INSTALL_MKFS = $(ROOT_BUILD_DIR)/sbin/$(notdir $(E2FSPROGS_BUILD_MKFS))
 
@@ -29,12 +30,12 @@ e2fsprogs_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== E2FSPROGS ===\n'
 
 $(E2FSPROGS_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$(E2FSPROGS_SRC_DIR)' '$(E2FSPROGS_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(E2FSPROGS_DIR)' '$(E2FSPROGS_SRC)' '$@' '$(E2FSPROGS_PATCH_DIR)'
 
-$(E2FSPROGS_BUILD_DIR)/Makefile : | $(E2FSPROGS_SRC_DIR)
-	mkdir -p $(E2FSPROGS_BUILD_DIR)
+$(E2FSPROGS_BUILD_MAKEFILE) : | $(E2FSPROGS_SRC_DIR)
+	mkdir -p $(@D)
 	( set -e ; \
-		cd $(E2FSPROGS_BUILD_DIR) ; \
+		cd $(@D) ; \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(E2FSPROGS_SRC_DIR))/configure \
 		$(CONFIGURE_HOST) \
@@ -50,7 +51,7 @@ $(E2FSPROGS_BUILD_DIR)/Makefile : | $(E2FSPROGS_SRC_DIR)
 			--disable-nls \
 	)
 
-e2fsprogs_libs : e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
+e2fsprogs_libs : e2fsprogs_init $(E2FSPROGS_BUILD_MAKEFILE)
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/ext2fs
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/e2p
@@ -58,10 +59,10 @@ e2fsprogs_libs : e2fsprogs_init $(E2FSPROGS_BUILD_DIR)/Makefile
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/uuid
 
 $(E2FSPROGS_BUILD_MKFS) : e2fsprogs_libs
-	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/misc $(notdir $(E2FSPROGS_BUILD_MKFS))
+	$(SET_PATH) $(MAKE) -C $(@D) $(@F)
 
 $(E2FSPROGS_INSTALL_MKFS) : $(E2FSPROGS_BUILD_MKFS)
-	install -D $(E2FSPROGS_BUILD_MKFS) $(E2FSPROGS_INSTALL_MKFS)
+	install -D $< $@
 
 e2fsprogs_clean :
 	- $(MAKE) -C $(E2FSPROGS_BUILD_DIR) clean

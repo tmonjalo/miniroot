@@ -36,16 +36,15 @@ busybox_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== BUSYBOX ===\n'
 
 $(BUSYBOX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$(BUSYBOX_SRC_DIR)' '$(BUSYBOX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$@' '$(BUSYBOX_PATCH_DIR)'
 
 $(BUSYBOX_BUILD_CONFIG) : | $(BUSYBOX_SRC_DIR)
-	mkdir -p $(BUSYBOX_BUILD_DIR)
-	@ echo 'copy config to $(BUSYBOX_BUILD_CONFIG)'
+	mkdir -p $(@D)
+	@ echo 'copy config to $@'
 	@ if [ -f '$(strip $(BUSYBOX_CONFIG))' ] ; then \
-		echo $(BUSYBOX_BUILD_CONFIG) ; \
-		cp $(BUSYBOX_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
+		cp $(BUSYBOX_CONFIG) $@ ; \
 	else \
-		cp $(BUSYBOX_DEFAULT_CONFIG) $(BUSYBOX_BUILD_CONFIG) ; \
+		cp $(BUSYBOX_DEFAULT_CONFIG) $@ ; \
 	fi
 	$(BUSYBOX_MAKE_OLDCONFIG)
 
@@ -58,7 +57,7 @@ $(BUSYBOX_BUILD_BIN) : busybox_busybox
 
 $(BUSYBOX_INSTALL_BIN) : $(BUSYBOX_BUILD_BIN)
 	$(BUSYBOX_MAKE) install
-	chmod 4755 $(BUSYBOX_INSTALL_BIN)
+	chmod 4755 $@
 
 busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall

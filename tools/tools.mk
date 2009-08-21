@@ -5,7 +5,7 @@ TOOLS_BUILD_DIR = $(BUILD_DIR)/$(TOOLS_DIR)
 clean : tools_clean
 
 $(TOOLS_BUILD_DIR) :
-	mkdir -p $(TOOLS_BUILD_DIR)
+	mkdir -p $@
 
 include $(TOOLS_DIR)/toolchain.mk
 

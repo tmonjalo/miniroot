@@ -27,16 +27,18 @@ libroxml : $(LIBROXML_DEPS) $(LIBROXML_INSTALL_BIN)
 
 libroxml_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== LIBROXML ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)' '$(LIBROXML_SRC_DIR)' '$(LIBROXML_PATCH_DIR)'
 
-$(LIBROXML_BUILD_BIN) : libroxml_init
-	$(SET_PATH) $(MAKE) -C $(LIBROXML_SRC_DIR) $(abspath $(LIBROXML_BUILD_BIN)) \
-		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))') \
+$(LIBROXML_SRC_DIR) :
+	@ $(TOOLS_DIR)/init_src.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)' '$@' '$(LIBROXML_PATCH_DIR)'
+
+$(LIBROXML_BUILD_BIN) : libroxml_init | $(LIBROXML_SRC_DIR)
+	$(SET_PATH) $(MAKE) -C $(LIBROXML_SRC_DIR) $(abspath $@) \
+		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(@D))') \
 		$(if $(LIBROXML_VERBOSE), V=1) \
 		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(LIBROXML_INSTALL_BIN) : $(LIBROXML_BUILD_BIN)
-	install -D $(LIBROXML_BUILD_BIN) $(LIBROXML_INSTALL_BIN)
+	install -D $< $@
 
 libroxml_clean :
 	- $(MAKE) -C $(LIBROXML_SRC_DIR) clean \

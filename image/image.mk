@@ -15,7 +15,7 @@ image_init :
 	@ printf '\n=== IMAGE ===\n'
 
 $(IMAGE_BUILD_DIR) :
-	mkdir -p $(IMAGE_BUILD_DIR)
+	mkdir -p $@
 
 $(ROOT_CPIO) : root_dev image_init | $(IMAGE_BUILD_DIR)
 	echo '$(ROOT_CPIO_BUILD) > $(abspath $@)' >> $(FAKEROOT_SCRIPT)

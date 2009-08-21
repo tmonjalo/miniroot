@@ -26,15 +26,17 @@ mdadm : $(MDADM_DEPS) $(MDADM_INSTALL_BIN)
 
 mdadm_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== MDADM ===\n'
-	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$(MDADM_SRC_DIR)' '$(MDADM_PATCH_DIR)'
+
+$(MDADM_SRC_DIR) :
+	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$@' '$(MDADM_PATCH_DIR)'
 
 $(MDADM_BUILD_BIN) : mdadm_init
-	$(SET_PATH) $(MAKE) -C $(MDADM_SRC_DIR) mdadm \
-		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))') \
+	$(SET_PATH) $(MAKE) -C $(MDADM_SRC_DIR) $(@F) \
+		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(@D))') \
 		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
 
 $(MDADM_INSTALL_BIN) : $(MDADM_BUILD_BIN)
-	install -D $(MDADM_BUILD_BIN) $(MDADM_INSTALL_BIN)
+	install -D $< $@
 
 mdadm_clean :
 	- $(MAKE) -C $(MDADM_SRC_DIR) clean \
