@@ -1,6 +1,6 @@
 # options can be set in config.mk
 PKG_LIBROXML ?= no
-LIBROXML_SRC ?= 1.6.1
+LIBROXML_SRC ?= 1.7.1
 LIBROXML_PATCH_DIR ?= # [directory]
 LIBROXML_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)')
 #LIBROXML_BUILD_INSIDE = no
