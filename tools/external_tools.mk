@@ -17,8 +17,11 @@ BUILDROOT_PATHS = \
 
 define EXTERNAL_TOOLS_DOWNLOAD
 $1 :
-	wget -O $1 $2
-	 if [ '$(strip $3)' = '.sh' -o '$(strip $3)' = '.py' ] ; then \
+	( set -e ; \
+		cd $(@D) ; \
+		wget $2 \
+	)
+	if [ '$(strip $3)' = '.sh' -o '$(strip $3)' = '.py' ] ; then \
 		chmod +x $1 ; \
 	fi
 endef

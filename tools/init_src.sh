@@ -66,10 +66,13 @@ if echo $SRC | fgrep -q '://' ; then
 	# SRC is an URL (can have a branch option)
 	PROTOCOL=$($SCRIPTS_DIR/get_protocol_from_url.sh $URL)
 	if echo $PROTOCOL | grep -q tp ; then # http, ftp
-		TARBALL=$TOP_DIR/$(basename $SRC)
+		TARBALL="$TOP_DIR/$(basename $SRC)"
 		if [ ! -s "$TARBALL" ] ; then
-			echo "wget -O $TARBALL $SRC"
-			wget -O "$TARBALL" "$SRC"
+			echo "wget $SRC"
+			( set -e
+				cd "$TOP_DIR"
+				wget "$SRC"
+			) || exit $?
 		fi
 		extract_tarball $TARBALL
 	elif [ "$PROTOCOL" = git ] ; then
