@@ -35,4 +35,4 @@ if [ "$*" = '-h' ] ; then
 	print_usage 0
 fi
 
-find_in_dir $(dirname $0)/.. $*
+find_in_dir $(dirname $0)/.. "$*"
