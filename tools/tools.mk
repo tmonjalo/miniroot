@@ -7,6 +7,8 @@ clean : tools_clean
 $(TOOLS_BUILD_DIR) :
 	mkdir -p $@
 
+include $(TOOLS_DIR)/common.mk
+
 include $(TOOLS_DIR)/toolchain.mk
 
 include $(TOOLS_DIR)/external_tools.mk
