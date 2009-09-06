@@ -9,19 +9,21 @@ TARGET_CXX = $(patsubst %g,%,$(TARGET_CC:cc=))g++
 TOOLCHAIN_PATH_PREFIX = $(if $(TOOLCHAIN_PATH), $(strip $(TOOLCHAIN_PATH))/bin/$(strip $(TOOLCHAIN_PREFIX)))
 TOOLCHAIN_CC = $(TOOLCHAIN_PATH_PREFIX)cc
 
-ifneq '$(TARGET_ARCH)' ''       # if ARCH defined
-ifeq '$(TOOLCHAIN_PATH)' ''     # and PATH undefined
-TOOLCHAIN_DEP = $(TOOLCHAIN_CC) # then build the toolchain
-TOOLCHAIN_PATH = $(TOOLCHAIN_BUILD_DIR)/toolchain
+ifneq '$(TARGET_ARCH)' ''        # if ARCH defined
+ifeq '$(TOOLCHAIN_PATH)' ''      # and PATH undefined
+TOOLCHAIN_DEP := $(TOOLCHAIN_CC) # then build the toolchain
+TOOLCHAIN_PATH := $(TOOLCHAIN_BUILD_DIR)/toolchain
 tools : toolchain
 clean : toolchain_clean crosstool-ng_clean
 endif
 endif
 
+TARGET_LIB_DIRS += $(if $(TOOLCHAIN_PATH), $(strip $(TOOLCHAIN_PATH))/lib)
+
 include $(TOOLS_DIR)/toolchain/crosstool-ng.mk
 
-TOOLCHAIN_BUILD_DIR = $(BUILD_DIR)/$(TOOLCHAIN_PREFIX:-=)
-TOOLCHAIN_BUILD_CONFIG = $(TOOLCHAIN_BUILD_DIR)/.config
+TOOLCHAIN_BUILD_DIR := $(BUILD_DIR)/$(TOOLCHAIN_PREFIX:-=)
+TOOLCHAIN_BUILD_CONFIG := $(TOOLCHAIN_BUILD_DIR)/.config
 TOOLCHAIN_DEFAULT_CONFIG = $(CROSSTOOL-NG_SRC_DIR)/samples/$(TOOLCHAIN_PREFIX:-=)/crosstool.config
 
 TOOLCHAIN_CONFIG_SET = sed -i 's,^\($(strip $1)\).*,\1="$(strip $2)",' $(TOOLCHAIN_BUILD_CONFIG)

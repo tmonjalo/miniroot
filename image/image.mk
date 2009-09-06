@@ -1,9 +1,9 @@
 IMAGE_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-IMAGE_BUILD_DIR = $(BUILD_DIR)/$(IMAGE_DIR)
+IMAGE_BUILD_DIR := $(BUILD_DIR)/$(IMAGE_DIR)
 
-FAKEROOT_SCRIPT = $(IMAGE_BUILD_DIR)/fakeroot.sh
+FAKEROOT_SCRIPT := $(IMAGE_BUILD_DIR)/fakeroot.sh
 
-ROOT_CPIO = $(IMAGE_BUILD_DIR)/$(if $(LINUX_INITRAMFS),root.cpio,root.gz)
+ROOT_CPIO := $(IMAGE_BUILD_DIR)/$(if $(LINUX_INITRAMFS),root.cpio,root.gz)
 ROOT_CPIO_BUILD = cd $(ROOT_BUILD_DIR) && find | cpio --quiet --create --format=newc $(if $(LINUX_INITRAMFS),,| gzip --best)
 
 .PHONY : image image_init image_clean

@@ -31,9 +31,13 @@ SET_CFLAGS = $(if $(TARGET_CFLAGS), CFLAGS='$(TARGET_CFLAGS)')
 SET_CXXFLAGS = $(if $(TARGET_CXXFLAGS), CXXFLAGS='$(TARGET_CXXFLAGS)')
 SET_LDFLAGS = $(if $(TARGET_LDFLAGS), LDFLAGS='$(TARGET_LDFLAGS)')
 TARGET_STATIC = $(findstring -static, $(TARGET_LDFLAGS))
-TARGET_LIB_DIRS += $(if $(TOOLCHAIN_PATH), $(strip $(TOOLCHAIN_PATH))/lib)
 CONFIGURE_HOST = $(if $(TOOLCHAIN_PREFIX), --host=$(strip $(TOOLCHAIN_PREFIX:-=)))
 TARGET_STRIP = $(TOOLCHAIN_PATH_PREFIX)strip -s
+
+# macro to check if *_SRC exists locally (tarball or directory) or is an URL
+define IS_SRC
+$(findstring ://, $1 $(shell [ -e '$(strip $1)' ] && echo ://))
+endef
 
 # Build outside of the sources
 BUILD_DIR ?= build

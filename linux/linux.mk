@@ -2,7 +2,7 @@
 LINUX_SRC ?= 2.6.30.5 # <version | directory | tarball | VCS URL>
 LINUX_PATCH_DIR ?= # [directory]
 LINUX_CONFIG ?= # <file>
-LINUX_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
+LINUX_SRC_DIR ?= $(LINUX_SRC_AUTODIR)
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
 LINUX_TOOLCHAIN_PATH ?= $(TOOLCHAIN_PATH)
@@ -13,12 +13,13 @@ LINUX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6
 # if LINUX_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LINUX_SRC)')),false)
+ifeq '$(call IS_SRC, $(LINUX_SRC))' ''
 override LINUX_SRC := $(LINUX_URL)/linux-$(strip $(LINUX_SRC)).tar.bz2
 endif
 
-LINUX_BUILD_DIR = $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
-LINUX_BUILD_CONFIG = $(LINUX_BUILD_DIR)/.config
+LINUX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
+LINUX_BUILD_DIR := $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
+LINUX_BUILD_CONFIG := $(LINUX_BUILD_DIR)/.config
 LINUX_DEFAULT_CONFIG = $(LINUX_SRC_DIR)/arch/$(TARGET_ARCH)/configs/$(LINUX_CONFIG)
 
 LINUX_MAKE = $(SET_LINUX_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
@@ -27,8 +28,8 @@ LINUX_MAKE = $(SET_LINUX_PATH) $(MAKE) -C $(LINUX_SRC_DIR) \
 	$(if $(LINUX_VERBOSE), V=1)
 LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig >/dev/null
 
-LINUX_MODULES = $(shell grep '^CONFIG_MODULES=y' $(LINUX_BUILD_CONFIG) 2>/dev/null)
-LINUX_INITRAMFS = $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG) 2>/dev/null)
+LINUX_MODULES := $(shell grep '^CONFIG_MODULES=y' $(LINUX_BUILD_CONFIG) 2>/dev/null)
+LINUX_INITRAMFS := $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG) 2>/dev/null)
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
 LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
 

@@ -9,7 +9,7 @@ PKG_MTD-UTILS_UBI ?= no   # TODO
 PKG_MTD-UTILS_JFFS2 ?= no # TODO
 MTD-UTILS_SRC ?= 1.2.0
 MTD-UTILS_PATCH_DIR ?= # [directory]
-MTD-UTILS_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)')
+MTD-UTILS_SRC_DIR ?= $(MTD-UTILS_SRC_AUTODIR)
 #MTD-UTILS_BUILD_INSIDE = no
 
 MTD-UTILS_DEPS = \
@@ -19,12 +19,13 @@ MTD-UTILS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 MTD-UTILS_URL = ftp://ftp.infradead.org/pub/mtd-utils
 # if MTD-UTILS_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(MTD-UTILS_SRC)')),false)
+ifeq '$(call IS_SRC, $(MTD-UTILS_SRC))' ''
 override MTD-UTILS_SRC := $(MTD-UTILS_URL)/mtd-utils-$(strip $(MTD-UTILS_SRC)).tar.bz2
 endif
 
-MTD-UTILS_BUILD_DIR = $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
-MTD-UTILS_INSTALL_DIR = $(ROOT_BUILD_DIR)/sbin
+MTD-UTILS_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)')
+MTD-UTILS_BUILD_DIR := $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
+MTD-UTILS_INSTALL_DIR := $(ROOT_BUILD_DIR)/sbin
 
 MTD-UTILS_BASIC = flashcp flash_erase flash_eraseall flash_lock flash_unlock flash_info
 MTD-UTILS_OTP   = flash_otp_write flash_otp_lock flash_otp_info flash_otp_dump

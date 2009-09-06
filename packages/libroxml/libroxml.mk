@@ -2,7 +2,7 @@
 PKG_LIBROXML ?= no
 LIBROXML_SRC ?= 1.7.1
 LIBROXML_PATCH_DIR ?= # [directory]
-LIBROXML_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)')
+LIBROXML_SRC_DIR ?= $(LIBROXML_SRC_AUTODIR)
 #LIBROXML_BUILD_INSIDE = no
 #LIBROXML_VERBOSE = no
 
@@ -12,13 +12,14 @@ LIBROXML_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 LIBROXML_URL = http://libroxml.googlecode.com/files
 # if LIBROXML_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(LIBROXML_SRC)')),false)
+ifeq '$(call IS_SRC, $(LIBROXML_SRC))' ''
 override LIBROXML_SRC := $(LIBROXML_URL)/libroxml-$(strip $(LIBROXML_SRC)).tar.gz
 endif
 
-LIBROXML_BUILD_DIR = $(if $(LIBROXML_BUILD_INSIDE), $(LIBROXML_SRC_DIR), $(BUILD_DIR)/$(notdir $(LIBROXML_SRC_DIR)))
-LIBROXML_BUILD_BIN = $(LIBROXML_BUILD_DIR)/roxml
-LIBROXML_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/$(notdir $(LIBROXML_BUILD_BIN))
+LIBROXML_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)')
+LIBROXML_BUILD_DIR := $(if $(LIBROXML_BUILD_INSIDE), $(LIBROXML_SRC_DIR), $(BUILD_DIR)/$(notdir $(LIBROXML_SRC_DIR)))
+LIBROXML_BUILD_BIN := $(LIBROXML_BUILD_DIR)/roxml
+LIBROXML_INSTALL_BIN := $(ROOT_BUILD_DIR)/bin/$(notdir $(LIBROXML_BUILD_BIN))
 
 .PHONY : libroxml libroxml_init libroxml_clean libroxml_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_LIBROXML), libroxml))

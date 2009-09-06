@@ -1,5 +1,5 @@
 TOOLS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-TOOLS_BUILD_DIR = $(BUILD_DIR)/$(TOOLS_DIR)
+TOOLS_BUILD_DIR := $(BUILD_DIR)/$(TOOLS_DIR)
 
 .PHONY : tools tools_clean
 clean : tools_clean

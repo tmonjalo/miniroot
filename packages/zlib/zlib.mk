@@ -1,7 +1,7 @@
 # options can be set in config.mk
 ZLIB_SRC ?= 1.2.3
 ZLIB_PATCH_DIR ?= # [directory]
-ZLIB_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)')
+ZLIB_SRC_DIR ?= $(ZLIB_SRC_AUTODIR)
 ZLIB_BUILD_INSIDE = yes # cannot build zlib outside
 
 ZLIB_DEPS =
@@ -10,13 +10,14 @@ ZLIB_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 ZLIB_URL = http://zlib.net
 # if ZLIB_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(ZLIB_SRC)')),false)
+ifeq '$(call IS_SRC, $(ZLIB_SRC))' ''
 override ZLIB_SRC := $(ZLIB_URL)/zlib-$(strip $(ZLIB_SRC)).tar.bz2
 endif
 
+ZLIB_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)')
 ZLIB_VERSION = $(shell sed -n 's,.*VERSION.*"\(.*\)".*,\1,p' $(ZLIB_SRC_DIR)/zlib.h 2>/dev/null)
-ZLIB_BUILD_DIR = $(if $(ZLIB_BUILD_INSIDE), $(ZLIB_SRC_DIR), $(BUILD_DIR)/$(notdir $(ZLIB_DIR)))
-ZLIB_BUILD_BIN = $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSION))
+ZLIB_BUILD_DIR := $(if $(ZLIB_BUILD_INSIDE), $(ZLIB_SRC_DIR), $(BUILD_DIR)/$(notdir $(ZLIB_DIR)))
+ZLIB_BUILD_BIN := $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSION))
 
 TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)
 

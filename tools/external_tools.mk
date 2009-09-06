@@ -2,13 +2,13 @@ include $(TOOLS_DIR)/sstrip.mk
 
 include $(TOOLS_DIR)/makedevs.mk
 
-PATCH_KERNEL = $(TOOLS_DIR)/patch-kernel.sh
+PATCH_KERNEL := $(TOOLS_DIR)/patch-kernel.sh
 tools : $(PATCH_KERNEL)
 
-MKLIBS = $(TOOLS_DIR)/mklibs.py
+MKLIBS := $(TOOLS_DIR)/mklibs.py
 tools : $(MKLIBS)
 
-BUILDROOT_URL = http://git.buildroot.net/buildroot/plain/
+BUILDROOT_URL = http://git.buildroot.net/buildroot/plain
 BUILDROOT_PATHS = \
 	toolchain/patch-kernel.sh \
 	toolchain/sstrip/sstrip.c \
@@ -27,7 +27,7 @@ $1 :
 endef
 $(foreach PATH, $(BUILDROOT_PATHS), $(eval $(call EXTERNAL_TOOLS_DOWNLOAD, \
 	$(TOOLS_DIR)/$(notdir $(PATH)), \
-	$(BUILDROOT_URL)$(PATH), \
+	$(BUILDROOT_URL)/$(PATH), \
 	$(suffix $(PATH)) \
 )))
 

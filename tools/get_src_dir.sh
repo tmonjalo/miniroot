@@ -2,27 +2,36 @@
 
 # get or compute the directory name of the sources
 
+left_strip() {
+	sed 's,^[ \t]*,,'
+}
+right_strip() {
+	sed 's,[ \t]*$,,'
+}
 strip_str() {
-	echo $1 | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
+	echo $1 | left_strip | right_strip
 }
 
-TOP_DIR=$(strip_str $1) # destination parent directory
-SRC=$(strip_str $2) # can be a VCS URL, a directory or a tarball
+#TOP_DIR=$(strip_str $1) # destination parent directory
+TOP_DIR=$(echo $1 | right_strip) # destination parent directory
+SRC=$2 # can be a VCS URL, a directory or a tarball
 
-SCRIPTS_DIR=$(dirname $0)
-VCS_SRC="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
+# first, test the most frequent case for optimization
+TARBALL=$(echo $SRC | sed -n "s,.*://.*/\([^/]*\)\.tar\($\|\..*\),$TOP_DIR/\1,p")
+if [ -n "$TARBALL" ] ; then
+	# SRC is a tarball URL
+	echo $TARBALL
+	exit
+fi
+
+SRC=$(strip_str $2)
 ERROR_DIR=/tmp/miniroot_error/$SRC # return a fake directory in case of error
+VCS_SRC="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
 
 if echo $SRC | fgrep -q '://' ; then
-	# SRC is an URL (can have a branch option)
+	# SRC is a VCS URL (can have a branch option)
 	printf $TOP_DIR/
-	if $SCRIPTS_DIR/get_protocol_from_url.sh $VCS_SRC | grep -q tp ; then # http, ftp
-		# tarball, get a simple directory name
-		basename $SRC | sed 's,\.tar\.[^-.]*,,'
-	else
-		# VCS, compute a directory name
-		echo $SRC | cut -d' ' -f1 | sed 's,://,_,g' | tr '/' '_'
-	fi
+	echo $SRC | cut -d' ' -f1 | sed 's,://,_,g' | tr '/' '_'
 elif [ -d "$SRC/.git" ] ; then
 	# SRC is a local git repository (space enabled in the path)
 	echo $TOP_DIR/local_git_$(basename $SRC)

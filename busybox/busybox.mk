@@ -2,7 +2,7 @@
 BUSYBOX_SRC ?= 1.14.3 # <version | directory | tarball | VCS URL>
 BUSYBOX_PATCH_DIR ?= # [directory]
 BUSYBOX_CONFIG ?= # [file]
-BUSYBOX_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
+BUSYBOX_SRC_DIR ?= $(BUSYBOX_SRC_AUTODIR)
 #BUSYBOX_BUILD_INSIDE = no
 #BUSYBOX_VERBOSE = no
 
@@ -10,15 +10,16 @@ BUSYBOX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 BUSYBOX_URL = http://busybox.net/downloads
 # if BUSYBOX_SRC is a version number
-ifeq ($(strip $(shell $(TOOLS_DIR)/is_src.sh '$(BUSYBOX_SRC)')),false)
+ifeq '$(call IS_SRC, $(BUSYBOX_SRC))' ''
 override BUSYBOX_SRC := $(BUSYBOX_URL)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
 endif
 
-BUSYBOX_BUILD_DIR = $(if $(BUSYBOX_BUILD_INSIDE), $(BUSYBOX_SRC_DIR), $(BUILD_DIR)/$(notdir $(BUSYBOX_SRC_DIR)))
-BUSYBOX_BUILD_CONFIG = $(BUSYBOX_BUILD_DIR)/.config
+BUSYBOX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
+BUSYBOX_BUILD_DIR := $(if $(BUSYBOX_BUILD_INSIDE), $(BUSYBOX_SRC_DIR), $(BUILD_DIR)/$(notdir $(BUSYBOX_SRC_DIR)))
+BUSYBOX_BUILD_CONFIG := $(BUSYBOX_BUILD_DIR)/.config
 BUSYBOX_DEFAULT_CONFIG = $(BUSYBOX_DIR)/default_config
-BUSYBOX_BUILD_BIN = $(BUSYBOX_BUILD_DIR)/busybox
-BUSYBOX_INSTALL_BIN = $(ROOT_BUILD_DIR)/bin/busybox
+BUSYBOX_BUILD_BIN := $(BUSYBOX_BUILD_DIR)/busybox
+BUSYBOX_INSTALL_BIN := $(ROOT_BUILD_DIR)/bin/busybox
 
 BUSYBOX_MAKE = $(SET_PATH) $(MAKE) -C $(BUSYBOX_SRC_DIR) \
 	$(SET_CROSS_COMPILE) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \

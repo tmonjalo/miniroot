@@ -2,11 +2,14 @@
 ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table # <file>
 ROOT_SKEL_SRC ?= $(ROOT_DIR)/default_skel # [directory | tarball | VCS URL]
 ROOT_SKEL_PATCH_DIR ?= # [directory]
-ROOT_SKEL_SRC_DIR ?= $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)')
+ROOT_SKEL_SRC_DIR ?= $(ROOT_SKEL_SRC_AUTODIR)
 
 ROOT_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-ROOT_BUILD_DIR = $(BUILD_DIR)/$(ROOT_DIR)
-ROOT_BUILD_LIB_DIR = $(ROOT_BUILD_DIR)/lib
+
+ROOT_SKEL_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)')
+
+ROOT_BUILD_DIR := $(BUILD_DIR)/$(ROOT_DIR)
+ROOT_BUILD_LIB_DIR := $(ROOT_BUILD_DIR)/lib
 
 FIND_ROOT_BINS_FILE = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec file '{}' \;
 FIND_ROOT_BINS = $(FIND_ROOT_BINS_FILE) | sed -n 's,^\(.*\):.*ELF.*executable.*,\1,p'
