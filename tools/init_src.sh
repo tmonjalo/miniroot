@@ -29,13 +29,15 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 			exit 1
 		fi
 		# branch can be <remote_repository>/<branch>
-		local LOCAL_BRANCH=$(echo $BRANCH | sed -n 's,.\+/\(.*\),\1,p')
-		if [ -n "$LOCAL_BRANCH" -a $TOOL = git ] ; then
-			# create a local branch if it is a remote one
-			BRANCH_COMMAND="$BRANCH_COMMAND -b $LOCAL_BRANCH"
+		if [ $TOOL = git ] ; then
+			if GIT_DIR="$SRC_DIR/.git" git branch -r | grep -q " $BRANCH$" ; then
+				# create a local branch if it is a remote one
+				local LOCAL_BRANCH=$(echo $BRANCH | sed -n 's,[^/]*/\(.*\),\1,p')
+				BRANCH_COMMAND="$BRANCH_COMMAND -b $LOCAL_BRANCH"
+			fi
 		fi
 		echo "$TOOL $BRANCH_COMMAND $BRANCH"
-		( cd "$SRC_DIR" ; $TOOL $BRANCH_COMMAND "$BRANCH" )
+		( cd "$SRC_DIR" ; $TOOL $BRANCH_COMMAND "$BRANCH" ) || exit $?
 	fi
 }
 
