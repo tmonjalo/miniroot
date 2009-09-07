@@ -11,8 +11,8 @@ TOOLCHAIN_CC = $(TOOLCHAIN_PATH_PREFIX)cc
 
 ifneq '$(TARGET_ARCH)' ''        # if ARCH defined
 ifeq '$(TOOLCHAIN_PATH)' ''      # and PATH undefined
-TOOLCHAIN_DEP := $(TOOLCHAIN_CC) # then build the toolchain
-TOOLCHAIN_PATH := $(TOOLCHAIN_BUILD_DIR)/toolchain
+TOOLCHAIN_DEP = $(TOOLCHAIN_CC)  # then build the toolchain
+TOOLCHAIN_PATH = $(TOOLCHAIN_BUILD_DIR)/toolchain
 tools : toolchain
 clean : toolchain_clean crosstool-ng_clean
 endif
