@@ -45,8 +45,9 @@ extract_tarball () { # <tarball>
 	local TARBALL=$*
 	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/*$,,')
 	echo untar sources to $SRC_DIR
-	tar x -C "$TOP_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .'
-	echo
+	(tar x -C "$TOP_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .' 2>/dev/null && echo) ||
+	# the option checkpoint-action is not always supported (still recent)
+	tar x -C "$TOP_DIR" -f "$TARBALL"
 	if [ "$(readlink -nm $TOP_DIR/$TARBALL_DIR)" != "$(readlink -nm $SRC_DIR)" ] ; then
 		# move to specified directory
 		mkdir -p $(dirname $SRC_DIR)
