@@ -47,10 +47,12 @@ $(TOOLCHAIN_BUILD_CONFIG) :
 	fi
 
 toolchain_config : toolchain_init $(TOOLCHAIN_BUILD_CONFIG)
-	$(call TOOLCHAIN_CONFIG_SET,     CT_LOCAL_TARBALLS_DIR , $(abspath $(CROSSTOOL-NG_DIR)))
-	$(call TOOLCHAIN_CONFIG_ENABLE,  CT_SAVE_TARBALLS      )
-	$(call TOOLCHAIN_CONFIG_SET,     CT_WORK_DIR           , $${CT_TOP_DIR}/tmp)
-	$(call TOOLCHAIN_CONFIG_SET,     CT_PREFIX_DIR         , $${CT_TOP_DIR}/toolchain)
+	$(call TOOLCHAIN_CONFIG_SET,     CT_LOCAL_TARBALLS_DIR     , $(abspath $(CROSSTOOL-NG_DIR)))
+	$(call TOOLCHAIN_CONFIG_ENABLE,  CT_SAVE_TARBALLS          )
+	$(call TOOLCHAIN_CONFIG_SET,     CT_WORK_DIR               , $${CT_TOP_DIR}/tmp)
+	$(call TOOLCHAIN_CONFIG_SET,     CT_PREFIX_DIR             , $${CT_TOP_DIR}/toolchain)
+	$(if $(TOOLCHAIN_UCLIBC_CONFIG), \
+	$(call TOOLCHAIN_CONFIG_SET,     CT_LIBC_UCLIBC_CONFIG_FILE, $(abspath $(TOOLCHAIN_UCLIBC_CONFIG))))
 
 toolchain_% : $(CROSSTOOL-NG) toolchain_config
 	( set -e ; \
