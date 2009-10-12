@@ -31,7 +31,7 @@ LINUX_MAKE_OLDCONFIG = yes '' | $(LINUX_MAKE) oldconfig >/dev/null
 LINUX_MODULES := $(shell grep '^CONFIG_MODULES=y' $(LINUX_BUILD_CONFIG) 2>/dev/null)
 LINUX_INITRAMFS := $(shell grep '^CONFIG_INITRAMFS_SOURCE=' $(LINUX_BUILD_CONFIG) 2>/dev/null)
 LINUX_GET_INITRAMFS = sed -n 's,^CONFIG_INITRAMFS_SOURCE="*\(.*\)"*,\1,p' $(LINUX_BUILD_CONFIG)
-LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $(ROOT_CPIO))",' $(LINUX_BUILD_CONFIG)
+LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $1)",' $(LINUX_BUILD_CONFIG)
 
 .PHONY : linux linux_clean linux_init linux_image_init linux_init2 \
 	linux_modules linux_modules_install linux_initramfs linux_check_latest
@@ -62,7 +62,7 @@ $(LINUX_BUILD_CONFIG) : | $(LINUX_SRC_DIR)
 linux_initramfs : $(if $(LINUX_MODULES), linux_modules_install) linux_image_init image linux_init2
 	@ if [ "`$(LINUX_GET_INITRAMFS)`" != '$(abspath $(ROOT_CPIO))' ] ; then \
 		echo 'set CONFIG_INITRAMFS_SOURCE=$(ROOT_CPIO)' ; \
-		$(LINUX_SET_INITRAMFS) && \
+		$(call LINUX_SET_INITRAMFS, $(ROOT_CPIO)) && \
 		$(LINUX_MAKE_OLDCONFIG) ; \
 	fi
 
@@ -86,6 +86,11 @@ linux_% : linux_init $(LINUX_BUILD_CONFIG)
 	$(LINUX_MAKE) $*
 
 linux_modules : $(LINUX_BUILD_CONFIG)
+	@ if [ -n "`$(LINUX_GET_INITRAMFS)`" ] ; then \
+		echo 'temporarily unset CONFIG_INITRAMFS_SOURCE' ; \
+		$(LINUX_SET_INITRAMFS) ; \
+		$(LINUX_MAKE_OLDCONFIG) ; \
+	fi
 	$(LINUX_MAKE) vmlinux
 	$(LINUX_MAKE) modules
 
