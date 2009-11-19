@@ -62,11 +62,11 @@ $(MTD-UTILS_BUILD_DIR)/$(strip $1) : mtd-utils_init | $(MTD-UTILS_SRC_DIR)
 	$(value SET_PATH) $(MAKE) -C $(abspath $(MTD-UTILS_SRC_DIR)) \
 		$(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		CPPFLAGS='$(TARGET_CPPFLAGS) -I$(abspath $(MTD-UTILS_SRC_DIR)/include)' \
-		BUILDDIR=$(abspath $(@D)) \
-		$(abspath $@)
+		BUILDDIR=$(abspath $$(@D)) \
+		$(abspath $$@)
 
 $(MTD-UTILS_INSTALL_DIR)/$(strip $1) : $(MTD-UTILS_BUILD_DIR)/$(strip $1)
-	install -D $< $@
+	install -D $$< $$@
 
 endef
 
