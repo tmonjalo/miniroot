@@ -3,11 +3,11 @@ HOST_CC ?= gcc
 #TARGET_ARCH =
 #TOOLCHAIN_PATH =
 TOOLCHAIN_PREFIX ?= $(if $(TARGET_ARCH), $(TARGET_ARCH)-unknown-linux-gnu-)
-TARGET_CC = ccache $(notdir $(TOOLCHAIN_CC))
-TARGET_CXX = $(patsubst %g,%,$(TARGET_CC:cc=))g++
+TARGET_CC ?= ccache $(notdir $(TOOLCHAIN_CC))
+TARGET_CXX ?= $(patsubst %g,%,$(TARGET_CC:gcc=))g++
 
 TOOLCHAIN_PATH_PREFIX = $(if $(TOOLCHAIN_PATH), $(strip $(TOOLCHAIN_PATH))/bin/$(strip $(TOOLCHAIN_PREFIX)))
-TOOLCHAIN_CC = $(TOOLCHAIN_PATH_PREFIX)cc
+TOOLCHAIN_CC = $(TOOLCHAIN_PATH_PREFIX)gcc
 
 ifneq '$(TARGET_ARCH)' ''        # if ARCH defined
 ifeq '$(TOOLCHAIN_PATH)' ''      # and PATH undefined
