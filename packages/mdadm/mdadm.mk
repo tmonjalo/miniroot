@@ -31,7 +31,7 @@ mdadm_init : $(TOOLCHAIN_DEP)
 $(MDADM_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(MDADM_DIR)' '$(MDADM_SRC)' '$@' '$(MDADM_PATCH_DIR)'
 
-$(MDADM_BUILD_BIN) : mdadm_init
+$(MDADM_BUILD_BIN) : mdadm_init | $(MDADM_SRC_DIR)
 	$(SET_PATH) $(MAKE) -C $(MDADM_SRC_DIR) $(@F) \
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(@D))') \
 		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)
