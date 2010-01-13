@@ -43,7 +43,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 
 extract_tarball () { # <tarball>
 	local TARBALL=$*
-	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/*$,,')
+	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/.*$,,')
 	echo untar sources to $SRC_DIR
 	(tar x -C "$TOP_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .' 2>/dev/null && echo) ||
 	# the option checkpoint-action is not always supported (still recent)

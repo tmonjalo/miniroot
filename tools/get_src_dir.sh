@@ -49,7 +49,7 @@ elif [ -d "$SRC" ] ; then
 	echo $SRC
 elif [ -f "$SRC" ] ; then
 	# SRC is a file, assume it is a tarball
-	TAR_DIR=$(tar tf "$SRC" 2>/dev/null | head -n1 | sed 's,/*$,,')
+	TAR_DIR=$(tar tf "$SRC" 2>/dev/null | head -n1 | sed 's,/.*$,,')
 	if [ -z "$TAR_DIR" ] ; then
 		echo $ERROR_DIR
 	else
