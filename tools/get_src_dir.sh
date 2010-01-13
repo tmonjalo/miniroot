@@ -12,7 +12,6 @@ strip_str() {
 	echo $1 | left_strip | right_strip
 }
 
-#TOP_DIR=$(strip_str $1) # destination parent directory
 TOP_DIR=$(echo $1 | right_strip) # destination parent directory
 SRC=$2 # can be a VCS URL, a directory or a tarball
 
