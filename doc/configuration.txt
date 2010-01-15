@@ -1,11 +1,16 @@
 Configuration is made by adding a file config.mk which is included by the Makefile.
 
+common
+------
+
 All paths are relative to the main directory containing the Makefile.
 
-The variables XXX_SRC can be a version number, a local tarball, a tarball URL
+The variables XXX_SRC can be a version number, a local archive, an archive URL
 or a VCS URL (remote or local). Git URLs can include a branch as an option.
 It is possible to specify the directory where the sources are checkouted, extracted or copied
 via the variables XXX_SRC_DIR.
+
+Sources can be patched by specifying a patch directory with XXX_PATCH_DIR
 
 
 toolchain
@@ -62,6 +67,20 @@ It can be interactively configured by
 	make linux_menuconfig
 
 A rootfs will be embedded if initramfs is selected in the Linux configuration.
+
+
+root
+----
+
+There is a default device table in
+	root/default_dev_table
+It can be changed via
+	ROOT_DEV_TABLE
+
+There is a default root skeleton in
+	root/default_skel
+A customized skeleton can be set via
+	ROOT_SKEL_SRC
 
 
 busybox

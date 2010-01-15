@@ -1,7 +1,6 @@
-# options can be set in config.mk
-ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table # <file>
-ROOT_SKEL_SRC ?= $(ROOT_DIR)/default_skel # [directory | tarball | VCS URL]
-ROOT_SKEL_PATCH_DIR ?= # [directory]
+ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table
+ROOT_SKEL_SRC ?= $(ROOT_DIR)/default_skel
+ROOT_SKEL_PATCH_DIR ?=
 ROOT_SKEL_SRC_DIR ?= $(ROOT_SKEL_SRC_AUTODIR)
 
 ROOT_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))

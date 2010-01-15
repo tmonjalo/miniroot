@@ -1,6 +1,5 @@
-# options can be set in config.mk
 ZLIB_SRC ?= 1.2.4
-ZLIB_PATCH_DIR ?= # [directory]
+ZLIB_PATCH_DIR ?=
 ZLIB_SRC_DIR ?= $(ZLIB_SRC_AUTODIR)
 ZLIB_BUILD_INSIDE = yes # cannot build zlib outside
 

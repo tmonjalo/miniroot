@@ -1,6 +1,5 @@
-# options can be set in config.mk
 CROSSTOOL-NG_SRC ?= 1.4.2
-CROSSTOOL-NG_PATCH_DIR ?= # [directory]
+CROSSTOOL-NG_PATCH_DIR ?=
 CROSSTOOL-NG_SRC_DIR ?= $(CROSSTOOL-NG_SRC_AUTODIR)
 
 CROSSTOOL-NG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))

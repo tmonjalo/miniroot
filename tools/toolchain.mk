@@ -1,4 +1,3 @@
-# options can be set in config.mk
 HOST_CC ?= gcc
 #TARGET_ARCH =
 #TOOLCHAIN_PATH =

@@ -1,7 +1,6 @@
-# options can be set in config.mk
 PKG_MDADM ?= no
 MDADM_SRC ?= 2.6.9
-MDADM_PATCH_DIR ?= # [directory]
+MDADM_PATCH_DIR ?=
 MDADM_SRC_DIR ?= $(MDADM_SRC_AUTODIR)
 MDADM_BUILD_INSIDE = yes # cannot build mdadm outside
 
