@@ -2,16 +2,10 @@
 
 # get or compute the directory name of the sources
 
-left_strip() {
-	sed 's,^[ \t]*,,'
-}
-right_strip() {
-	sed 's,[ \t]*$,,'
-}
-strip_str() {
-	echo $1 | left_strip | right_strip
-}
+SCRIPTS_DIR=$(dirname $0)
+. $SCRIPTS_DIR/common.sh
 
+# arguments
 TOP_DIR=$(echo $1 | right_strip) # destination parent directory
 SRC=$2 # can be a VCS URL, a directory or a tarball
 

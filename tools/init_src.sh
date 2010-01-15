@@ -3,16 +3,15 @@
 # get sources by download, checkout or tarball
 # and patch them
 
-strip_str() {
-	echo $* | sed 's,^[ \t]*,,' | sed 's,[ \t]*$,,'
-}
+SCRIPTS_DIR=$(dirname $0)
+. $SCRIPTS_DIR/common.sh
 
+# arguments
 TOP_DIR=$(strip_str $1) # destination parent directory
 SRC=$(strip_str $2) # can be a VCS URL to checkout, a tarball URL to download, a directory or a tarball
 SRC_DIR=$(strip_str $3) # directory where to checkout or to untar
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
 
-SCRIPTS_DIR=$(dirname $0)
 URL="$(echo $SRC | cut -d' ' -f1)" # replace SRC in VCS case with branch option
 BRANCH="$(echo $SRC | cut -d' ' -sf2)" # SRC can have a branch option in VCS case
 ERROR_DIR=/tmp/miniroot_error # fake directory in case of error
