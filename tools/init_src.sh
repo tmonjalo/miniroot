@@ -24,7 +24,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 	$TOOL $MAIN_COMMAND "$URL" "$SRC_DIR"
 	if [ -n "$BRANCH" ] ; then
 		if [ -z "$BRANCH_COMMAND" ] ; then
-			echo $TOOL: no branch support for $BRANCH
+			echo "$TOOL: no branch support for $BRANCH"
 			exit 1
 		fi
 		# branch can be <remote_repository>/<branch>
@@ -43,7 +43,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 extract_tarball () { # <tarball>
 	local TARBALL=$*
 	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/.*$,,')
-	echo untar sources to $SRC_DIR
+	echo "untar sources to $SRC_DIR"
 	(tar x -C "$TOP_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .' 2>/dev/null && echo) ||
 	# the option checkpoint-action is not always supported (still recent)
 	tar x -C "$TOP_DIR" -f "$TARBALL"
@@ -54,9 +54,45 @@ extract_tarball () { # <tarball>
 	fi
 }
 
+extract_zip () { # <zip archive>
+	echo "unzip sources to $SRC_DIR"
+	local ZIP=$*
+	local EXTRACT_DIR="$TOP_DIR"
+	local CONTAINER_DIR="$(unzip -l "$ZIP" | sed -n "s,^ *[0-9]\+ \+[-0-9]\+ \+[:0-9]\+ \+\([^/]*\).*,$EXTRACT_DIR/\1,p" | uniq)"
+	# check if all the files are contained in a single root directory
+	if [ "$(echo "$CONTAINER_DIR" | wc -l)" -gt 1 ] ; then
+		EXTRACT_DIR="$SRC_DIR"
+		CONTAINER_DIR="$SRC_DIR"
+	# check if a directory with the same name already exists
+	elif [ -e "$CONTAINER_DIR" ] ; then
+		echo "$CONTAINER_DIR already exists"
+		exit 1
+	fi
+	# extract
+	unzip -qo "$ZIP" -d "$EXTRACT_DIR"
+	# move if not in the expected directory
+	mv_src_dir "$CONTAINER_DIR" "$SRC_DIR"
+}
+
+# identify archive type and extract
 extract_archive () { # <archive>
 	local ARCHIVE=$*
-	extract_tarball $ARCHIVE
+	case "$ARCHIVE" in
+		*.zip)
+			extract_zip $ARCHIVE
+		;;
+		*) # tarball fallback
+			extract_tarball $ARCHIVE
+		;;
+	esac
+}
+
+# move if src and dst are different
+mv_src_dir () { # <src> <dst>
+	if [ "$(readlink -nm "$1")" != "$(readlink -nm "$2")" ] ; then
+		mkdir -p $(dirname "$2")
+		mv "$1" "$2"
+	fi
 }
 
 # check the source directory
@@ -87,7 +123,7 @@ if echo $SRC | fgrep -q '://' ; then
 	elif [ "$PROTOCOL" = svn ] ; then
 		vcs_checkout svn checkout
 	else
-		echo $PROTOCOL: protocol not supported
+		echo "$PROTOCOL: protocol not supported"
 		exit 1
 	fi
 elif [ -d "$SRC/.git" ] ; then
@@ -117,7 +153,7 @@ fi
 
 # patch
 if [ -n "$PATCH_DIR" ] ; then
-	echo patch sources
+	echo 'patch sources'
 	if [ -d "$SRC_DIR/.git" ] && find $PATCH_DIR -type f | head -n1 | xargs -r head -n1 | grep -q '^From ' ; then
 		# apply patches as git commits
 		# git-am doesn't work with --work-tree ?
