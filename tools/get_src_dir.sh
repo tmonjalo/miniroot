@@ -7,13 +7,13 @@ SCRIPTS_DIR=$(dirname $0)
 
 # arguments
 TOP_DIR=$(echo $1 | right_strip) # destination parent directory
-SRC=$2 # can be a VCS URL, a directory or a tarball
+SRC=$2 # can be a VCS URL, a directory or an archive
 
-# first, test the most frequent case for optimization
-TARBALL=$(echo $SRC | sed -n "s,.*://.*/\([^/]*\)\.tar\($\|\..*\),$TOP_DIR/\1,p")
-if [ -n "$TARBALL" ] ; then
-	# SRC is a tarball URL
-	echo $TARBALL
+# first, for optimization, test the most frequent case: an archive
+ARCHIVE=$(echo $SRC | sed -n "s,.*/,,;s,\(.*\)\.$ARCHIVE_EXT,\1,p")
+if [ -n "$ARCHIVE" ] ; then
+	# SRC is an archive (URL or file)
+	echo $TOP_DIR/$ARCHIVE
 	exit
 fi
 
@@ -40,14 +40,6 @@ elif [ -d "$VCS_SRC/.hg" ] ; then
 elif [ -d "$SRC" ] ; then
 	# SRC is a directory
 	echo $SRC
-elif [ -f "$SRC" ] ; then
-	# SRC is a file, assume it is a tarball
-	TAR_DIR=$(tar tf "$SRC" 2>/dev/null | head -n1 | sed 's,/.*$,,')
-	if [ -z "$TAR_DIR" ] ; then
-		echo $ERROR_DIR
-	else
-		echo $TOP_DIR/$TAR_DIR
-	fi
 else
 	# SRC is unknown
 	echo $ERROR_DIR
