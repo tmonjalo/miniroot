@@ -45,4 +45,4 @@ libroxml_clean :
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(LIBROXML_BUILD_DIR))')
 
 libroxml_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, gz, head, http://code.google.com/p/libroxml/downloads/list)
+	@ $(call CHECK_LATEST_ARCHIVE, head, http://code.google.com/p/libroxml/downloads/list)

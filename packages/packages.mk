@@ -16,6 +16,7 @@ ifneq '$(call PKG_IS_SET, $1)' ''
 packages : $2
 packages_clean : $2_clean
 endif
+check_latest : $2_check_latest
 endef
 
 include $(PKG_DIR)/mtd-utils/mtd-utils.mk

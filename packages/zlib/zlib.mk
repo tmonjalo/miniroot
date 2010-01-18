@@ -46,4 +46,4 @@ zlib_clean :
 	- $(MAKE) -C $(ZLIB_BUILD_DIR) clean
 
 zlib_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, $(ZLIB_URL))
+	@ $(call CHECK_LATEST_ARCHIVE, head, $(ZLIB_URL))

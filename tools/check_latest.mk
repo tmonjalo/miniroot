@@ -1,12 +1,5 @@
 .PHONY : check_latest
 
-check_latest : $(foreach PACKAGE, \
-	linux busybox zlib dropbear \
-	mtd-utils e2fsprogs mdadm \
-	libroxml \
-	crosstool-ng, \
-	$(PACKAGE)_check_latest)
-
 # CHECK_LATEST <package> <PACKAGE> <latest version>
 # print default and latest version
 define CHECK_LATEST
@@ -23,15 +16,16 @@ define GET_DEFAULT_VERSION
 	)
 endef
 
-# GET_TARBALL_VERSION <package> <extension> <head|tail> <url>
-# print version of a tarball from the web page
-define GET_TARBALL_VERSION
+# GET_ARCHIVE_VERSION <package> <head|tail> <url>
+# print version of an archive from the web page
+define GET_ARCHIVE_VERSION
 	$(shell \
-		$(call WWW_DUMP, $(strip $4)) | \
-		sed -n 's,.*://.*/$(strip $1)-\(.*\)\.tar\.$(strip $2).*,\1,p' | \
-		$3 -n1 \
+		$(call WWW_DUMP, $(strip $3)) | \
+		sed -n 's,.*://.*/$(strip $1)-\(.*\)\.$(ARCHIVE_EXT).*,\1,p' | \
+		$2 -n1 \
 	)
 endef
+ARCHIVE_EXT := $(shell . $(TOOLS_DIR)/common.sh && env | sed -n 's,^ARCHIVE_EXT=\(.*\),\1,p')
 define WWW_DUMP
 	$(if $(shell which elinks 2>/dev/null), \
 		elinks -dump $1, \
@@ -42,22 +36,20 @@ define WWW_DUMP
 	)
 endef
 
-# CHECK_LATEST_TARBALL_FOR <package> <extension> <head|tail> <url>
+# CHECK_LATEST_ARCHIVE_FOR <package> <head|tail> <url>
 # print default and latest version from the web page for the package
-# extension should be gz or bz2
-# filter first or last tarball with head or tail
-define CHECK_LATEST_TARBALL_FOR
+# filter first or last archive with head or tail
+define CHECK_LATEST_ARCHIVE_FOR
 	$(call CHECK_LATEST, \
 		$1, \
 		$(shell echo $1 | tr '[:lower:]' '[:upper:]'), \
-		$(call GET_TARBALL_VERSION, $1, $2, $3, $4) \
+		$(call GET_ARCHIVE_VERSION, $1, $2, $3) \
 	)
 endef
 
-# CHECK_LATEST_TARBALL <extension> <head|tail> <url>
+# CHECK_LATEST_ARCHIVE <head|tail> <url>
 # print default and latest version from the web page for the implicit package
-# extension should be gz or bz2
-# filter first or last tarball with head or tail
-define CHECK_LATEST_TARBALL
-	$(call CHECK_LATEST_TARBALL_FOR, $(@:_check_latest=), $1, $2, $3)
+# filter first or last archive with head or tail
+define CHECK_LATEST_ARCHIVE
+	$(call CHECK_LATEST_ARCHIVE_FOR, $(@:_check_latest=), $1, $2)
 endef

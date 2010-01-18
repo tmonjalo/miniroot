@@ -43,4 +43,4 @@ mdadm_clean :
 		$(if $(MDADM_BUILD_INSIDE), , O='$(abspath $(MDADM_BUILD_DIR))')
 
 mdadm_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, $(MDADM_URL))
+	@ $(call CHECK_LATEST_ARCHIVE, tail, $(MDADM_URL))

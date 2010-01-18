@@ -29,6 +29,7 @@ BUSYBOX_MAKE_OLDCONFIG = yes '' | $(BUSYBOX_MAKE) oldconfig >/dev/null
 
 .PHONY : busybox busybox_init busybox_clean busybox_check_latest
 clean : busybox_clean
+check_latest : busybox_check_latest
 
 busybox : $(BUSYBOX_INSTALL_BIN)
 
@@ -63,4 +64,4 @@ busybox_clean :
 	- $(BUSYBOX_MAKE) clean uninstall
 
 busybox_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://busybox.net)
+	@ $(call CHECK_LATEST_ARCHIVE, head, http://busybox.net)

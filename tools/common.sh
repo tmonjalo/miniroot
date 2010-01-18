@@ -2,7 +2,7 @@
 TAR_LONG_EXT='tar\($\|\.[^.]*$\)'
 TAR_SHORT_EXT='\(tgz\|tbz2\|txz\)$'
 TARBALL_EXT="\($TAR_LONG_EXT\|$TAR_SHORT_EXT\)"
-ARCHIVE_EXT="\($TAR_LONG_EXT\|$TAR_SHORT_EXT\)"
+export ARCHIVE_EXT="\($TAR_LONG_EXT\|$TAR_SHORT_EXT\)"
 
 # extension detection
 is_tarball () {

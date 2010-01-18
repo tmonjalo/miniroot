@@ -96,4 +96,4 @@ dropbear_clean :
 	- rm -f $(DROPBEAR_INSTALL_CLIENT2_ALIAS)
 
 dropbear_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://matt.ucc.asn.au/dropbear/dropbear.html)
+	@ $(call CHECK_LATEST_ARCHIVE, head, http://matt.ucc.asn.au/dropbear/dropbear.html)

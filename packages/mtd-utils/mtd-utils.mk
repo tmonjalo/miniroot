@@ -77,4 +77,4 @@ mtd-utils_clean :
 		$(if $(MTD-UTILS_BUILD_INSIDE), , BUILDDIR='$(abspath $(MTD-UTILS_BUILD_DIR))') \
 
 mtd-utils_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, $(MTD-UTILS_URL))
+	@ $(call CHECK_LATEST_ARCHIVE, tail, $(MTD-UTILS_URL))

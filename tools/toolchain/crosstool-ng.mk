@@ -18,6 +18,7 @@ CROSSTOOL-NG := $(CROSSTOOL-NG_BUILD_DIR)/ct-ng
 CROSSTOOL-NG_MAKE = $(MAKE) -C $(CROSSTOOL-NG_BUILD_DIR)
 
 .PHONY : crosstool-ng crosstool-ng_init crosstool-ng_clean crosstool-ng_check_latest
+check_latest : crosstool-ng_check_latest
 
 crosstool-ng : $(CROSSTOOL-NG)
 
@@ -40,4 +41,4 @@ crosstool-ng_clean :
 	- $(CROSSTOOL-NG_MAKE) distclean
 
 crosstool-ng_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, tail, $(CROSSTOOL-NG_URL))
+	@ $(call CHECK_LATEST_ARCHIVE, tail, $(CROSSTOOL-NG_URL))

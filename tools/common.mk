@@ -22,7 +22,7 @@ TARGET_STATIC = $(findstring -static, $(TARGET_LDFLAGS))
 TARGET_STRIP = $(TOOLCHAIN_PATH_PREFIX)strip -s
 CONFIGURE_HOST = $(if $(TOOLCHAIN_PREFIX), --host=$(strip $(TOOLCHAIN_PREFIX:-=)))
 
-# macro to check if *_SRC exists locally (tarball or directory) or is an URL
+# macro to check if *_SRC exists locally (archive or directory) or is an URL
 define IS_SRC
 $(findstring ://, $1 $(shell [ -e '$(strip $1)' ] && echo ://))
 endef

@@ -35,6 +35,7 @@ LINUX_SET_INITRAMFS = sed -i 's,^\(CONFIG_INITRAMFS_SOURCE=\).*,\1"$(abspath $1)
 .PHONY : linux linux_clean linux_init linux_image_init linux_init2 \
 	linux_modules linux_modules_install linux_initramfs linux_check_latest
 clean : linux_clean
+check_latest : linux_check_latest
 
 linux : linux_all
 
@@ -99,4 +100,4 @@ linux_clean :
 	- $(LINUX_MAKE) clean
 
 linux_check_latest :
-	@ $(call CHECK_LATEST_TARBALL, bz2, head, http://kernel.org)
+	@ $(call CHECK_LATEST_ARCHIVE, head, http://kernel.org)

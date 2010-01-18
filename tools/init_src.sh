@@ -1,6 +1,6 @@
 #! /bin/sh -e
 
-# get sources by download, checkout or tarball
+# get sources by download, checkout or archive
 # and patch them
 
 SCRIPTS_DIR=$(dirname $0)
@@ -8,7 +8,7 @@ SCRIPTS_DIR=$(dirname $0)
 
 # arguments
 TOP_DIR=$(strip_str $1) # destination parent directory
-SRC=$(strip_str $2) # can be a VCS URL to checkout, a tarball URL to download, a directory or a tarball
+SRC=$(strip_str $2) # can be a VCS URL to checkout, an URL of archive to download, a directory or an archive
 SRC_DIR=$(strip_str $3) # directory where to checkout or to untar
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
 
@@ -54,6 +54,11 @@ extract_tarball () { # <tarball>
 	fi
 }
 
+extract_archive () { # <archive>
+	local ARCHIVE=$*
+	extract_tarball $ARCHIVE
+}
+
 # check the source directory
 if echo $SRC_DIR | grep -q "^$ERROR_DIR" ; then
 	echo "bad source: $SRC"
@@ -69,12 +74,12 @@ if echo $SRC | fgrep -q '://' ; then
 	# SRC is an URL (can have a branch option)
 	PROTOCOL=$($SCRIPTS_DIR/get_protocol_from_url.sh $URL)
 	if echo $PROTOCOL | grep -q tp ; then # http, ftp
-		TARBALL="$TOP_DIR/$(basename $SRC)"
-		if [ ! -s "$TARBALL" ] ; then
+		ARCHIVE="$TOP_DIR/$(basename $SRC)"
+		if [ ! -s "$ARCHIVE" ] ; then
 			echo "wget $SRC"
 			( cd "$TOP_DIR" && wget "$SRC" ) || exit $?
 		fi
-		extract_tarball $TARBALL
+		extract_archive $ARCHIVE
 	elif [ "$PROTOCOL" = git ] ; then
 		vcs_checkout git clone checkout
 	elif [ "$PROTOCOL" = hg ] ; then
@@ -106,8 +111,8 @@ elif [ -d "$SRC" ] ; then
 	mkdir -p "$SRC_DIR"
 	tar --create --exclude-vcs --directory "$SRC" . | tar --extract --directory "$SRC_DIR"
 else
-	# SRC is a file, assume it is a tarball
-	extract_tarball $SRC
+	# SRC is a file, assume it is an archive
+	extract_archive $SRC
 fi
 
 # patch
