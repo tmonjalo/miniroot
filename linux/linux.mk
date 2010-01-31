@@ -11,7 +11,7 @@ LINUX_TARGET_CC ?= $(if $(filter $(LINUX_TOOLCHAIN_PREFIX), $(TOOLCHAIN_PREFIX))
 
 LINUX_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
-LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6
+LINUX_URL = http://kernel.org/pub/linux/kernel/v2.6$(if $(findstring -rc, $(LINUX_SRC)),/testing)
 # if LINUX_SRC is a version number
 ifeq '$(call IS_SRC, $(LINUX_SRC))' ''
 override LINUX_SRC := $(LINUX_URL)/linux-$(strip $(LINUX_SRC)).tar.bz2
