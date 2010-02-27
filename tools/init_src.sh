@@ -41,17 +41,26 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 }
 
 extract_tarball () { # <tarball>
-	local TARBALL=$*
-	local TARBALL_DIR=$(tar tf "$TARBALL" 2>/dev/null | head -n1 | sed 's,/.*$,,')
 	echo "untar sources to $SRC_DIR"
-	(tar x -C "$TOP_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .' 2>/dev/null && echo) ||
-	# the option checkpoint-action is not always supported (still recent)
-	tar x -C "$TOP_DIR" -f "$TARBALL"
-	if [ "$(readlink -nm $TOP_DIR/$TARBALL_DIR)" != "$(readlink -nm $SRC_DIR)" ] ; then
-		# move to specified directory
-		mkdir -p $(dirname $SRC_DIR)
-		mv $TOP_DIR/$TARBALL_DIR $SRC_DIR
+	local TARBALL=$*
+	local EXTRACT_DIR="$TOP_DIR"
+	local CONTAINER_DIR="$(tar tf "$TARBALL" 2>&- | sed "s,^\([^/]*\).*,$EXTRACT_DIR/\1," | uniq)"
+	# check if all the files are contained in a single root directory
+	if [ "$(echo "$CONTAINER_DIR" | wc -l)" -gt 1 ] ; then
+		EXTRACT_DIR="$SRC_DIR"
+		mkdir -p $EXTRACT_DIR
+		CONTAINER_DIR="$SRC_DIR"
+	# check if a directory with the same name already exists
+	elif [ -e "$CONTAINER_DIR" ] ; then
+		echo "$CONTAINER_DIR already exists"
+		exit 1
 	fi
+	# extract
+	(tar x -C "$EXTRACT_DIR" -f "$TARBALL" --checkpoint --checkpoint-action exec='printf .' 2>&- && echo .) ||
+	# the option checkpoint-action is not always supported (still recent)
+	tar x -C "$EXTRACT_DIR" -f "$TARBALL"
+	# move if not in the expected directory
+	mv_src_dir "$CONTAINER_DIR" "$SRC_DIR"
 }
 
 extract_zip () { # <zip archive>
