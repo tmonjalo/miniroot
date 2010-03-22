@@ -30,7 +30,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 		fi
 		# branch can be <remote_repository>/<branch>
 		if [ $TOOL = git ] ; then
-			if GIT_DIR="$SRC_DIR/.git" git branch -r | grep -q " $BRANCH$" ; then
+			if git --git-dir="$SRC_DIR/.git" branch -r | grep -q " $BRANCH$" ; then
 				# create a local branch if it is a remote one
 				local LOCAL_BRANCH=$(echo $BRANCH | sed -n 's,[^/]*/\(.*\),\1,p')
 				BRANCH_COMMAND="$BRANCH_COMMAND -b $LOCAL_BRANCH"
@@ -117,6 +117,14 @@ fi
 # patch
 if [ -n "$PATCH_DIR" ] ; then
 	echo patch sources
-	make -s $SCRIPTS_DIR/patch-kernel.sh
-	$SCRIPTS_DIR/patch-kernel.sh $SRC_DIR $PATCH_DIR
+	if [ -d "$SRC_DIR/.git" ] && find $PATCH_DIR -type f | head -n1 | xargs -r head -n1 | grep -q '^From ' ; then
+		# apply patches as git commits
+		# git-am doesn't work with --work-tree ?
+		#git --git-dir="$SRC_DIR/.git" --work-tree="$SRC_DIR" am "$PATCH_DIR/*"
+		PATCH_ABSDIR=$(readlink -nm "$PATCH_DIR")
+		( cd "$SRC_DIR" && git am "$PATCH_ABSDIR/*" ) || exit $?
+	else
+		make -s $SCRIPTS_DIR/patch-kernel.sh
+		$SCRIPTS_DIR/patch-kernel.sh "$SRC_DIR" "$PATCH_DIR"
+	fi
 fi
