@@ -122,7 +122,7 @@ if [ -n "$PATCH_DIR" ] ; then
 		# git-am doesn't work with --work-tree ?
 		#git --git-dir="$SRC_DIR/.git" --work-tree="$SRC_DIR" am "$PATCH_DIR/*"
 		PATCH_ABSDIR=$(readlink -nm "$PATCH_DIR")
-		( cd "$SRC_DIR" && git am "$PATCH_ABSDIR/*" ) || exit $?
+		( cd "$SRC_DIR" && git am "$PATCH_ABSDIR"/* ) || exit $?
 	else
 		make -s $SCRIPTS_DIR/patch-kernel.sh
 		$SCRIPTS_DIR/patch-kernel.sh "$SRC_DIR" "$PATCH_DIR"
