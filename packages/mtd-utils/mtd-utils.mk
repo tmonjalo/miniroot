@@ -58,9 +58,9 @@ $(MTD-UTILS_SRC_DIR) :
 define MTD-UTILS_RULES
 
 $(MTD-UTILS_BUILD_DIR)/$(strip $1) : mtd-utils_init | $(MTD-UTILS_SRC_DIR)
-	$(value SET_PATH) $(MAKE) -C $(abspath $(MTD-UTILS_SRC_DIR)) \
+	$(value SET_PATH) $(MAKE) -C $(abspath $$|) \
 		$(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
-		CPPFLAGS='$(TARGET_CPPFLAGS) -I$(abspath $(MTD-UTILS_SRC_DIR)/include)' \
+		CPPFLAGS='$(TARGET_CPPFLAGS) -I$(abspath $$|/include)' \
 		BUILDDIR=$(abspath $$(@D)) \
 		$(abspath $$@)
 

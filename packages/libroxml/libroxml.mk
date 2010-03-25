@@ -32,7 +32,7 @@ $(LIBROXML_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(LIBROXML_DIR)' '$(LIBROXML_SRC)' '$@' '$(LIBROXML_PATCH_DIR)'
 
 $(LIBROXML_BUILD_BIN) : libroxml_init | $(LIBROXML_SRC_DIR)
-	$(SET_PATH) $(MAKE) -C $(LIBROXML_SRC_DIR) $(abspath $@) \
+	$(SET_PATH) $(MAKE) -C $| $(abspath $@) \
 		$(if $(LIBROXML_BUILD_INSIDE), , O='$(abspath $(@D))') \
 		$(if $(LIBROXML_VERBOSE), V=1) \
 		$(SET_CC) $(SET_CPPFLAGS) $(SET_CFLAGS) $(SET_LDFLAGS)

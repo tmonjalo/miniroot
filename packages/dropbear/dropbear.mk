@@ -48,9 +48,9 @@ $(DROPBEAR_BUILD_MAKEFILE) : | $(DROPBEAR_SRC_DIR)
 	mkdir -p $(@D)
 	cd $(@D) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
-		$(abspath $(DROPBEAR_SRC_DIR))/configure \
+		$(abspath $|)/configure \
 			$(CONFIGURE_HOST) \
-			--srcdir='$(abspath $(DROPBEAR_SRC_DIR))' \
+			--srcdir='$(abspath $|)' \
 			--with-zlib='$(abspath $(ZLIB_BUILD_DIR))' \
 			--disable-lastlog \
 			--disable-utmp \

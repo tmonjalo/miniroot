@@ -30,9 +30,8 @@ root_lib_so : $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
 	$(SET_PATH) $(MKLIBS) \
 		$(if $(TOOLCHAIN_PREFIX), --target $(TOOLCHAIN_PREFIX)) \
 		-D $(foreach DIR, $(TARGET_LIB_DIRS), -L $(DIR)) \
-		--dest-dir $(ROOT_BUILD_LIB_DIR) \
-		`$(FIND_ROOT_BINS)`
-	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>&- || true
+		--dest-dir $| `$(FIND_ROOT_BINS)`
+	find $| -type f | xargs -r $(SSTRIP) 2>&- || true
 
 root_bin_init :
 	@ printf '\n=== BINARIES ===\n'
@@ -45,7 +44,7 @@ root_skel_init :
 $(ROOT_SKEL_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$@' '$(ROOT_SKEL_PATCH_DIR)'
 root_skel : root_skel_init | $(ROOT_SKEL_SRC_DIR)
-	tar --create --exclude-vcs --directory $(ROOT_SKEL_SRC_DIR) . | tar --extract --directory $(ROOT_BUILD_DIR)
+	tar --create --exclude-vcs --directory $| . | tar --extract --directory $(ROOT_BUILD_DIR)
 
 root_dev_init :
 	@ printf '\n=== DEVICES ===\n'

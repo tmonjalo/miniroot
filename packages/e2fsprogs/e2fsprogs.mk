@@ -36,9 +36,9 @@ $(E2FSPROGS_BUILD_MAKEFILE) : | $(E2FSPROGS_SRC_DIR)
 	mkdir -p $(@D)
 	cd $(@D) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
-		$(abspath $(E2FSPROGS_SRC_DIR))/configure \
+		$(abspath $|)/configure \
 		$(CONFIGURE_HOST) \
-			--srcdir='$(abspath $(E2FSPROGS_SRC_DIR))' \
+			--srcdir='$(abspath $|)' \
 			--disable-testio-debug \
 			--disable-debugfs \
 			--disable-imager \
