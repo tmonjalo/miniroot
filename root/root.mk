@@ -32,7 +32,7 @@ root_lib_so : $(MKLIBS) $(SSTRIP) | $(ROOT_BUILD_LIB_DIR)
 		-D $(foreach DIR, $(TARGET_LIB_DIRS), -L $(DIR)) \
 		--dest-dir $(ROOT_BUILD_LIB_DIR) \
 		`$(FIND_ROOT_BINS)`
-	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>/dev/null || true
+	find $(ROOT_BUILD_LIB_DIR) -type f | xargs -r $(SSTRIP) 2>&- || true
 
 root_bin_init :
 	@ printf '\n=== BINARIES ===\n'

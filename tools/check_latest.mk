@@ -27,9 +27,9 @@ define GET_ARCHIVE_VERSION
 endef
 ARCHIVE_EXT := $(shell . $(TOOLS_DIR)/common.sh && env | sed -n 's,^ARCHIVE_EXT=\(.*\),\1,p')
 define WWW_DUMP
-	$(if $(shell which elinks 2>/dev/null), \
+	$(if $(shell which elinks 2>&-), \
 		elinks -dump $1, \
-		$(if $(shell which lynx 2>/dev/null), \
+		$(if $(shell which lynx 2>&-), \
 			lynx -dump $1, \
 			$(error no www-browser able to dump, you should install elinks) \
 		) \

@@ -5,7 +5,7 @@ case "$1" in
 		mkdir -p /etc/dropbear
 		if [ ! -f /etc/dropbear/dropbear_rsa_host_key ] ; then
 			echo "generating RSA key..."
-			dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key >/dev/null 2>&1
+			dropbearkey -t rsa -f /etc/dropbear/dropbear_rsa_host_key >&- 2>&1
 		fi
 		dropbear
 		;;
