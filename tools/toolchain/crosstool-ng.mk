@@ -28,10 +28,7 @@ $(CROSSTOOL-NG_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)' '$@' '$(CROSSTOOL-NG_PATCH_DIR)'
 
 $(CROSSTOOL-NG_BUILD_MAKEFILE) : | $(CROSSTOOL-NG_SRC_DIR)
-	( set -e ; \
-		cd $(@D) ; \
-		./configure --local \
-	)
+	cd $(@D) && ./configure --local
 
 $(CROSSTOOL-NG) : crosstool-ng_init $(CROSSTOOL-NG_BUILD_MAKEFILE)
 	$(CROSSTOOL-NG_MAKE)

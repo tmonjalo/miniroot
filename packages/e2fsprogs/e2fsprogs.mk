@@ -34,8 +34,7 @@ $(E2FSPROGS_SRC_DIR) :
 
 $(E2FSPROGS_BUILD_MAKEFILE) : | $(E2FSPROGS_SRC_DIR)
 	mkdir -p $(@D)
-	( set -e ; \
-		cd $(@D) ; \
+	cd $(@D) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(E2FSPROGS_SRC_DIR))/configure \
 		$(CONFIGURE_HOST) \
@@ -48,8 +47,7 @@ $(E2FSPROGS_BUILD_MAKEFILE) : | $(E2FSPROGS_SRC_DIR)
 			--disable-e2initrd-helper \
 			--disable-tls \
 			--disable-uuidd \
-			--disable-nls \
-	)
+			--disable-nls
 
 e2fsprogs_libs : e2fsprogs_init $(E2FSPROGS_BUILD_MAKEFILE)
 	$(SET_PATH) $(MAKE) -C $(E2FSPROGS_BUILD_DIR)/lib/et

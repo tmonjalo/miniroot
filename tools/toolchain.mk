@@ -54,10 +54,7 @@ toolchain_config : toolchain_init $(TOOLCHAIN_BUILD_CONFIG)
 	$(call TOOLCHAIN_CONFIG_SET,     CT_LIBC_UCLIBC_CONFIG_FILE, $(abspath $(TOOLCHAIN_UCLIBC_CONFIG))))
 
 toolchain_% : $(CROSSTOOL-NG) toolchain_config
-	( set -e ; \
-		cd $(TOOLCHAIN_BUILD_DIR) ; \
-		$(abspath $(CROSSTOOL-NG)) $* \
-	)
+	cd $(TOOLCHAIN_BUILD_DIR) && $(abspath $(CROSSTOOL-NG)) $*
 
 $(TOOLCHAIN_CC) :
 	@ $(MAKE) --no-print-directory toolchain_build

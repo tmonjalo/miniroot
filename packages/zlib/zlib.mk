@@ -32,11 +32,9 @@ $(ZLIB_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_DIR)' '$(ZLIB_SRC)' '$@' '$(ZLIB_PATCH_DIR)'
 
 zlib_configure : | $(ZLIB_SRC_DIR)
-	( set -e ; \
-		cd $(ZLIB_BUILD_DIR) ; \
+	cd $(ZLIB_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
-		$(if $(TARGET_STATIC), ./configure, ./configure --shared) \
-	)
+		$(if $(TARGET_STATIC), ./configure, ./configure --shared)
 
 $(ZLIB_BUILD_BIN) : zlib_init
 	@ if ! fgrep -q 'LIBS=$(@F)' $(ZLIB_SRC_DIR)/Makefile ; then \

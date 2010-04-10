@@ -46,8 +46,7 @@ endef
 
 $(DROPBEAR_BUILD_MAKEFILE) : | $(DROPBEAR_SRC_DIR)
 	mkdir -p $(@D)
-	( set -e ; \
-		cd $(@D) ; \
+	cd $(@D) && \
 		$(SET_PATH) $(SET_CC) $(SET_CFLAGS) $(SET_LDFLAGS) \
 		$(abspath $(DROPBEAR_SRC_DIR))/configure \
 			$(CONFIGURE_HOST) \
@@ -60,8 +59,7 @@ $(DROPBEAR_BUILD_MAKEFILE) : | $(DROPBEAR_SRC_DIR)
 			--disable-wtmpx \
 			--disable-loginfunc \
 			--disable-pututline \
-			--disable-pututxline \
-	)
+			--disable-pututxline
 	$(call DROPBEAR_DISABLE_FEATURE, DROPBEAR_BLOWFISH)
 	$(call DROPBEAR_DISABLE_FEATURE, DROPBEAR_TWOFISH)
 	$(call DROPBEAR_DISABLE_FEATURE, DROPBEAR_MD5_HMAC)
