@@ -37,7 +37,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 			fi
 		fi
 		echo "$TOOL $BRANCH_COMMAND $BRANCH"
-		( cd "$SRC_DIR" ; $TOOL $BRANCH_COMMAND "$BRANCH" ) || exit $?
+		( cd "$SRC_DIR" && $TOOL $BRANCH_COMMAND "$BRANCH" ) || exit $?
 	fi
 }
 
@@ -73,10 +73,7 @@ if echo $SRC | fgrep -q '://' ; then
 		TARBALL="$TOP_DIR/$(basename $SRC)"
 		if [ ! -s "$TARBALL" ] ; then
 			echo "wget $SRC"
-			( set -e
-				cd "$TOP_DIR"
-				wget "$SRC"
-			) || exit $?
+			( cd "$TOP_DIR" && wget "$SRC" ) || exit $?
 		fi
 		extract_tarball $TARBALL
 	elif [ "$PROTOCOL" = git ] ; then
