@@ -4,6 +4,7 @@ PKG_DROPBEAR_SERVER ?= no
 PKG_DROPBEAR_CLIENT ?= no
 DROPBEAR_SRC ?= 0.52
 DROPBEAR_PATCH_DIR ?=
+DROPBEAR_DL_DIR ?= $(DL_DIR)
 DROPBEAR_SRC_DIR ?= $(DROPBEAR_SRC_AUTODIR)
 #DROPBEAR_BUILD_INSIDE = no
 DROPBEAR_RC_SCRIPT ?= /etc/rc.dropbear
@@ -18,7 +19,7 @@ ifeq '$(call IS_SRC, $(DROPBEAR_SRC))' ''
 override DROPBEAR_SRC := $(DROPBEAR_URL)/dropbear-$(strip $(DROPBEAR_SRC)).tar.bz2
 endif
 
-DROPBEAR_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)')
+DROPBEAR_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(DROPBEAR_SRC)')
 DROPBEAR_BUILD_DIR := $(if $(DROPBEAR_BUILD_INSIDE), $(DROPBEAR_SRC_DIR), $(BUILD_DIR)/$(notdir $(DROPBEAR_SRC_DIR)))
 DROPBEAR_BUILD_MAKEFILE := $(DROPBEAR_BUILD_DIR)/Makefile
 DROPBEAR_BUILD_CONFIG := $(DROPBEAR_SRC_DIR)/options.h
@@ -38,7 +39,7 @@ dropbear_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== DROPBEAR (package not tested) ===\n'
 
 $(DROPBEAR_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_DIR)' '$(DROPBEAR_SRC)' '$@' '$(DROPBEAR_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(DROPBEAR_SRC)' '$(DROPBEAR_DL_DIR)' '$@' '$(DROPBEAR_PATCH_DIR)'
 
 define DROPBEAR_DISABLE_FEATURE
 sed -i 's,^\(#define.*$1.*\),/*\1*/,' $(DROPBEAR_BUILD_CONFIG)

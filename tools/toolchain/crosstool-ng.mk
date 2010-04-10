@@ -1,5 +1,6 @@
 CROSSTOOL-NG_SRC ?= 1.4.2
 CROSSTOOL-NG_PATCH_DIR ?=
+CROSSTOOL-NG_DL_DIR ?= $(DL_DIR)
 CROSSTOOL-NG_SRC_DIR ?= $(CROSSTOOL-NG_SRC_AUTODIR)
 
 CROSSTOOL-NG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
@@ -10,7 +11,7 @@ ifeq '$(call IS_SRC, $(CROSSTOOL-NG_SRC))' ''
 override CROSSTOOL-NG_SRC := $(CROSSTOOL-NG_URL)/crosstool-ng-$(strip $(CROSSTOOL-NG_SRC)).tar.bz2
 endif
 
-CROSSTOOL-NG_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUILD_DIR)' '$(CROSSTOOL-NG_SRC)')
+CROSSTOOL-NG_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(CROSSTOOL-NG_SRC)')
 CROSSTOOL-NG_BUILD_DIR := $(CROSSTOOL-NG_SRC_DIR)
 CROSSTOOL-NG_BUILD_MAKEFILE := $(CROSSTOOL-NG_BUILD_DIR)/Makefile
 CROSSTOOL-NG := $(CROSSTOOL-NG_BUILD_DIR)/ct-ng
@@ -26,7 +27,7 @@ crosstool-ng_init :
 	@ printf '\n=== CROSSTOOL-NG ===\n'
 
 $(CROSSTOOL-NG_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(CROSSTOOL-NG_DIR)' '$(CROSSTOOL-NG_SRC)' '$@' '$(CROSSTOOL-NG_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(CROSSTOOL-NG_SRC)' '$(CROSSTOOL-NG_DL_DIR)' '$@' '$(CROSSTOOL-NG_PATCH_DIR)'
 
 $(CROSSTOOL-NG_BUILD_MAKEFILE) : | $(CROSSTOOL-NG_SRC_DIR)
 	cd $(@D) && ./configure --local

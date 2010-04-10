@@ -17,13 +17,14 @@ BUILDROOT_PATHS = \
 
 define EXTERNAL_TOOLS_DOWNLOAD
 $1 :
+	mkdir -p $(dir $1)
 	cd $(dir $1) && wget $2
 	if [ '$(strip $3)' = '.sh' -o '$(strip $3)' = '.py' ] ; then \
 		chmod +x $1 ; \
 	fi
 endef
 $(foreach PATH, $(BUILDROOT_PATHS), $(eval $(call EXTERNAL_TOOLS_DOWNLOAD, \
-	$(TOOLS_DIR)/$(notdir $(PATH)), \
+	$(SRC_DIR)/tools/$(notdir $(PATH)), \
 	$(BUILDROOT_URL)/$(PATH), \
 	$(suffix $(PATH)) \
 )))

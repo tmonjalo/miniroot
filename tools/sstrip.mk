@@ -1,5 +1,5 @@
 SSTRIP_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-SSTRIP_SRC := $(SSTRIP_DIR)/sstrip.c
+SSTRIP_SRC := $(SRC_DIR)/tools/sstrip.c
 SSTRIP := $(TOOLS_BUILD_DIR)/sstrip
 
 .PHONY : sstrip_clean

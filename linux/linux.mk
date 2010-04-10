@@ -1,6 +1,7 @@
 LINUX_SRC ?= 2.6.30.5
 LINUX_PATCH_DIR ?=
 LINUX_CONFIG ?=
+LINUX_DL_DIR ?= $(DL_DIR)
 LINUX_SRC_DIR ?= $(LINUX_SRC_AUTODIR)
 #LINUX_BUILD_INSIDE = no
 #LINUX_VERBOSE = no
@@ -16,7 +17,7 @@ ifeq '$(call IS_SRC, $(LINUX_SRC))' ''
 override LINUX_SRC := $(LINUX_URL)/linux-$(strip $(LINUX_SRC)).tar.bz2
 endif
 
-LINUX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(LINUX_DIR)' '$(LINUX_SRC)')
+LINUX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(LINUX_SRC)')
 LINUX_BUILD_DIR := $(if $(LINUX_BUILD_INSIDE), $(LINUX_SRC_DIR), $(BUILD_DIR)/$(notdir $(LINUX_SRC_DIR)))
 LINUX_BUILD_CONFIG := $(LINUX_BUILD_DIR)/.config
 LINUX_DEFAULT_CONFIG = $(LINUX_SRC_DIR)/arch/$(TARGET_ARCH)/configs/$(LINUX_CONFIG)
@@ -47,7 +48,7 @@ linux_init2 :
 	@ printf '\n=== LINUX === (part 2)\n'
 
 $(LINUX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_DIR)' '$(LINUX_SRC)' '$@' '$(LINUX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(LINUX_SRC)' '$(LINUX_DL_DIR)' '$@' '$(LINUX_PATCH_DIR)'
 
 $(LINUX_BUILD_CONFIG) : | $(LINUX_SRC_DIR)
 	mkdir -p $(@D)

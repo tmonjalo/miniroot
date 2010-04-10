@@ -7,8 +7,8 @@ SCRIPTS_DIR=$(dirname $0)
 . $SCRIPTS_DIR/common.sh
 
 # arguments
-TOP_DIR=$(strip_str $1) # destination parent directory
-SRC=$(strip_str $2) # can be a VCS URL to checkout, an URL of archive to download, a directory or an archive
+SRC=$(strip_str $1) # can be a VCS URL to checkout, an URL of archive to download, a directory or an archive
+DL_DIR=$(strip_str $2) # directory where download an archive
 SRC_DIR=$(strip_str $3) # directory where to checkout or to untar
 PATCH_DIR=$(strip_str $4) # directory of patch files to apply
 
@@ -43,7 +43,7 @@ vcs_checkout () { # <vcs tool> <main command> [branch command]
 extract_tarball () { # <tarball>
 	echo "untar sources to $SRC_DIR"
 	local TARBALL=$*
-	local EXTRACT_DIR="$TOP_DIR"
+	local EXTRACT_DIR=$(dirname "$SRC_DIR")
 	local CONTAINER_DIR="$(tar tf "$TARBALL" 2>&- | sed "s,^\([^/]*\).*,$EXTRACT_DIR/\1," | uniq)"
 	# check if all the files are contained in a single root directory
 	if [ "$(echo "$CONTAINER_DIR" | wc -l)" -gt 1 ] ; then
@@ -66,7 +66,7 @@ extract_tarball () { # <tarball>
 extract_zip () { # <zip archive>
 	echo "unzip sources to $SRC_DIR"
 	local ZIP=$*
-	local EXTRACT_DIR="$TOP_DIR"
+	local EXTRACT_DIR=$(dirname "$SRC_DIR")
 	local CONTAINER_DIR="$(unzip -l "$ZIP" | sed -n "s,^ *[0-9]\+ \+[-0-9]\+ \+[:0-9]\+ \+\([^/]*\).*,$EXTRACT_DIR/\1,p" | uniq)"
 	# check if all the files are contained in a single root directory
 	if [ "$(echo "$CONTAINER_DIR" | wc -l)" -gt 1 ] ; then
@@ -119,10 +119,11 @@ if echo $SRC | fgrep -q '://' ; then
 	# SRC is an URL (can have a branch option)
 	PROTOCOL=$($SCRIPTS_DIR/get_protocol_from_url.sh $URL)
 	if echo $PROTOCOL | grep -q tp ; then # http, ftp
-		ARCHIVE="$TOP_DIR/$(basename $SRC)"
+		ARCHIVE="$DL_DIR/$(basename $SRC)"
 		if [ ! -s "$ARCHIVE" ] ; then
 			echo "wget $SRC"
-			( cd "$TOP_DIR" && wget "$SRC" ) || exit $?
+			mkdir -p "$DL_DIR"
+			( cd "$DL_DIR" && wget "$SRC" ) || exit $?
 		fi
 		extract_archive $ARCHIVE
 	elif [ "$PROTOCOL" = git ] ; then

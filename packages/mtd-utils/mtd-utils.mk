@@ -8,6 +8,7 @@ PKG_MTD-UTILS_UBI ?= no   # TODO
 PKG_MTD-UTILS_JFFS2 ?= no # TODO
 MTD-UTILS_SRC ?= 1.2.0
 MTD-UTILS_PATCH_DIR ?=
+MTD-UTILS_DL_DIR ?= $(DL_DIR)
 MTD-UTILS_SRC_DIR ?= $(MTD-UTILS_SRC_AUTODIR)
 #MTD-UTILS_BUILD_INSIDE = no
 
@@ -22,7 +23,7 @@ ifeq '$(call IS_SRC, $(MTD-UTILS_SRC))' ''
 override MTD-UTILS_SRC := $(MTD-UTILS_URL)/mtd-utils-$(strip $(MTD-UTILS_SRC)).tar.bz2
 endif
 
-MTD-UTILS_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)')
+MTD-UTILS_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(MTD-UTILS_SRC)')
 MTD-UTILS_BUILD_DIR := $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
 MTD-UTILS_INSTALL_DIR := $(ROOT_BUILD_DIR)/sbin
 
@@ -53,7 +54,7 @@ mtd-utils_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== MTD-UTILS ===\n'
 
 $(MTD-UTILS_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_DIR)' '$(MTD-UTILS_SRC)' '$@' '$(MTD-UTILS_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(MTD-UTILS_SRC)' '$(MTD-UTILS_DL_DIR)' '$@' '$(MTD-UTILS_PATCH_DIR)'
 
 define MTD-UTILS_RULES
 

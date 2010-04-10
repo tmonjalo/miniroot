@@ -1,6 +1,7 @@
 BUSYBOX_SRC ?= 1.14.3
 BUSYBOX_PATCH_DIR ?=
 BUSYBOX_CONFIG ?=
+BUSYBOX_DL_DIR ?= $(DL_DIR)
 BUSYBOX_SRC_DIR ?= $(BUSYBOX_SRC_AUTODIR)
 #BUSYBOX_BUILD_INSIDE = no
 #BUSYBOX_VERBOSE = no
@@ -13,7 +14,7 @@ ifeq '$(call IS_SRC, $(BUSYBOX_SRC))' ''
 override BUSYBOX_SRC := $(BUSYBOX_URL)/busybox-$(strip $(BUSYBOX_SRC)).tar.bz2
 endif
 
-BUSYBOX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)')
+BUSYBOX_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(BUSYBOX_SRC)')
 BUSYBOX_BUILD_DIR := $(if $(BUSYBOX_BUILD_INSIDE), $(BUSYBOX_SRC_DIR), $(BUILD_DIR)/$(notdir $(BUSYBOX_SRC_DIR)))
 BUSYBOX_BUILD_CONFIG := $(BUSYBOX_BUILD_DIR)/.config
 BUSYBOX_DEFAULT_CONFIG = $(BUSYBOX_DIR)/default_config
@@ -37,7 +38,7 @@ busybox_init : $(TOOLCHAIN_DEP)
 	@ printf '\n=== BUSYBOX ===\n'
 
 $(BUSYBOX_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_DIR)' '$(BUSYBOX_SRC)' '$@' '$(BUSYBOX_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(BUSYBOX_SRC)' '$(BUSYBOX_DL_DIR)' '$@' '$(BUSYBOX_PATCH_DIR)'
 
 $(BUSYBOX_BUILD_CONFIG) : | $(BUSYBOX_SRC_DIR)
 	mkdir -p $(@D)

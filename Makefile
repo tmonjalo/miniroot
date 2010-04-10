@@ -10,6 +10,10 @@ TARGETS ?= linux image
 all : $(TARGETS)
 	@ printf '\n'
 
+# Downloaded archives
+DL_DIR ?= $(SRC_DIR)
+# Sources
+SRC_DIR ?= src
 # Build outside of the sources
 BUILD_DIR ?= build
 

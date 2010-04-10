@@ -1,5 +1,5 @@
 MAKEDEVS_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-MAKEDEVS_SRC := $(MAKEDEVS_DIR)/makedevs.c
+MAKEDEVS_SRC := $(SRC_DIR)/tools/makedevs.c
 MAKEDEVS := $(TOOLS_BUILD_DIR)/makedevs
 
 .PHONY : makedevs_clean

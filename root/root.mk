@@ -1,6 +1,7 @@
 ROOT_DEV_TABLE ?= $(ROOT_DIR)/default_dev_table
 ROOT_SKEL_SRC ?= $(ROOT_DIR)/default_skel
 ROOT_SKEL_PATCH_DIR ?=
+ROOT_SKEL_DL_DIR ?= $(DL_DIR)
 ROOT_SKEL_SRC_DIR ?= $(ROOT_SKEL_SRC_AUTODIR)
 
 ROOT_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
@@ -42,7 +43,7 @@ root_bin : root_bin_init $(SSTRIP)
 root_skel_init :
 	@ printf '\n=== SKELETON ===\n'
 $(ROOT_SKEL_SRC_DIR) :
-	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)' '$@' '$(ROOT_SKEL_PATCH_DIR)'
+	@ $(TOOLS_DIR)/init_src.sh '$(ROOT_SKEL_SRC)' '$(ROOT_SKEL_DL_DIR)' '$@' '$(ROOT_SKEL_PATCH_DIR)'
 root_skel : root_skel_init | $(ROOT_SKEL_SRC_DIR)
 	tar --create --exclude-vcs --directory $| . | tar --extract --directory $(ROOT_BUILD_DIR)
 
