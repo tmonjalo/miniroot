@@ -17,11 +17,12 @@ endif
 ZLIB_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(ZLIB_SRC)')
 ZLIB_VERSION = $(shell sed -n 's,.*VERSION.*"\(.*\)".*,\1,p' $(ZLIB_SRC_DIR)/zlib.h 2>&-)
 ZLIB_BUILD_DIR := $(if $(ZLIB_BUILD_INSIDE), $(ZLIB_SRC_DIR), $(BUILD_DIR)/$(notdir $(ZLIB_SRC_DIR)))
+ZLIB_BUILD_MAKEFILE := $(ZLIB_BUILD_DIR)/Makefile
 ZLIB_BUILD_BIN := $(ZLIB_BUILD_DIR)/libz.$(if $(TARGET_STATIC),a,so.$(ZLIB_VERSION))
 
 TARGET_LIB_DIRS += $(ZLIB_BUILD_DIR)
 
-.PHONY : zlib zlib_init zlib_configure zlib_clean zlib_check_latest
+.PHONY : zlib zlib_init zlib_clean zlib_check_latest
 $(eval $(call PKG_INCLUDE_RULE, $(PKG_ZLIB), zlib))
 
 zlib : $(ZLIB_DEPS) $(ZLIB_BUILD_BIN)
@@ -31,16 +32,14 @@ zlib_init : $(TOOLCHAIN_DEP)
 
 $(ZLIB_SRC_DIR) :
 	@ $(TOOLS_DIR)/init_src.sh '$(ZLIB_SRC)' '$(ZLIB_DL_DIR)' '$@' '$(ZLIB_PATCH_DIR)'
+	rm -f $(ZLIB_BUILD_MAKEFILE)
 
-zlib_configure : | $(ZLIB_SRC_DIR)
+$(ZLIB_BUILD_MAKEFILE) : | $(ZLIB_SRC_DIR)
 	cd $(ZLIB_BUILD_DIR) && \
 		$(SET_PATH) $(SET_CC) CFLAGS='$(TARGET_CFLAGS) -fPIC' $(SET_LDFLAGS) \
-		$(if $(TARGET_STATIC), ./configure, ./configure --shared)
+		./configure $(if $(TARGET_STATIC), --static, --shared)
 
-$(ZLIB_BUILD_BIN) : zlib_init
-	@ if ! fgrep -q 'LIBS=$(@F)' $(ZLIB_SRC_DIR)/Makefile ; then \
-		$(MAKE) zlib_configure ; \
-	fi
+$(ZLIB_BUILD_BIN) : zlib_init $(ZLIB_BUILD_MAKEFILE)
 	$(SET_PATH) $(MAKE) -C $(@D) $(@F)
 
 zlib_clean :
