@@ -13,7 +13,7 @@ BUILDROOT_PATHS = \
 	toolchain/patch-kernel.sh \
 	toolchain/sstrip/sstrip.c \
 	toolchain/mklibs/mklibs.py \
-	target/makedevs/makedevs.c
+	package/makedevs/makedevs.c
 
 define EXTERNAL_TOOLS_DOWNLOAD
 $1 :
