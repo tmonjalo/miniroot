@@ -86,12 +86,6 @@ linux_% : linux_init $(LINUX_BUILD_CONFIG)
 	$(LINUX_MAKE) $*
 
 linux_modules : $(LINUX_BUILD_CONFIG)
-	@ if [ -n "`$(LINUX_GET_INITRAMFS)`" ] ; then \
-		echo 'temporarily unset CONFIG_INITRAMFS_SOURCE' ; \
-		$(LINUX_SET_INITRAMFS) ; \
-		$(LINUX_MAKE_OLDCONFIG) ; \
-	fi
-	$(LINUX_MAKE) vmlinux
 	$(LINUX_MAKE) modules
 
 linux_modules_install : linux_modules
