@@ -16,12 +16,24 @@ COLOR_PATTERN='[7m'
 find_in_dir () {
 	DIR=$1
 	shift
-	find -L $DIR -maxdepth 3 |
-	fgrep -v 'CVS/' |
-	fgrep -v '.svn/' |
-	fgrep -v '.git/' |
-	grep '\([Mm]akefile.*\|\.\(mk\|sh\)\)$' |
-	xargs grep -n --color=never "$*" |
+	VARS=$(make -sC $DIR 'DL_DIR?' 'SRC_DIR?' 'BUILD_DIR?')
+	DL_DIR=$(echo "$VARS" | sed -n 's,^DL_DIR = ,,p')
+	SRC_DIR=$(echo "$VARS" | sed -n 's,^SRC_DIR = ,,p')
+	BUILD_DIR=$(echo "$VARS" | sed -n 's,^BUILD_DIR = ,,p')
+	find -L $DIR \
+		-regextype posix-extended \
+		\( \
+			-path "$DIR/$DL_DIR" -o \
+			-path "$DIR/$SRC_DIR" -o \
+			-path "$DIR/$BUILD_DIR" -o \
+			-path '*/CVS' -o \
+			-path '*/.svn' -o \
+			-path '*/.hg' -o \
+			-path '*/.git' \
+		\) -prune -o \
+		-type f \
+		-regex '.*/([Mm]akefile.*|.*\.(mk|sh))' \
+		-exec grep -n --color=never "$*" '{}' + |
 	sed "s,^$DIR/,," |
 	sed 's,^\./,,' |
 	sed "s,\([^/:]*\):[	 ]*\([0-9]*\):[	 ]*,$COLOR_FILE\1$COLOR_RESET $COLOR_LINE+\2$COLOR_RESET ," |
