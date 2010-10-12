@@ -9,9 +9,15 @@ $(if $($(strip $2)), $(strip $1)='$(strip $($(strip $2)))')
 endef
 
 # host compilation
+HOST_ARCH ?= $(shell $(HOST_CC) -dumpmachine 2>&- || uname -m)
+HOST_BUILD_DIR = $(strip $(BUILD_DIR))/host
 SET_HOST_CC = $(call SET_ENV, CC, HOST_CC)
 
 # target compilation
+TARGET_NAME ?= $(if $(TOOLCHAIN_PREFIX), $(TOOLCHAIN_PREFIX:-=), $(HOST_ARCH))
+LINUX_TARGET_NAME ?= $(if $(filter $(LINUX_TOOLCHAIN_PREFIX), $(TOOLCHAIN_PREFIX)), $(TARGET_NAME), $(LINUX_TOOLCHAIN_PREFIX:-=))
+TARGET_BUILD_DIR = $(strip $(BUILD_DIR))/$(strip $(TARGET_NAME))
+LINUX_TARGET_BUILD_DIR = $(strip $(BUILD_DIR))/$(strip $(LINUX_TARGET_NAME))
 SET_ARCH = $(call SET_ENV, ARCH, TARGET_ARCH)
 SET_CROSS_COMPILE = $(call SET_ENV, CROSS_COMPILE, TOOLCHAIN_PREFIX)
 SET_LINUX_CROSS_COMPILE = $(call SET_ENV, CROSS_COMPILE, LINUX_TOOLCHAIN_PREFIX)
