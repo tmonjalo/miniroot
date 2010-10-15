@@ -1,5 +1,4 @@
 PKG_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-PKG_BUILD_DIR := $(BUILD_DIR)
 
 .PHONY : packages packages_clean
 clean : packages_clean

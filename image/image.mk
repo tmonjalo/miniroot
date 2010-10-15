@@ -1,5 +1,5 @@
 IMAGE_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
-IMAGE_BUILD_DIR := $(BUILD_DIR)/$(IMAGE_DIR)
+IMAGE_BUILD_DIR := $(TARGET_BUILD_DIR)/$(IMAGE_DIR)
 
 FAKEROOT_SCRIPT := $(IMAGE_BUILD_DIR)/fakeroot.sh
 

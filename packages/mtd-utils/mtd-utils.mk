@@ -24,7 +24,7 @@ override MTD-UTILS_SRC := $(MTD-UTILS_URL)/mtd-utils-$(strip $(MTD-UTILS_SRC)).t
 endif
 
 MTD-UTILS_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(MTD-UTILS_SRC)')
-MTD-UTILS_BUILD_DIR := $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
+MTD-UTILS_BUILD_DIR := $(if $(MTD-UTILS_BUILD_INSIDE), $(MTD-UTILS_SRC_DIR), $(TARGET_BUILD_DIR)/$(notdir $(MTD-UTILS_SRC_DIR)))
 MTD-UTILS_INSTALL_DIR := $(ROOT_BUILD_DIR)/sbin
 
 MTD-UTILS_BASIC = flashcp flash_erase flash_eraseall flash_lock flash_unlock flash_info

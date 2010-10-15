@@ -8,7 +8,7 @@ ROOT_DIR := $(patsubst %/,%,$(dir $(lastword $(MAKEFILE_LIST))))
 
 ROOT_SKEL_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(ROOT_DIR)' '$(ROOT_SKEL_SRC)')
 
-ROOT_BUILD_DIR := $(BUILD_DIR)/$(ROOT_DIR)
+ROOT_BUILD_DIR := $(TARGET_BUILD_DIR)/$(ROOT_DIR)
 ROOT_BUILD_LIB_DIR := $(ROOT_BUILD_DIR)/lib
 
 FIND_ROOT_BINS_FILE = find $(ROOT_BUILD_DIR) -type f -perm +100 -exec file '{}' \;

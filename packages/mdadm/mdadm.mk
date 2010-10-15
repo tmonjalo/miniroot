@@ -16,7 +16,7 @@ override MDADM_SRC := $(MDADM_URL)/mdadm-$(strip $(MDADM_SRC)).tar.bz2
 endif
 
 MDADM_SRC_AUTODIR := $(shell $(TOOLS_DIR)/get_src_dir.sh '$(SRC_DIR)' '$(MDADM_SRC)')
-MDADM_BUILD_DIR := $(if $(MDADM_BUILD_INSIDE), $(MDADM_SRC_DIR), $(BUILD_DIR)/$(notdir $(MDADM_SRC_DIR)))
+MDADM_BUILD_DIR := $(if $(MDADM_BUILD_INSIDE), $(MDADM_SRC_DIR), $(TARGET_BUILD_DIR)/$(notdir $(MDADM_SRC_DIR)))
 MDADM_BUILD_BIN := $(MDADM_BUILD_DIR)/mdadm
 MDADM_INSTALL_BIN := $(ROOT_BUILD_DIR)/sbin/$(notdir $(MDADM_BUILD_BIN))
 
